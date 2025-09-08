@@ -1,5 +1,5 @@
 # 🛡️ HeroGen
-![HeroGen Logo](img/HeroGen_Logo.png)
+![HeroGen Logo](img/HeroGen_logo.png)
 
 **HeroGen** è un progetto che unisce creatività e intelligenza artificiale per dare vita a **eroi, avventurieri e leggende**.  
 Con poche parole puoi generare **immagini illustrate + schede personaggio** pronte per racconti, giochi di ruolo o progetti di worldbuilding.  
