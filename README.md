@@ -28,4 +28,3 @@ Con poche parole puoi generare **immagini illustrate + schede personaggio** pron
 "Eroe epico con armatura blu notte e mantello al vento, in posa eroica su un promontorio.
 Sullo sfondo montagne maestose e una grande luna dorata.
 Stile illustrativo, dettagli puliti, atmosfera cinematografica."
-
