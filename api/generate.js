@@ -13,7 +13,6 @@ const withCors = (handler) => async (req, res) => {
 };
 
 export default withCors(async function handler(req, res) {
-  // Endpoint di test con GET
   if (req.method === "GET") {
     return res.status(200).json({
       ok: true,
@@ -31,7 +30,7 @@ export default withCors(async function handler(req, res) {
       return res.status(400).json({ error: "Prompt mancante o troppo corto" });
     }
 
-    // 1) Generazione della scheda JSON
+    // 1) Genera la scheda JSON
     const sys =
       "Sei un generatore di personaggi fantasy. Rispondi SOLO con JSON valido " +
       "che abbia esattamente queste chiavi: " +
@@ -63,7 +62,7 @@ export default withCors(async function handler(req, res) {
       };
     }
 
-    // 2) Generazione dell’immagine (senza response_format!)
+    // 2) Genera immagine (usa size valido)
     const imgPrompt =
       `Illustrazione in stile fumetto fantasy: ${sheet.razza_classe || "eroe"} ` +
       `con ${Array.isArray(sheet.equipaggiamento) ? sheet.equipaggiamento.join(", ") : "equipaggiamento iconico"}. ` +
@@ -72,10 +71,9 @@ export default withCors(async function handler(req, res) {
     const img = await openai.images.generate({
       model: "gpt-image-1",
       prompt: imgPrompt,
-      size: "512x512" // più veloce; puoi salire a "1024x1024"
+      size: "1024x1024" // ✅ valori supportati
     });
 
-    // Preferisci URL, ma gestisci anche b64_json in fallback
     let image_url = img?.data?.[0]?.url || null;
     if (!image_url && img?.data?.[0]?.b64_json) {
       image_url = `data:image/png;base64,${img.data[0].b64_json}`;
@@ -89,4 +87,3 @@ export default withCors(async function handler(req, res) {
     return res.status(status).json({ error: message });
   }
 });
-
