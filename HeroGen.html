@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeroGen - Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f7fb; color:#222; text-align:center; padding:40px; }
+    textarea { width:90%; max-width:600px; height:100px; margin:20px 0; }
+    button { padding:10px 20px; font-size:16px; cursor:pointer; }
+    .output { margin-top:30px; padding:20px; background:#fff; border:1px solid #ccc; border-radius:8px; max-width:600px; margin-left:auto; margin-right:auto; text-align:left; }
+  </style>
+</head>
+<body>
+  <h1>⚔️ HeroGen Demo</h1>
+  <p>Scrivi un prompt e genera un personaggio</p>
+
+  <textarea id="prompt" placeholder="Esempio: Cavaliere nano con barba intrecciata..."></textarea><br>
+  <button onclick="generate()">Genera</button>
+
+  <div class="output" id="output"></div>
+
+  <script>
+    async function generate() {
+      const prompt = document.getElementById("prompt").value;
+      const out = document.getElementById("output");
+      out.innerHTML = "⏳ Generazione in corso...";
+
+      try {
+        const res = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt })
+        });
+
+        const data = await res.json();
+        out.innerHTML = "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
+      } catch (err) {
+        out.innerHTML = "❌ Errore: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
