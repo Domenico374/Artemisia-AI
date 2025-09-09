@@ -1,30 +1,73 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HeroGen - Demo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HeroGen Demo</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f7fb; color:#222; text-align:center; padding:40px; }
-    textarea { width:90%; max-width:600px; height:100px; margin:20px 0; }
-    button { padding:10px 20px; font-size:16px; cursor:pointer; }
-    .output { margin-top:30px; padding:20px; background:#fff; border:1px solid #ccc; border-radius:8px; max-width:600px; margin-left:auto; margin-right:auto; text-align:left; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6fa;
+      margin: 0;
+      padding: 20px;
+      color: #222;
+    }
+    h1 {
+      text-align: center;
+      color: #003b4f;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: none;
+    }
+    button {
+      background: #244977;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #003b4f;
+    }
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background: #e8f1fa;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
   <h1>⚔️ HeroGen Demo</h1>
-  <p>Scrivi un prompt e genera un personaggio</p>
+  <div class="container">
+    <label for="prompt"><strong>Scrivi il tuo prompt:</strong></label>
+    <textarea id="prompt" placeholder="Es: cavaliere nano con barba intrecciata..."></textarea>
+    <button onclick="genera()">Genera</button>
 
-  <textarea id="prompt" placeholder="Esempio: Cavaliere nano con barba intrecciata..."></textarea><br>
-  <button onclick="generate()">Genera</button>
-
-  <div class="output" id="output"></div>
+    <div id="output" class="output"></div>
+  </div>
 
   <script>
-    async function generate() {
+    async function genera() {
       const prompt = document.getElementById("prompt").value;
-      const out = document.getElementById("output");
-      out.innerHTML = "⏳ Generazione in corso...";
+      const output = document.getElementById("output");
+      output.innerText = "⏳ Generazione in corso...";
 
       try {
         const res = await fetch("/api/generate", {
@@ -34,9 +77,13 @@
         });
 
         const data = await res.json();
-        out.innerHTML = "<pre>" + JSON.stringify(data, null, 2) + "</pre>";
+        if (data.error) {
+          output.innerText = "❌ Errore: " + data.error;
+        } else {
+          output.innerText = "✅ Risultato:\n\n" + (data.result || JSON.stringify(data, null, 2));
+        }
       } catch (err) {
-        out.innerHTML = "❌ Errore: " + err.message;
+        output.innerText = "❌ Errore di connessione: " + err.message;
       }
     }
   </script>
