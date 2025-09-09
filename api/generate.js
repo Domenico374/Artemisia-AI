@@ -62,28 +62,29 @@ export default withCors(async function handler(req, res) {
       };
     }
 
-    // 2) Genera immagine (usa size valido)
-    const imgPrompt =
-      `Illustrazione in stile fumetto fantasy: ${sheet.razza_classe || "eroe"} ` +
-      `con ${Array.isArray(sheet.equipaggiamento) ? sheet.equipaggiamento.join(", ") : "equipaggiamento iconico"}. ` +
-      `Scenario fantasy coerente, colori bilanciati.`;
+   // 2) Genera immagine (usa size valido)
+const imgPrompt =
+  `Illustrazione in stile fumetto fantasy: ${sheet.razza_classe || "eroe"} ` +
+  `con ${Array.isArray(sheet.equipaggiamento) ? sheet.equipaggiamento.join(", ") : "equipaggiamento iconico"}. ` +
+  `Scenario fantasy coerente, colori bilanciati.`;
 
-    const img = await openai.images.generate({
-      model: "gpt-image-1",
-      prompt: imgPrompt,
-      size: "1024x1024" // ✅ valori supportati
-    });
-
-    let image_url = img?.data?.[0]?.url || null;
-    if (!image_url && img?.data?.[0]?.b64_json) {
-      image_url = `data:image/png;base64,${img.data[0].b64_json}`;
-    }
-
-    return res.status(200).json({ sheet, image_url });
-  } catch (err) {
-    console.error("GENERATE_ERR", err?.status || "", err?.message || err);
-    const status = err?.status || 500;
-    const message = err?.message || "Errore interno";
-    return res.status(status).json({ error: message });
-  }
+const img = await openai.images.generate({
+  model: "gpt-image-1",
+  prompt: imgPrompt,
+  size: "1024x1024" // valori supportati: 1024x1024 | 1024x1536 | 1536x1024 | auto
 });
+
+// Normalizza output immagine: preferisci URL, fallback a data URL da b64_json
+const first = img?.data?.[0] || {};
+let image_url = first?.url || null;
+if (!image_url && first?.b64_json) {
+  image_url = `data:image/png;base64,${first.b64_json}`;
+}
+
+// Ritorna anche meta per debug
+return res.status(200).json({
+  sheet,
+  image_url,
+  image_meta: first
+});
+
