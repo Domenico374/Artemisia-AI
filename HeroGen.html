@@ -1,90 +1,210 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HeroGen Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6fa;
-      margin: 0;
-      padding: 20px;
-      color: #222;
+    :root{
+      --brand:#0d3b4f; --ink:#0f172a; --muted:#475569; --page:#f4f7fb; --ok:#0e9f6e; --err:#ef4444;
+      --card:#fff; --ring:#93c5fd; --shadow:0 8px 24px rgba(2,6,23,.08);
     }
-    h1 {
-      text-align: center;
-      color: #003b4f;
-    }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    textarea {
-      width: 100%;
-      height: 100px;
-      margin: 10px 0;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      resize: none;
-    }
-    button {
-      background: #244977;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #003b4f;
-    }
-    .output {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 8px;
-      background: #e8f1fa;
-      white-space: pre-wrap;
-    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:var(--page);color:var(--ink)}
+    .wrap{max-width:980px;margin:40px auto;padding:0 16px}
+    h1{display:flex;align-items:center;gap:10px;margin:0 0 14px}
+    h1 small{font-weight:600;color:var(--muted);font-size:.9rem}
+    .card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);border:1px solid #e5e7eb}
+    .pad{padding:18px}
+    textarea{width:100%;min-height:120px;padding:12px;border-radius:12px;border:1px solid #cbd5e1;font:inherit}
+    textarea:focus{outline:none;box-shadow:0 0 0 3px var(--ring)}
+    .row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:12px}
+    .btn{background:var(--brand);color:#fff;border:none;border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer}
+    .btn.secondary{background:#0b1b2a}
+    .btn.ghost{background:#fff;color:var(--brand);border:1px solid #cbd5e1}
+    .status{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:.95rem}
+    .ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+    .err{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+    pre{margin:0;max-height:520px;overflow:auto;background:#0b1220;color:#e6edf3;padding:14px;border-radius:12px}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
+    .stack{display:flex;flex-direction:column;gap:10px}
+    .imgBox{display:grid;place-items:center;background:#0b1b2a;border-radius:12px;min-height:260px;padding:10px;border:1px solid #233041}
+    .imgBox img{max-width:100%;border-radius:10px;display:block}
+    .bar{display:flex;gap:8px;align-items:center;justify-content:space-between}
+    .right{display:flex;gap:8px;align-items:center}
+    .muted{color:var(--muted);font-size:.92rem}
+    .copyToast{position:fixed;inset:auto 16px 16px auto;background:#0b1b2a;color:#fff;padding:10px 12px;border-radius:10px;box-shadow:var(--shadow);display:none}
+    .spin{width:16px;height:16px;border:3px solid #93c5fd;border-top-color:transparent;border-radius:50%;display:inline-block;animation:rot 1s linear infinite;margin-right:8px}
+    @keyframes rot {to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
-  <h1>⚔️ HeroGen Demo</h1>
-  <div class="container">
-    <label for="prompt"><strong>Scrivi il tuo prompt:</strong></label>
-    <textarea id="prompt" placeholder="Es: cavaliere nano con barba intrecciata..."></textarea>
-    <button onclick="genera()">Genera</button>
+  <div class="wrap">
+    <h1>🛡️ HeroGen <small>— Genera eroi + immagine</small></h1>
 
-    <div id="output" class="output"></div>
+    <!-- INPUT -->
+    <div class="card pad">
+      <label for="prompt"><strong>Scrivi il tuo prompt:</strong></label>
+      <textarea id="prompt" placeholder="Es.: Un cavaliere in armatura dorata con mantello rosso..."></textarea>
+      <div class="row">
+        <button class="btn" id="genBtn">Genera</button>
+        <button class="btn ghost" id="exBtn">Usa esempio epico</button>
+        <span id="status" class="status" style="display:none"></span>
+      </div>
+    </div>
+
+    <!-- RISULTATI -->
+    <div style="height:12px"></div>
+    <div class="grid">
+      <!-- JSON -->
+      <div class="card pad stack">
+        <div class="bar">
+          <strong>📄 Scheda (JSON)</strong>
+          <div class="right">
+            <span class="muted" id="jsonHint">—</span>
+            <button class="btn secondary" id="copyBtn" disabled>Copia JSON</button>
+          </div>
+        </div>
+        <pre id="jsonPre"><code>// In attesa di generazione...</code></pre>
+      </div>
+
+      <!-- IMMAGINE -->
+      <div class="card pad stack">
+        <div class="bar">
+          <strong>🖼️ Immagine</strong>
+          <span class="muted" id="imgHint">—</span>
+        </div>
+        <div class="imgBox" id="imgBox">
+          <span class="muted">Nessuna immagine ancora</span>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <div class="copyToast" id="toast">JSON copiato! ✅</div>
+
   <script>
-    async function genera() {
-      const prompt = document.getElementById("prompt").value;
-      const output = document.getElementById("output");
-      output.innerText = "⏳ Generazione in corso...";
+    const $ = (s)=>document.querySelector(s);
+    const genBtn = $("#genBtn");
+    const exBtn  = $("#exBtn");
+    const copyBtn= $("#copyBtn");
+    const jsonPre= $("#jsonPre");
+    const imgBox = $("#imgBox");
+    const status = $("#status");
+    const toast  = $("#toast");
+    const jsonHint = $("#jsonHint");
+    const imgHint  = $("#imgHint");
+    const promptEl = $("#prompt");
+
+    // Prompt di esempio "epico"
+    const epic = `Un cavaliere in armatura dorata, mantello rosso che sventola al vento, in piedi su una scogliera sopra l’oceano.
+Tiene alta una spada infuocata mentre un drago alato emerge dalle nuvole dietro di lui.
+Atmosfera epica, colori intensi, stile illustrativo realistico.`;
+
+    exBtn.addEventListener("click", ()=>{
+      promptEl.value = epic;
+      promptEl.focus();
+    });
+
+    copyBtn.addEventListener("click", ()=>{
+      const txt = jsonPre.innerText;
+      navigator.clipboard.writeText(txt).then(()=>{
+        toast.style.display="block";
+        setTimeout(()=>toast.style.display="none", 1200);
+      });
+    });
+
+    genBtn.addEventListener("click", async ()=>{
+      const prompt = promptEl.value.trim();
+      if (prompt.length < 10){
+        showStatus("Inserisci almeno 10 caratteri.", true);
+        return;
+      }
+
+      // UI → loading
+      lockUI(true);
+      showStatus(`<span class="spin"></span>Generazione in corso...`);
+      jsonHint.textContent = "model: gpt-4o-mini";
+      imgHint.textContent  = "model: gpt-image-1";
+
+      // reset box
+      jsonPre.innerHTML = `<code>// In attesa di risposta...</code>`;
+      imgBox.innerHTML  = `<span class="muted">Attendo immagine...</span>`;
+      copyBtn.disabled  = true;
 
       try {
-        const res = await fetch("/api/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+        const r = await fetch("/api/generate", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
           body: JSON.stringify({ prompt })
         });
 
-        const data = await res.json();
-        if (data.error) {
-          output.innerText = "❌ Errore: " + data.error;
-        } else {
-          output.innerText = "✅ Risultato:\n\n" + (data.result || JSON.stringify(data, null, 2));
+        const data = await r.json();
+
+        if(!r.ok){
+          // Mostra messaggio d'errore con dettaglio
+          const msg = data?.error || `Errore ${r.status}`;
+          showStatus(`❌ Errore: ${msg}`, true);
+          imgHint.textContent = "—";
+          jsonPre.innerHTML = `<code>${escapeHTML(JSON.stringify(data, null, 2))}</code>`;
+          return;
         }
-      } catch (err) {
-        output.innerText = "❌ Errore di connessione: " + err.message;
+
+        // JSON pretty
+        const pretty = JSON.stringify(data.sheet || data, null, 2);
+        jsonPre.innerHTML = `<code>${escapeHTML(pretty)}</code>`;
+        copyBtn.disabled = false;
+
+        if (data.image_data_url){
+          // Immagine
+          imgBox.innerHTML = "";
+          const img = new Image();
+          img.alt = "Eroe generato";
+          img.src = data.image_data_url;
+          img.onload = ()=> {
+            imgBox.appendChild(img);
+            imgHint.textContent = "ok";
+          };
+          img.onerror = ()=> {
+            imgBox.innerHTML = `<span class="muted">Immagine non caricata</span>`;
+            imgHint.textContent = "errore immagine";
+          };
+        } else {
+          imgBox.innerHTML = `<span class="muted">Nessuna immagine ricevuta</span>`;
+          imgHint.textContent = "—";
+        }
+
+        showStatus("✅ Fatto!");
+      } catch (err){
+        console.error(err);
+        showStatus("❌ Errore di rete o server.", true);
+      } finally {
+        lockUI(false);
       }
+    });
+
+    function showStatus(message, isErr=false){
+      status.style.display = "inline-block";
+      status.className = "status " + (isErr? "err":"ok");
+      status.innerHTML = message;
+    }
+
+    function lockUI(disabled){
+      genBtn.disabled = disabled;
+      exBtn.disabled  = disabled;
+      promptEl.disabled = disabled;
+    }
+
+    function escapeHTML(s){
+      return s
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
     }
   </script>
 </body>
