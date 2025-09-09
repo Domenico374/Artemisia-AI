@@ -63,7 +63,7 @@ export default withCors(async function handler(req, res) {
       };
     }
 
-    // 2) Generazione dell’immagine (forzata come URL)
+    // 2) Generazione dell’immagine (senza response_format!)
     const imgPrompt =
       `Illustrazione in stile fumetto fantasy: ${sheet.razza_classe || "eroe"} ` +
       `con ${Array.isArray(sheet.equipaggiamento) ? sheet.equipaggiamento.join(", ") : "equipaggiamento iconico"}. ` +
@@ -72,11 +72,14 @@ export default withCors(async function handler(req, res) {
     const img = await openai.images.generate({
       model: "gpt-image-1",
       prompt: imgPrompt,
-      size: "512x512", // usa 512x512 per velocità, poi puoi aumentare a 1024x1024
-      response_format: "url",
+      size: "512x512" // più veloce; puoi salire a "1024x1024"
     });
 
-    const image_url = img.data?.[0]?.url || null;
+    // Preferisci URL, ma gestisci anche b64_json in fallback
+    let image_url = img?.data?.[0]?.url || null;
+    if (!image_url && img?.data?.[0]?.b64_json) {
+      image_url = `data:image/png;base64,${img.data[0].b64_json}`;
+    }
 
     return res.status(200).json({ sheet, image_url });
   } catch (err) {
