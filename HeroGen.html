@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
@@ -147,7 +147,6 @@ Atmosfera epica, colori intensi, stile illustrativo realistico.`;
         const data = await r.json();
 
         if(!r.ok){
-          // Mostra messaggio d'errore con dettaglio
           const msg = data?.error || `Errore ${r.status}`;
           showStatus(`❌ Errore: ${msg}`, true);
           imgHint.textContent = "—";
@@ -160,12 +159,17 @@ Atmosfera epica, colori intensi, stile illustrativo realistico.`;
         jsonPre.innerHTML = `<code>${escapeHTML(pretty)}</code>`;
         copyBtn.disabled = false;
 
-        if (data.image_data_url){
-          // Immagine
+        // 🔧 nuova gestione immagine
+        const src =
+          (data.image_url ? `${data.image_url}${data.image_url.includes('?') ? '&' : '?'}t=${Date.now()}` : null) ||
+          data.image_data_url ||
+          null;
+
+        if (src) {
           imgBox.innerHTML = "";
           const img = new Image();
           img.alt = "Eroe generato";
-          img.src = data.image_data_url;
+          img.src = src;
           img.onload = ()=> {
             imgBox.appendChild(img);
             imgHint.textContent = "ok";
@@ -209,3 +213,4 @@ Atmosfera epica, colori intensi, stile illustrativo realistico.`;
   </script>
 </body>
 </html>
+
