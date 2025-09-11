@@ -14,7 +14,7 @@
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:var(--page);color:var(--ink)}
-    .wrap{max-width:1080px;margin:40px auto;padding:0 16px}
+    .wrap{max-width:1200px;margin:40px auto;padding:0 16px}
     h1{display:flex;align-items:center;gap:10px;margin:0 0 14px}
     h1 small{font-weight:600;color:var(--muted);font-size:.9rem}
     .card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);border:1px solid #e5e7eb}
@@ -29,26 +29,31 @@
     .ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
     .err{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
 
-    /* 🔧 immagine più grande della scheda */
-    .grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:16px}
+    /* griglia: più spazio all'immagine */
+    .grid{display:grid;grid-template-columns:0.8fr 1.2fr;gap:16px}
     @media (max-width:900px){.grid{grid-template-columns:1fr}}
 
-    pre{margin:0;max-height:520px;overflow:auto;background:#0b1220;color:#e6edf3;padding:14px;border-radius:12px}
+    pre{margin:0;max-height:480px;overflow:auto;background:#0b1220;color:#e6edf3;padding:14px;border-radius:12px}
     code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
     .stack{display:flex;flex-direction:column;gap:10px}
 
-    /* 🔧 box immagine alto e immagine a larghezza piena */
+    /* immagine più grande */
     .imgBox{
-      display:grid;place-items:center;background:#0b1b2a;border-radius:12px;
-      min-height:600px; /* era 260px */
-      padding:10px;border:1px solid #233041
+      display:grid;
+      place-items:center;
+      background:#0b1b2a;
+      border-radius:12px;
+      min-height:700px; /* aumentato */
+      padding:10px;
+      border:1px solid #233041
     }
     .imgBox img{
-      width:100%; /* forza larghezza piena */
+      width:100%; 
       height:auto;
       max-height:100%;
       object-fit:contain;
-      border-radius:10px;display:block
+      border-radius:10px;
+      display:block
     }
 
     .bar{display:flex;gap:8px;align-items:center;justify-content:space-between}
@@ -66,7 +71,7 @@
     <!-- INPUT -->
     <div class="card pad">
       <label for="prompt"><strong>Scrivi il tuo prompt:</strong></label>
-      <textarea id="prompt" placeholder="Es.: Un cavaliere in armatura dorata con mantello rosso..."></textarea>
+      <textarea id="prompt" placeholder="Es.: Un drago in volo che sputa fuoco sui cavalieri..."></textarea>
       <div class="row">
         <button class="btn" id="genBtn">Genera</button>
         <button class="btn ghost" id="exBtn">Usa esempio epico</button>
@@ -131,9 +136,9 @@
     })();
 
     // Prompt di esempio
-    const epic = `Un cavaliere in armatura dorata, mantello rosso che sventola al vento, in piedi su una scogliera sopra l’oceano.
-Tiene alta una spada infuocata mentre un drago alato emerge dalle nuvole dietro di lui.
-Atmosfera epica, colori intensi, stile illustrativo realistico.`;
+    const epic = `A gigantic dragon flying in the sky, breathing fire down onto a group of armored knights.
+Some knights are on horseback, others on foot. The battlefield burns under a fiery red sky with mountains in the distance.
+Fantasy illustration, realistic style, epic and dramatic atmosphere.`;
 
     exBtn.addEventListener("click", ()=>{
       promptEl.value = epic;
@@ -242,5 +247,3 @@ Atmosfera epica, colori intensi, stile illustrativo realistico.`;
   </script>
 </body>
 </html>
-
-
