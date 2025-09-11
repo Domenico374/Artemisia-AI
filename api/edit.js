@@ -2,7 +2,11 @@
 import OpenAI from "openai";
 import { toFile } from "openai/uploads";
 
-// --- Middleware CORS ---
+// Se usi Next.js "pages/api" e il body parser crea problemi con multipart,
+// decommenta la riga sotto:
+// export const config = { api: { bodyParser: false } };
+
+// --- CORS ---
 const withCors = (handler) => async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
@@ -11,10 +15,9 @@ const withCors = (handler) => async (req, res) => {
   return handler(req, res);
 };
 
-// --- Client OpenAI ---
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// --- Parser multipart semplice ---
+// Parser multipart semplice (Node >= 18) – estrae "file" e "prompt"
 async function parseMultipart(req) {
   const contentType = req.headers["content-type"] || "";
   const boundary = contentType.split("boundary=")[1];
@@ -34,12 +37,17 @@ async function parseMultipart(req) {
 
     const nameMatch = /name="([^"]+)"/.exec(rawHeaders);
     const filenameMatch = /filename="([^"]+)"/.exec(rawHeaders);
+    const ctMatch = /Content-Type:\s*([^\r\n]+)/i.exec(rawHeaders);
 
     if (filenameMatch) {
-      const filename = filenameMatch[1] || "upload.png";
+      const filename = filenameMatch[1] || "upload";
       const bodyBin = rawBody.slice(0, rawBody.lastIndexOf("\r\n"));
       const buf = Buffer.from(bodyBin, "binary");
-      fields.file = { buffer: buf, filename };
+
+      // content-type dal part (se presente) – utile su Safari/Firefox
+      const partMime = ctMatch?.[1]?.trim() || "";
+
+      fields.file = { buffer: buf, filename, partMime };
     } else if (nameMatch) {
       const name = nameMatch[1];
       const val = rawBody.slice(0, rawBody.lastIndexOf("\r\n"));
@@ -49,7 +57,16 @@ async function parseMultipart(req) {
   return fields;
 }
 
-// --- Handler principale ---
+// Mappa estensioni → mime supportati da gpt-image-1
+function guessMime(filename = "", fallback = "image/png", partMime = "") {
+  const lower = filename.toLowerCase();
+  if (partMime && /image\/(png|jpeg|webp)/.test(partMime)) return partMime;
+  if (lower.endsWith(".png")) return "image/png";
+  if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/jpeg";
+  if (lower.endsWith(".webp")) return "image/webp";
+  return fallback; // default: png
+}
+
 export default withCors(async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -65,31 +82,45 @@ export default withCors(async function handler(req, res) {
       return res.status(400).json({ error: "Prompt mancante o troppo corto" });
     }
 
-    // 🖼️ Image Edit con gpt-image-1
-   const resp = await openai.images.edit({
-  model: "gpt-image-1",
-  prompt,
-  image: await toFile(file.buffer, file.filename || "input.png", {
-    contentType: "image/png",
-  }),
-  size: "1024x1024",
-});
+    // Determina il MIME corretto
+    const mime = guessMime(file.filename, "image/png", file.partMime);
+    if (!/^image\/(png|jpeg|webp)$/.test(mime)) {
+      return res.status(400).json({
+        error:
+          `Formato non supportato (${mime}). Usa PNG, JPG/JPEG o WEBP.`,
+      });
+    }
 
+    // 🖼️ Image Edit (nuova SDK: .edit, NON .edits)
+    const resp = await openai.images.edit({
+      model: "gpt-image-1",
+      prompt,
+      image: await toFile(file.buffer, file.filename || "input.png", {
+        contentType: mime,
+      }),
+      size: "1024x1024",
+    });
 
     const first = resp?.data?.[0] || {};
     const image_b64 = first?.b64_json || null;
     const image_url = image_b64
-      ? `data:image/png;base64,${image_b64}`
-      : (first?.url || null);
+      ? `data:image/png;base64,${first.b64_json}`
+      : first?.url || null;
 
     res.setHeader("Cache-Control", "no-store");
     return res.status(200).json({
       image_url,
-      image_meta: { revised_prompt: first?.revised_prompt || null },
+      image_meta: {
+        revised_prompt: first?.revised_prompt || null,
+        content_type: mime,
+      },
     });
   } catch (e) {
     console.error("Edit API error:", e);
     const code = e?.status || e?.statusCode || 500;
-    return res.status(code).json({ error: e?.message || "Errore interno" });
+    const msg =
+      e?.message ||
+      (typeof e === "string" ? e : "Errore interno");
+    return res.status(code).json({ error: msg });
   }
 });
