@@ -1,9 +1,9 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HeroGen – Generatore di immagini</title>
+  <title>HeroGen — Generatore & Trasformatore di immagini</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -26,28 +26,36 @@
     .status{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:.95rem}
     .ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
     .err{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+    .muted{color:var(--muted);font-size:.92rem}
     .viewer{margin-top:16px}
     .bar{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
-    .muted{color:var(--muted);font-size:.92rem}
     .imgBox{display:grid;place-items:center;background:#0b1b2a;border-radius:12px;min-height:720px;padding:10px;border:1px solid #233041}
     .imgBox img{width:100%;height:auto;max-height:100%;object-fit:contain;border-radius:10px;display:block}
+    .chip{border:1px dashed #cbd5e1;border-radius:10px;padding:6px 10px;background:#fff}
     .spin{width:16px;height:16px;border:3px solid #93c5fd;border-top-color:transparent;border-radius:50%;display:inline-block;animation:rot 1s linear infinite;margin-right:8px}
     @keyframes rot{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>🛡️ HeroGen <small>— Generatore di immagini</small></h1>
+    <h1>🛡️ HeroGen <small>— Generatore & Trasformatore di immagini</small></h1>
 
     <!-- INPUT -->
     <div class="card pad">
       <label for="prompt"><strong>Scrivi il tuo prompt:</strong></label>
-      <textarea id="prompt" placeholder="Es.: A gigantic dragon flying in the sky, breathing fire onto armored knights..."></textarea>
+      <textarea id="prompt" placeholder="Es.: Trasforma in stile cartoon con sfondo città notturna..."></textarea>
+
       <div class="row">
-        <button class="btn" id="genBtn">Genera</button>
+        <button class="btn" id="genBtn" title="Se carichi una foto farà la trasformazione, altrimenti genera da testo">Genera / Trasforma</button>
         <button class="btn ghost" id="exBtn">Usa esempio epico</button>
         <button class="btn secondary" id="dlBtn" disabled>Scarica PNG</button>
+
+        <!-- Upload -->
+        <input id="fileInput" type="file" accept="image/*" style="display:none" />
+        <button class="btn ghost" id="uploadBtn" title="Carica una foto da trasformare">Trasforma da foto</button>
+        <span id="fileName" class="muted chip" style="display:none"></span>
       </div>
+
       <div id="status" class="status" style="display:none"></div>
     </div>
 
@@ -64,146 +72,151 @@
     </div>
   </div>
 
-  <!-- ✅ Metti tutto dentro DOMContentLoaded per evitare che il codice parta prima del DOM -->
   <script defer>
   (function(){
     "use strict";
     window.addEventListener("DOMContentLoaded", () => {
-      try {
-        const $ = (s)=>document.querySelector(s);
-        const genBtn = $("#genBtn");
-        const exBtn  = $("#exBtn");
-        const dlBtn  = $("#dlBtn");
-        const imgBox = $("#imgBox");
-        const status = $("#status");
-        const imgHint= $("#imgHint");
-        const promptEl = $("#prompt");
-        const openFull = $("#openFull");
+      const $ = (s)=>document.querySelector(s);
 
-        // Se per qualunque motivo non esistono gli elementi, esci pulito
-        if (!genBtn || !exBtn || !dlBtn || !imgBox || !status || !imgHint || !promptEl || !openFull) {
-          console.error("Init error: elementi non trovati");
-          return;
+      // UI elements
+      const genBtn   = $("#genBtn");
+      const exBtn    = $("#exBtn");
+      const dlBtn    = $("#dlBtn");
+      const imgBox   = $("#imgBox");
+      const status   = $("#status");
+      const imgHint  = $("#imgHint");
+      const promptEl = $("#prompt");
+      const openFull = $("#openFull");
+      const uploadBtn= $("#uploadBtn");
+      const fileInput= $("#fileInput");
+      const fileName = $("#fileName");
+
+      if(!genBtn) return;
+
+      // Endpoints
+      const BASE = (()=>{
+        const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
+        return isLocal ? "http://localhost:3000" : "";
+      })();
+      const GEN_URL  = `${BASE}/api/generate`;
+      const EDIT_URL = `${BASE}/api/edit`;
+
+      // Example
+      const epic = `Turn this photo into a clean cartoon illustration: bold outlines, flat vibrant colors, simple background with a night city skyline and neon lights. If no photo is provided, generate the image from scratch with the same style.`;
+
+      exBtn.addEventListener("click", ()=>{ promptEl.value = epic; promptEl.focus(); });
+
+      // Upload
+      uploadBtn.addEventListener("click", ()=> fileInput.click());
+      let lastFile = null;
+      fileInput.addEventListener("change", ()=>{
+        const f = fileInput.files?.[0] || null;
+        lastFile = f;
+        if (f){
+          fileName.textContent = `Selezionato: ${f.name}`;
+          fileName.style.display = "inline-block";
+        } else {
+          fileName.textContent = "";
+          fileName.style.display = "none";
         }
+      });
 
-        // Assicurati che non siano disabilitati all'avvio
-        promptEl.disabled = false;
-        genBtn.disabled = false;
-        exBtn.disabled = false;
-        dlBtn.disabled = true;
+      // Helpers
+      function showStatus(message, isErr=false){
+        status.style.display = "block";
+        status.className = "status " + (isErr? "err":"ok");
+        status.innerHTML = message;
+      }
+      function lockUI(disabled){
+        genBtn.disabled = disabled;
+        exBtn.disabled  = disabled;
+        uploadBtn.disabled = disabled;
+        promptEl.disabled = disabled;
+        dlBtn.disabled = disabled || !lastImageUrl;
+      }
+      function downloadDataUrl(filename, dataUrl){
+        const a = document.createElement("a");
+        a.href = dataUrl; a.download = filename;
+        document.body.appendChild(a); a.click(); a.remove();
+      }
 
-        // Endpoint API
-        const API_URL = (()=>{
-          const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
-          return isLocal ? "http://localhost:3000/api/generate" : "/api/generate";
-        })();
+      let lastImageUrl = null;
 
-        // Prompt d'esempio
-        const epic = `A gigantic black-scaled dragon flying high, breathing a torrent of fire onto a group of armored knights.
-Some knights on horseback, others on foot; shields raised, lances forward. Fiery red sky, smoke and sparks, mountains in the distance.
-Fantasy illustration, realistic style, epic and dramatic atmosphere, high detail.`;
+      // Main action
+      genBtn.addEventListener("click", async ()=>{
+        const prompt = (promptEl.value || "").trim();
+        if (prompt.length < 3) return showStatus("Inserisci un prompt.", true);
 
-        exBtn.addEventListener("click", () => {
-          promptEl.value = epic;
-          promptEl.focus();
-        });
+        lockUI(true);
+        showStatus(`<span class="spin"></span>Elaborazione...`);
+        imgHint.textContent = lastFile ? "edit: gpt-image-1" : "generate: gpt-image-1";
+        imgBox.innerHTML = `<span class="muted">Attendo immagine...</span>`;
+        openFull.style.display = "none"; openFull.removeAttribute("href");
+        dlBtn.disabled = true; lastImageUrl = null;
 
-        // Scarica PNG da data URL
-        function downloadDataUrl(filename, dataUrl){
-          const a = document.createElement("a");
-          a.href = dataUrl;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-        }
-
-        let lastImageUrl = null;
-
-        genBtn.addEventListener("click", async ()=>{
-          const prompt = (promptEl.value || "").trim();
-          if (prompt.length < 10){ return showStatus("Inserisci almeno 10 caratteri.", true); }
-
-          lockUI(true);
-          showStatus(`<span class="spin"></span>Generazione in corso...`);
-          imgHint.textContent = "model: gpt-image-1";
-          imgBox.innerHTML = `<span class="muted">Attendo immagine...</span>`;
-          openFull.style.display = "none";
-          openFull.removeAttribute("href");
-          dlBtn.disabled = true;
-          lastImageUrl = null;
-
-          try{
-            const r = await fetch(API_URL, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
+        try {
+          let r;
+          if (lastFile) {
+            // Trasformazione foto → /api/edit
+            const form = new FormData();
+            form.append("prompt", prompt);
+            form.append("file", lastFile);
+            r = await fetch(EDIT_URL, { method:"POST", body: form });
+          } else {
+            // Generazione da testo → /api/generate
+            r = await fetch(GEN_URL, {
+              method:"POST",
+              headers:{ "Content-Type":"application/json" },
               body: JSON.stringify({ prompt })
             });
-
-            const text = await r.text();
-            let data; try{ data = JSON.parse(text); } catch{ data = { raw: text }; }
-
-            if(!r.ok){
-              const msg = data?.error || `Errore ${r.status}`;
-              showStatus(`❌ ${msg}`, true);
-              imgHint.textContent = "—";
-              imgBox.innerHTML = `<span class="muted">Nessuna immagine</span>`;
-              return;
-            }
-
-            if (data.image_url){
-              imgBox.innerHTML = "";
-              const img = new Image();
-              img.alt = "Immagine generata";
-              img.src = data.image_url; // data:image/png;base64,...
-              img.onload = ()=>{
-                imgBox.appendChild(img);
-                imgHint.textContent = "ok";
-                openFull.href = data.image_url;
-                openFull.style.display = "inline";
-                lastImageUrl = data.image_url;
-                dlBtn.disabled = false;
-                showStatus("✅ Fatto!");
-              };
-              img.onerror = ()=>{
-                imgBox.innerHTML = `<span class="muted">Immagine non caricata</span>`;
-                imgHint.textContent = "errore immagine";
-                showStatus("❌ Errore caricamento immagine", true);
-              };
-            } else {
-              imgBox.innerHTML = `<span class="muted">Nessuna immagine ricevuta</span>`;
-              imgHint.textContent = "—";
-              showStatus("❌ Nessuna immagine ricevuta", true);
-            }
-          } catch(e){
-            console.error(e);
-            showStatus("❌ Errore di rete o server.", true);
-          } finally {
-            lockUI(false);
           }
-        });
 
-        dlBtn.addEventListener("click", ()=>{
-          if(lastImageUrl){ downloadDataUrl("herogen.png", lastImageUrl); }
-        });
+          const text = await r.text();
+          let data; try{ data = JSON.parse(text); } catch { data = { raw: text }; }
 
-        function showStatus(message, isErr=false){
-          status.style.display = "block";
-          status.className = "status " + (isErr? "err":"ok");
-          status.innerHTML = message;
+          if(!r.ok){
+            const msg = data?.error || `Errore ${r.status}`;
+            showStatus(`❌ ${msg}`, true);
+            imgHint.textContent = "—";
+            imgBox.innerHTML = `<span class="muted">Nessuna immagine</span>`;
+            return;
+          }
+
+          const url = data.image_url;
+          if (url){
+            imgBox.innerHTML = "";
+            const img = new Image();
+            img.alt = "Immagine generata";
+            img.src = url;
+            img.onload = ()=>{
+              imgBox.appendChild(img);
+              imgHint.textContent = "ok";
+              openFull.href = url; openFull.style.display = "inline";
+              lastImageUrl = url; dlBtn.disabled = false;
+              showStatus("✅ Fatto!");
+            };
+            img.onerror = ()=>{
+              imgBox.innerHTML = `<span class="muted">Immagine non caricata</span>`;
+              imgHint.textContent = "errore immagine";
+              showStatus("❌ Errore caricamento immagine", true);
+            };
+          } else {
+            imgBox.innerHTML = `<span class="muted">Nessuna immagine ricevuta</span>`;
+            imgHint.textContent = "—";
+            showStatus("❌ Nessuna immagine ricevuta", true);
+          }
+        } catch (e){
+          console.error(e);
+          showStatus("❌ Errore di rete o server.", true);
+        } finally {
+          lockUI(false);
         }
-        function lockUI(disabled){
-          genBtn.disabled = disabled;
-          exBtn.disabled  = disabled;
-          promptEl.disabled = disabled ? true : false;
-          dlBtn.disabled = disabled || !lastImageUrl;
-        }
-      } catch (e) {
-        console.error("Bootstrap error:", e);
-        alert("Errore di inizializzazione della pagina. Apri la console per i dettagli.");
-      }
+      });
+
+      dlBtn.addEventListener("click", ()=>{ if(lastImageUrl) downloadDataUrl("herogen.png", lastImageUrl); });
     });
   })();
   </script>
 </body>
 </html>
+
