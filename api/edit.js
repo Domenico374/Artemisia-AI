@@ -66,16 +66,15 @@ export default withCors(async function handler(req, res) {
     }
 
     // 🖼️ Image Edit con gpt-image-1
-    const resp = await openai.images.edits({
-      model: "gpt-image-1",
-      prompt,
-      image: [
-        await toFile(file.buffer, file.filename || "input.png", {
-          contentType: "image/png",
-        }),
-      ],
-      size: "1024x1024",
-    });
+   const resp = await openai.images.edit({
+  model: "gpt-image-1",
+  prompt,
+  image: await toFile(file.buffer, file.filename || "input.png", {
+    contentType: "image/png",
+  }),
+  size: "1024x1024",
+});
+
 
     const first = resp?.data?.[0] || {};
     const image_b64 = first?.b64_json || null;
