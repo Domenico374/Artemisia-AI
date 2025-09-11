@@ -101,7 +101,18 @@
     const imgHint  = $("#imgHint");
     const promptEl = $("#prompt");
 
-    // Prompt di esempio "epico"
+    // API endpoint
+    const API_URL = (()=>{
+      const isLocal =
+        location.hostname === "localhost" ||
+        location.hostname === "127.0.0.1" ||
+        location.protocol === "file:";
+      return isLocal
+        ? "http://localhost:3000/api/generate"
+        : "/api/generate";
+    })();
+
+    // Prompt di esempio
     const epic = `Un cavaliere in armatura dorata, mantello rosso che sventola al vento, in piedi su una scogliera sopra l’oceano.
 Tiene alta una spada infuocata mentre un drago alato emerge dalle nuvole dietro di lui.
 Atmosfera epica, colori intensi, stile illustrativo realistico.`;
@@ -126,25 +137,25 @@ Atmosfera epica, colori intensi, stile illustrativo realistico.`;
         return;
       }
 
-      // UI → loading
       lockUI(true);
       showStatus(`<span class="spin"></span>Generazione in corso...`);
       jsonHint.textContent = "model: gpt-4o-mini";
       imgHint.textContent  = "model: gpt-image-1";
 
-      // reset box
       jsonPre.innerHTML = `<code>// In attesa di risposta...</code>`;
       imgBox.innerHTML  = `<span class="muted">Attendo immagine...</span>`;
       copyBtn.disabled  = true;
 
       try {
-        const r = await fetch("/api/generate", {
+        const r = await fetch(API_URL, {
           method:"POST",
           headers:{ "Content-Type":"application/json" },
           body: JSON.stringify({ prompt })
         });
 
-        const data = await r.json();
+        const text = await r.text();
+        let data;
+        try { data = JSON.parse(text); } catch { data = { raw: text }; }
 
         if(!r.ok){
           const msg = data?.error || `Errore ${r.status}`;
@@ -154,22 +165,16 @@ Atmosfera epica, colori intensi, stile illustrativo realistico.`;
           return;
         }
 
-        // JSON pretty
         const pretty = JSON.stringify(data.sheet || data, null, 2);
         jsonPre.innerHTML = `<code>${escapeHTML(pretty)}</code>`;
         copyBtn.disabled = false;
 
-        // 🔧 nuova gestione immagine
-        const src =
-          (data.image_url ? `${data.image_url}${data.image_url.includes('?') ? '&' : '?'}t=${Date.now()}` : null) ||
-          data.image_data_url ||
-          null;
-
-        if (src) {
+        // Mostra immagine
+        if (data.image_url) {
           imgBox.innerHTML = "";
           const img = new Image();
           img.alt = "Eroe generato";
-          img.src = src;
+          img.src = data.image_url;
           img.onload = ()=> {
             imgBox.appendChild(img);
             imgHint.textContent = "ok";
@@ -213,4 +218,3 @@ Atmosfera epica, colori intensi, stile illustrativo realistico.`;
   </script>
 </body>
 </html>
-
