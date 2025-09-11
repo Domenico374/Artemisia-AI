@@ -91,12 +91,23 @@ export default withCors(async function handler(req, res) {
 
     console.log("🚀 Chiamata a OpenAI...");
     
+    // Crea il file con estensione corretta
+    const extension = mime === "image/jpeg" ? "jpg" : mime.split("/")[1];
+    const filename = `input.${extension}`;
+    
+    console.log(`📁 Creando file: ${filename} con MIME: ${mime}`);
+    
+    const fileObject = await toFile(buffer, filename, { type: mime });
+    console.log(`📋 File object creato:`, {
+      name: fileObject.name,
+      type: fileObject.type,
+      size: fileObject.size
+    });
+    
     const resp = await openai.images.edit({
       model: "dall-e-2", // DALL-E 2 per image editing
       prompt: prompt.trim(),
-      image: await toFile(buffer, `input.${mime.split("/")[1]}`, {
-        type: mime,
-      }),
+      image: fileObject,
       size: "1024x1024",
       n: 1,
     });
@@ -158,3 +169,4 @@ export default withCors(async function handler(req, res) {
     });
   }
 });
+     
