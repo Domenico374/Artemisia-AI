@@ -3,7 +3,7 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-// Middleware CORS
+// --- Middleware CORS ---
 const withCors = (handler) => async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
@@ -26,18 +26,19 @@ export default withCors(async function handler(req, res) {
 
   try {
     const { prompt } = req.body || {};
-    if (!prompt || prompt.trim().length < 10) {
+    if (!prompt || typeof prompt !== "string" || prompt.trim().length < 10) {
       return res.status(400).json({ error: "Prompt mancante o troppo corto" });
     }
 
-    // 1) Genera la scheda JSON
+    // 1) Genera la scheda JSON (forza JSON valido)
     const sys =
       "Sei un generatore di personaggi fantasy. Rispondi SOLO con JSON valido " +
-      "che abbia esattamente queste chiavi: " +
+      "con esattamente queste chiavi: " +
       "nome, razza_classe, tratti (array), background, abilita (array), equipaggiamento (array).";
 
     const chat = await openai.chat.completions.create({
       model: "gpt-4o-mini",
+      response_format: { type: "json_object" },
       messages: [
         { role: "system", content: sys },
         { role: "user", content: prompt },
@@ -45,12 +46,9 @@ export default withCors(async function handler(req, res) {
       temperature: 0.7,
     });
 
-    let raw = chat.choices?.[0]?.message?.content?.trim() || "{}";
-    raw = raw.replace(/^```json\s*|\s*```$/g, "");
-
     let sheet;
     try {
-      sheet = JSON.parse(raw);
+      sheet = JSON.parse(chat.choices?.[0]?.message?.content || "{}");
     } catch {
       sheet = {
         nome: "Eroe senza nome",
@@ -62,29 +60,36 @@ export default withCors(async function handler(req, res) {
       };
     }
 
-   // 2) Genera immagine (usa size valido)
-const imgPrompt =
-  `Illustrazione in stile fumetto fantasy: ${sheet.razza_classe || "eroe"} ` +
-  `con ${Array.isArray(sheet.equipaggiamento) ? sheet.equipaggiamento.join(", ") : "equipaggiamento iconico"}. ` +
-  `Scenario fantasy coerente, colori bilanciati.`;
+    // 2) Genera immagine
+    const imgPrompt =
+      `Illustrazione in stile fumetto fantasy: ${sheet.razza_classe || "eroe"} ` +
+      `con ${Array.isArray(sheet.equipaggiamento) && sheet.equipaggiamento.length
+        ? sheet.equipaggiamento.join(", ")
+        : "equipaggiamento iconico"
+      }. ` +
+      `Scenario fantasy coerente, colori bilanciati.`;
 
-const img = await openai.images.generate({
-  model: "gpt-image-1",
-  prompt: imgPrompt,
-  size: "1024x1024" // valori supportati: 1024x1024 | 1024x1536 | 1536x1024 | auto
+    const img = await openai.images.generate({
+      model: "gpt-image-1",
+      prompt: imgPrompt,
+      size: "1024x1024",
+    });
+
+    const first = img?.data?.[0] || {};
+    const image_b64 = first?.b64_json || null;
+    const image_url = image_b64
+      ? `data:image/png;base64,${image_b64}`
+      : (first?.url || null);
+
+    return res.status(200).json({
+      sheet,
+      image_url,
+      image_meta: { revised_prompt: first?.revised_prompt || null },
+    });
+  } catch (err) {
+    console.error("HeroGen API error:", err);
+    const status = err?.status || 500;
+    const msg = err?.message || "Errore interno del server";
+    return res.status(status).json({ error: msg });
+  }
 });
-
-// Normalizza output immagine: preferisci URL, fallback a data URL da b64_json
-const first = img?.data?.[0] || {};
-let image_url = first?.url || null;
-if (!image_url && first?.b64_json) {
-  image_url = `data:image/png;base64,${first.b64_json}`;
-}
-
-// Ritorna anche meta per debug
-return res.status(200).json({
-  sheet,
-  image_url,
-  image_meta: first
-});
-
