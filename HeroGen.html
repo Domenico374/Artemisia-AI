@@ -43,15 +43,15 @@
     <!-- INPUT -->
     <div class="card pad">
       <label for="prompt"><strong>Scrivi il tuo prompt:</strong></label>
-      <textarea id="prompt" placeholder="Es.: Trasforma in stile cartoon con sfondo città notturna..."></textarea>
+      <textarea id="prompt" placeholder="Es.: Trasforma in stile cartoon moderno, colori brillanti e contorni morbidi..."></textarea>
 
       <div class="row">
         <button class="btn" id="genBtn" title="Se carichi una foto farà la trasformazione, altrimenti genera da testo">Genera / Trasforma</button>
-        <button class="btn ghost" id="exBtn">Usa esempio epico</button>
+        <button class="btn ghost" id="exBtn">Usa esempio cartoon</button>
         <button class="btn secondary" id="dlBtn" disabled>Scarica PNG</button>
 
         <!-- Upload -->
-        <input id="fileInput" type="file" accept="image/*" style="display:none" />
+        <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp" style="display:none" />
         <button class="btn ghost" id="uploadBtn" title="Carica una foto da trasformare">Trasforma da foto</button>
         <span id="fileName" class="muted chip" style="display:none"></span>
       </div>
@@ -91,8 +91,6 @@
       const fileInput= $("#fileInput");
       const fileName = $("#fileName");
 
-      if(!genBtn) return;
-
       // Endpoints
       const BASE = (()=>{
         const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
@@ -101,14 +99,23 @@
       const GEN_URL  = `${BASE}/api/generate`;
       const EDIT_URL = `${BASE}/api/edit`;
 
-      // Example
-      const epic = `Turn this photo into a clean cartoon illustration: bold outlines, flat vibrant colors, simple background with a night city skyline and neon lights. If no photo is provided, generate the image from scratch with the same style.`;
+      // Esempio cartoon moderno
+      const example = `Trasforma questa foto in stile cartoon moderno, con colori brillanti, contorni morbidi e look da animazione digitale. Mantieni il volto riconoscibile e pulisci lo sfondo.`;
+      exBtn.addEventListener("click", ()=>{ promptEl.value = example; promptEl.focus(); });
 
-      exBtn.addEventListener("click", ()=>{ promptEl.value = epic; promptEl.focus(); });
+      // Lettura file -> Data URL (base64)
+      function fileToDataURL(file) {
+        return new Promise((resolve, reject) => {
+          const fr = new FileReader();
+          fr.onload = () => resolve(fr.result); // "data:image/png;base64,...."
+          fr.onerror = reject;
+          fr.readAsDataURL(file);
+        });
+      }
 
       // Upload
-      uploadBtn.addEventListener("click", ()=> fileInput.click());
       let lastFile = null;
+      uploadBtn.addEventListener("click", ()=> fileInput.click());
       fileInput.addEventListener("change", ()=>{
         const f = fileInput.files?.[0] || null;
         lastFile = f;
@@ -142,14 +149,13 @@
 
       let lastImageUrl = null;
 
-      // Main action
+      // Azione principale
       genBtn.addEventListener("click", async ()=>{
         const prompt = (promptEl.value || "").trim();
         if (prompt.length < 3) return showStatus("Inserisci un prompt.", true);
 
         lockUI(true);
         showStatus(`<span class="spin"></span>Elaborazione...`);
-        imgHint.textContent = lastFile ? "edit: gpt-image-1" : "generate: gpt-image-1";
         imgBox.innerHTML = `<span class="muted">Attendo immagine...</span>`;
         openFull.style.display = "none"; openFull.removeAttribute("href");
         dlBtn.disabled = true; lastImageUrl = null;
@@ -157,13 +163,17 @@
         try {
           let r;
           if (lastFile) {
-            // Trasformazione foto → /api/edit
-            const form = new FormData();
-            form.append("prompt", prompt);
-            form.append("file", lastFile);
-            r = await fetch(EDIT_URL, { method:"POST", body: form });
+            // Trasformazione foto → /api/edit (JSON con data URL)
+            const dataUrl = await fileToDataURL(lastFile);
+            imgHint.textContent = "edit: gpt-image-1";
+            r = await fetch(EDIT_URL, {
+              method:"POST",
+              headers:{ "Content-Type":"application/json" },
+              body: JSON.stringify({ prompt, image_data_url: dataUrl })
+            });
           } else {
             // Generazione da testo → /api/generate
+            imgHint.textContent = "generate: gpt-image-1";
             r = await fetch(GEN_URL, {
               method:"POST",
               headers:{ "Content-Type":"application/json" },
@@ -177,7 +187,6 @@
           if(!r.ok){
             const msg = data?.error || `Errore ${r.status}`;
             showStatus(`❌ ${msg}`, true);
-            imgHint.textContent = "—";
             imgBox.innerHTML = `<span class="muted">Nessuna immagine</span>`;
             return;
           }
@@ -190,19 +199,16 @@
             img.src = url;
             img.onload = ()=>{
               imgBox.appendChild(img);
-              imgHint.textContent = "ok";
               openFull.href = url; openFull.style.display = "inline";
               lastImageUrl = url; dlBtn.disabled = false;
               showStatus("✅ Fatto!");
             };
             img.onerror = ()=>{
               imgBox.innerHTML = `<span class="muted">Immagine non caricata</span>`;
-              imgHint.textContent = "errore immagine";
               showStatus("❌ Errore caricamento immagine", true);
             };
           } else {
             imgBox.innerHTML = `<span class="muted">Nessuna immagine ricevuta</span>`;
-            imgHint.textContent = "—";
             showStatus("❌ Nessuna immagine ricevuta", true);
           }
         } catch (e){
@@ -219,4 +225,3 @@
   </script>
 </body>
 </html>
-
