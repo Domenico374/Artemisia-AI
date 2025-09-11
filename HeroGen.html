@@ -14,7 +14,7 @@
     }
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:var(--page);color:var(--ink)}
-    .wrap{max-width:980px;margin:40px auto;padding:0 16px}
+    .wrap{max-width:1080px;margin:40px auto;padding:0 16px}
     h1{display:flex;align-items:center;gap:10px;margin:0 0 14px}
     h1 small{font-weight:600;color:var(--muted);font-size:.9rem}
     .card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);border:1px solid #e5e7eb}
@@ -28,13 +28,29 @@
     .status{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:.95rem}
     .ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
     .err{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
-    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+
+    /* 🔧 immagine più grande della scheda */
+    .grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:16px}
     @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
     pre{margin:0;max-height:520px;overflow:auto;background:#0b1220;color:#e6edf3;padding:14px;border-radius:12px}
     code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace}
     .stack{display:flex;flex-direction:column;gap:10px}
-    .imgBox{display:grid;place-items:center;background:#0b1b2a;border-radius:12px;min-height:260px;padding:10px;border:1px solid #233041}
-    .imgBox img{max-width:100%;border-radius:10px;display:block}
+
+    /* 🔧 box immagine alto e immagine a larghezza piena */
+    .imgBox{
+      display:grid;place-items:center;background:#0b1b2a;border-radius:12px;
+      min-height:600px; /* era 260px */
+      padding:10px;border:1px solid #233041
+    }
+    .imgBox img{
+      width:100%; /* forza larghezza piena */
+      height:auto;
+      max-height:100%;
+      object-fit:contain;
+      border-radius:10px;display:block
+    }
+
     .bar{display:flex;gap:8px;align-items:center;justify-content:space-between}
     .right{display:flex;gap:8px;align-items:center}
     .muted{color:var(--muted);font-size:.92rem}
@@ -77,11 +93,12 @@
       <div class="card pad stack">
         <div class="bar">
           <strong>🖼️ Immagine</strong>
-          <span class="muted" id="imgHint">—</span>
+          <a id="openFull" href="#" target="_blank" class="muted" style="display:none">Apri grande ↗</a>
         </div>
         <div class="imgBox" id="imgBox">
           <span class="muted">Nessuna immagine ancora</span>
         </div>
+        <span class="muted" id="imgHint">—</span>
       </div>
     </div>
   </div>
@@ -100,6 +117,7 @@
     const jsonHint = $("#jsonHint");
     const imgHint  = $("#imgHint");
     const promptEl = $("#prompt");
+    const openFull = $("#openFull");
 
     // API endpoint
     const API_URL = (()=>{
@@ -145,6 +163,8 @@ Atmosfera epica, colori intensi, stile illustrativo realistico.`;
       jsonPre.innerHTML = `<code>// In attesa di risposta...</code>`;
       imgBox.innerHTML  = `<span class="muted">Attendo immagine...</span>`;
       copyBtn.disabled  = true;
+      openFull.style.display = "none";
+      openFull.removeAttribute("href");
 
       try {
         const r = await fetch(API_URL, {
@@ -169,7 +189,7 @@ Atmosfera epica, colori intensi, stile illustrativo realistico.`;
         jsonPre.innerHTML = `<code>${escapeHTML(pretty)}</code>`;
         copyBtn.disabled = false;
 
-        // Mostra immagine
+        // Mostra immagine grande
         if (data.image_url) {
           imgBox.innerHTML = "";
           const img = new Image();
@@ -178,14 +198,18 @@ Atmosfera epica, colori intensi, stile illustrativo realistico.`;
           img.onload = ()=> {
             imgBox.appendChild(img);
             imgHint.textContent = "ok";
+            openFull.href = data.image_url;
+            openFull.style.display = "inline";
           };
           img.onerror = ()=> {
             imgBox.innerHTML = `<span class="muted">Immagine non caricata</span>`;
             imgHint.textContent = "errore immagine";
+            openFull.style.display = "none";
           };
         } else {
           imgBox.innerHTML = `<span class="muted">Nessuna immagine ricevuta</span>`;
           imgHint.textContent = "—";
+          openFull.style.display = "none";
         }
 
         showStatus("✅ Fatto!");
@@ -218,3 +242,5 @@ Atmosfera epica, colori intensi, stile illustrativo realistico.`;
   </script>
 </body>
 </html>
+
+
