@@ -343,6 +343,17 @@
       window.simulateRender = async function(text, ratio){
         const m = { '3-4':[768,1024], '9-16':[720,1280], '4-3':[1280,960], '16-9':[1280,720], '1-1':[1024,1024] };
         const [w,h] = m[ratio] || m['1-1'];
+
+        // Se il prompt parla di gatti/kitten -> usa un'immagine reale di test
+        if (/(gatt|cat|kitten)/i.test(text)) {
+          const res = await fetch(`https://placekitten.com/${w}/${h}?_=${Date.now()}`);
+          if (!res.ok) throw new Error('placekitten non raggiungibile');
+          const blob = await res.blob();
+          // Restituisco un ObjectURL, così possiamo scaricare e mettere in cronologia
+          return URL.createObjectURL(blob);
+        }
+
+        // Altrimenti, fallback mock (canvas con gradiente e testo)
         const c = document.createElement('canvas'); c.width=w; c.height=h;
         const ctx = c.getContext('2d');
         const g = ctx.createLinearGradient(0,0,w,h);
@@ -354,7 +365,7 @@
         ctx.fillStyle = '#111827'; ctx.font = Math.floor(h*0.035)+'px Inter, sans-serif';
         const clipped = text.length>120 ? text.slice(0,117)+'…' : text;
         ctx.fillText(clipped, 24, h*0.89);
-        await new Promise(r=>setTimeout(r, 1200 + Math.random()*800));
+        await new Promise(r=>setTimeout(r, 600));
         return c.toDataURL('image/png');
       }
     }
