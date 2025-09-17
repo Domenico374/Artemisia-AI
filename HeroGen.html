@@ -319,10 +319,38 @@
 
     function fileToDataURL(file) {
       return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Imposta dimensioni canvas (max 1024px per lato per ottimizzare)
+            const maxSize = 1024;
+            let { width, height } = img;
+            
+            if (width > maxSize || height > maxSize) {
+              const ratio = Math.min(maxSize / width, maxSize / height);
+              width *= ratio;
+              height *= ratio;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Disegna l'immagine sul canvas (converte automaticamente in RGBA)
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Restituisci come PNG (formato RGBA supportato da OpenAI)
+            const dataUrl = canvas.toDataURL('image/png', 0.9);
+            resolve(dataUrl);
+          } catch (error) {
+            reject(new Error('Errore nella conversione dell\'immagine: ' + error.message));
+          }
+        };
+        
+        img.onerror = () => reject(new Error('Impossibile caricare l\'immagine'));
+        img.src = URL.createObjectURL(file);
       });
     }
 
@@ -449,10 +477,12 @@
       try {
         let response;
         
-        if (lastFile) {
-          // Trasformazione immagine
-          showStatus('🎨 Trasformando la tua immagine...');
+        try {
+          // Mostra feedback durante la conversione
+          showStatus('🔄 Preparando l\'immagine per la trasformazione...');
           const dataUrl = await fileToDataURL(lastFile);
+          
+          showStatus('🎨 Trasformando la tua immagine...');
           
           response = await fetch(EDIT_URL, {
             method: 'POST',
@@ -462,6 +492,8 @@
               image_data_url: dataUrl
             })
           });
+        } catch (conversionError) {
+          throw new Error('Errore nella preparazione dell\'immagine: ' + conversionError.message);
         } else {
           // Generazione da testo
           showStatus('✨ Generando la tua immagine...');
