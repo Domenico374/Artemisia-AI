@@ -477,23 +477,25 @@
       try {
         let response;
         
-        try {
-          // Mostra feedback durante la conversione
-          showStatus('🔄 Preparando l\'immagine per la trasformazione...');
-          const dataUrl = await fileToDataURL(lastFile);
-          
-          showStatus('🎨 Trasformando la tua immagine...');
-          
-          response = await fetch(EDIT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              prompt: prompt,
-              image_data_url: dataUrl
-            })
-          });
-        } catch (conversionError) {
-          throw new Error('Errore nella preparazione dell\'immagine: ' + conversionError.message);
+        if (lastFile) {
+          try {
+            // Mostra feedback durante la conversione
+            showStatus('🔄 Preparando l\'immagine per la trasformazione...');
+            const dataUrl = await fileToDataURL(lastFile);
+            
+            showStatus('🎨 Trasformando la tua immagine...');
+            
+            response = await fetch(EDIT_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                prompt: prompt,
+                image_data_url: dataUrl
+              })
+            });
+          } catch (conversionError) {
+            throw new Error('Errore nella preparazione dell\'immagine: ' + conversionError.message);
+          }
         } else {
           // Generazione da testo
           showStatus('✨ Generando la tua immagine...');
