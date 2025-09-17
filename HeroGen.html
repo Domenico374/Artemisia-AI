@@ -1,663 +1,421 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HeroGen — Generatore & Trasformatore di immagini</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <title>Artemisia AI — Generatore Immagini AI</title>
+  <link rel="icon" href="logo-artemisia.png" />
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --brand-primary: #4f46e5;
-      --brand-secondary: #7c3aed;
-      --success: #10b981;
-      --error: #ef4444;
-      --warning: #f59e0b;
-      --ink: #0f172a;
-      --ink-light: #334155;
-      --muted: #64748b;
-      --muted-light: #94a3b8;
-      --page: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --card: rgba(255, 255, 255, 0.95);
-      --card-border: rgba(255, 255, 255, 0.2);
-      --input-bg: #fafbfc;
-      --input-border: #e2e8f0;
-      --input-focus: #4f46e5;
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-      --shadow-lg: 0 25px 80px rgba(0, 0, 0, 0.15);
-      --radius: 16px;
-      --radius-lg: 24px;
+      --bg-start: #0f172a; /* slate-900 */
+      --bg-end: #1e1b4b;   /* indigo-950 */
+      --card: #0b1020cc;   /* glass */
+      --text: #e2e8f0;     /* slate-200 */
+      --muted: #94a3b8;    /* slate-400 */
+      --brand: #8b5cf6;  /* violet-500 */    /* blue-400 */
+      --brand-2: #eab308; /* amber-500 */  /* violet-400 */
+      --accent: #eab308;  /* gold accent */   /* cyan-400 */
+      --ring: rgba(96, 165, 250, .35);
+      --ok: #34d399;       /* emerald-400 */
+      --warn: #f59e0b;     /* amber-500 */
+      --err: #f87171;      /* red-400 */
+      --surface: rgba(255,255,255,.06);
+      --border: rgba(255,255,255,.14);
+      --chip: rgba(148,163,184,.16);
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
     }
-
-    * { box-sizing: border-box; }
-    
-    body {
-      margin: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      background: var(--page);
-      color: var(--ink);
-      line-height: 1.6;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+    [data-theme="light"]{
+      --bg-start:#e2e8f0; --bg-end:#c7d2fe;
+      --card:#ffffffee; --text:#0f172a; --muted:#475569; --surface:#f8fafc;
+      --border: rgba(2,6,23,.12); --shadow: 0 20px 60px rgba(2,6,23,.12);
+      --chip: rgba(2,6,23,.06);
     }
-
-    .wrap {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 40px 20px;
-      animation: fadeInUp 0.8s ease-out;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background: radial-gradient(1000px 600px at -10% -10%, #0ea5e980, transparent 60%),
+                  radial-gradient(800px 500px at 110% 10%, #a78bfa66, transparent 60%),
+                  linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      overflow-x:hidden;
     }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .container{max-width:1200px;margin:0 auto;padding:24px}
 
     /* Header */
-    h1 {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin: 0 0 40px;
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: white;
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    }
+    .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;box-shadow:var(--shadow)}
+    .title-wrap .title{font-size:28px;font-weight:800;letter-spacing:.2px}
+    .title-wrap .subtitle{font-size:14px;color:var(--muted)}
+    .actions{display:flex;align-items:center;gap:8px}
+    .icon-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer;transition:all .2s ease}
+    .icon-btn:hover{transform:translateY(-1px);border-color:var(--accent)}
 
-    h1::before {
-      content: "🛡️";
-      font-size: 3rem;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-      animation: float 3s ease-in-out infinite;
-    }
+    /* Card */
+    .card{background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-8px); }
-    }
+    /* Grid layout */
+    .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}
+    @media(max-width:1024px){.grid{grid-template-columns:1fr;}}
 
-    h1 small {
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 1.1rem;
-      margin-left: 8px;
-    }
+    /* Prompt */
+    .section-title{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:10px}
+    .section-title .emoji{font-size:20px}
 
-    /* Cards */
-    .card {
-      background: var(--card);
-      backdrop-filter: blur(20px);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--card-border);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+    .chip{padding:8px 12px;border:1px solid var(--border);background:var(--chip);border-radius:999px;font-size:12px;cursor:pointer;user-select:none}
+    .chip.active{outline:2px solid var(--ring);border-color:transparent}
 
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    }
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+    .select,.slider{display:flex;align-items:center;gap:8px;border:1px solid var(--border);background:var(--surface);padding:10px 12px;border-radius:12px}
+    .select select{background:transparent;border:none;color:var(--text)}
+    .select select:focus{outline:none}
+    .slider input{accent-color:var(--brand)}
 
-    .pad {
-      padding: 32px;
+    .textarea{position:relative}
+    textarea{
+      width:100%;min-height:140px;resize:vertical;border:2px solid transparent;border-radius:16px;padding:16px 18px;background:var(--surface);color:var(--text);line-height:1.6
     }
+    textarea:focus{outline:none;box-shadow:0 0 0 4px var(--ring);border-color:transparent}
+    .counter{position:absolute;right:12px;bottom:8px;font-size:12px;color:var(--muted)}
 
-    /* Form Elements */
-    label {
-      display: block;
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 12px;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:.2s;background:var(--surface);color:var(--text);text-decoration:none}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));border-color:transparent;color:#fff;box-shadow:0 10px 24px rgba(96,165,250,.35)}
+    .btn.primary:hover{transform:translateY(-1px)}
+    .btn.outline:hover{border-color:var(--accent)}
 
-    label::before {
-      content: "✨";
-      font-size: 1.2rem;
-    }
+    /* Preview */
+    .frame{position:relative;background:linear-gradient(135deg,#0b1020,#1f2937);border:2px solid var(--border);border-radius:18px;display:grid;place-items:center;overflow:hidden}
+    .frame.ratio-1-1{aspect-ratio:1/1}
+    .frame.ratio-3-4{aspect-ratio:3/4}
+    .frame.ratio-4-3{aspect-ratio:4/3}
+    .frame.ratio-16-9{aspect-ratio:16/9}
+    .frame.ratio-9-16{aspect-ratio:9/16}
+    .frame img{max-width:100%;max-height:100%;display:none}
+    .placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#cbd5e1;opacity:.9;text-align:center;padding:28px}
+    .spinner{width:54px;height:54px;border-radius:50%;border:4px solid #ffffff30;border-top-color:var(--brand);animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .progress{position:absolute;left:0;bottom:0;height:4px;width:0;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .2s}
 
-    textarea {
-      width: 100%;
-      min-height: 140px;
-      padding: 18px;
-      border-radius: var(--radius);
-      border: 2px solid var(--input-border);
-      font: inherit;
-      font-size: 16px;
-      line-height: 1.6;
-      background: var(--input-bg);
-      transition: all 0.3s ease;
-      resize: vertical;
-    }
+    /* History */
+    .history{margin-top:18px}
+    .history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+    .card-thumb{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    .card-thumb img{display:block;width:100%;height:140px;object-fit:cover}
+    .thumb-actions{display:flex;gap:6px;position:absolute;right:8px;bottom:8px}
+    .small{font-size:12px;color:var(--muted)}
 
-    textarea:focus {
-      outline: none;
-      border-color: var(--input-focus);
-      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-      background: white;
-      transform: translateY(-1px);
-    }
+    /* Tips */
+    .tips{margin-top:20px;padding:18px;border-left:3px solid var(--brand);background:linear-gradient(0deg,transparent,rgba(96,165,250,.08));border-radius:12px}
 
-    textarea::placeholder {
-      color: var(--muted-light);
-    }
-
-    /* Buttons */
-    .row {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-top: 24px;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 14px;
-      padding: 14px 24px;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      position: relative;
-      overflow: hidden;
-      min-height: 48px;
-    }
-
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s;
-    }
-
-    .btn:hover::before {
-      left: 100%;
-    }
-
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    .btn:not(:disabled):hover {
-      transform: translateY(-2px);
-    }
-
-    .btn:not(:disabled):active {
-      transform: translateY(0);
-    }
-
-    /* Primary Button */
-    .btn:not(.secondary):not(.ghost) {
-      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
-      color: white;
-      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
-    }
-
-    .btn:not(.secondary):not(.ghost):not(:disabled):hover {
-      box-shadow: 0 12px 35px rgba(79, 70, 229, 0.4);
-    }
-
-    /* Secondary Button */
-    .btn.secondary {
-      background: linear-gradient(135deg, #1e293b, #334155);
-      color: white;
-      box-shadow: 0 8px 25px rgba(30, 41, 59, 0.3);
-    }
-
-    .btn.secondary:not(:disabled):hover {
-      box-shadow: 0 12px 35px rgba(30, 41, 59, 0.4);
-    }
-
-    /* Ghost Button */
-    .btn.ghost {
-      background: rgba(255, 255, 255, 0.9);
-      color: var(--brand-primary);
-      border: 2px solid var(--input-border);
-      backdrop-filter: blur(10px);
-    }
-
-    .btn.ghost:not(:disabled):hover {
-      background: white;
-      border-color: var(--brand-primary);
-      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15);
-    }
-
-    /* Status Messages */
-    .status {
-      margin-top: 20px;
-      padding: 16px 20px;
-      border-radius: var(--radius);
-      font-size: 15px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      animation: slideIn 0.3s ease-out;
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-20px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .status.ok {
-      background: rgba(16, 185, 129, 0.1);
-      color: #065f46;
-      border: 2px solid rgba(16, 185, 129, 0.2);
-    }
-
-    .status.err {
-      background: rgba(239, 68, 68, 0.1);
-      color: #991b1b;
-      border: 2px solid rgba(239, 68, 68, 0.2);
-    }
-
-    /* Utility Classes */
-    .muted {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .chip {
-      background: rgba(255, 255, 255, 0.9);
-      border: 2px dashed var(--input-border);
-      border-radius: 10px;
-      padding: 8px 14px;
-      font-size: 14px;
-      color: var(--ink-light);
-      backdrop-filter: blur(10px);
-    }
-
-    /* Image Viewer */
-    .viewer {
-      margin-top: 32px;
-    }
-
-    .bar {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      padding: 0 4px;
-    }
-
-    .bar strong {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: white;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .bar strong::before {
-      content: "🖼️";
-      font-size: 1.3rem;
-    }
-
-    .bar a {
-      color: rgba(255, 255, 255, 0.8);
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      padding: 6px 12px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-    }
-
-    .bar a:hover {
-      color: white;
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-1px);
-    }
-
-    .imgBox {
-      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-      border-radius: var(--radius-lg);
-      min-height: 500px;
-      padding: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: var(--shadow-lg);
-    }
-
-    .imgBox::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23ffffff' fill-opacity='0.03'%3e%3cpath d='m36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e") repeat;
-      opacity: 0.4;
-    }
-
-    .imgBox > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .imgBox img {
-      width: 100%;
-      height: auto;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: 12px;
-      display: block;
-      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
-      transition: all 0.3s ease;
-    }
-
-    .imgBox img:hover {
-      transform: scale(1.02);
-    }
-
-    .imgBox .muted {
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 1.1rem;
-      font-weight: 500;
-      text-align: center;
-      padding: 60px 20px;
-    }
-
-    #imgHint {
-      margin-top: 12px;
-      text-align: center;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 0.85rem;
-      font-weight: 500;
-    }
-
-    /* Loading Spinner */
-    .spin {
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(79, 70, 229, 0.3);
-      border-top-color: var(--brand-primary);
-      border-radius: 50%;
-      display: inline-block;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Mobile Responsiveness */
-    @media (max-width: 768px) {
-      .wrap {
-        padding: 20px 16px;
-      }
-      
-      h1 {
-        font-size: 2rem;
-        gap: 12px;
-      }
-      
-      h1::before {
-        font-size: 2.5rem;
-      }
-      
-      .pad {
-        padding: 24px;
-      }
-      
-      .row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 12px;
-      }
-      
-      .btn {
-        justify-content: center;
-        padding: 16px 24px;
-      }
-      
-      .imgBox {
-        min-height: 400px;
-        padding: 16px;
-      }
-    }
-
-    /* Smooth transitions for dynamic content */
-    [style*="display: none"] {
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    [style*="display: block"], [style*="display: inline"], [style*="display: inline-block"] {
-      opacity: 1;
-      transition: opacity 0.3s ease;
-    }
+    /* Accessibility helpers */
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:12px}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>HeroGen <small>— Generatore & Trasformatore di immagini</small></h1>
-
-    <!-- INPUT -->
-    <div class="card pad">
-      <label for="prompt">Scrivi il tuo prompt:</label>
-      <textarea id="prompt" placeholder="Es.: Trasforma in stile cartoon moderno, colori brillanti e contorni morbidi..."></textarea>
-
-      <div class="row">
-        <button class="btn" id="genBtn" title="Se carichi una foto farà la trasformazione, altrimenti genera da testo">
-          🎨 Genera / Trasforma
-        </button>
-        <button class="btn ghost" id="exBtn">
-          📝 Usa esempio cartoon
-        </button>
-        <button class="btn secondary" id="dlBtn" disabled>
-          📥 Scarica PNG
-        </button>
-
-        <!-- Upload -->
-        <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp" style="display:none" />
-        <button class="btn ghost" id="uploadBtn" title="Carica una foto da trasformare">
-          📸 Trasforma da foto
-        </button>
-        <span id="fileName" class="muted chip" style="display:none"></span>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div class="logo"><img src="logo-artemisia.png" alt="Artemisia AI logo" /></div>
+        <div class="title-wrap">
+          <div class="title">Artemisia AI</div>
+          <div class="subtitle">Generatore & Trasformatore di immagini AI</div>
+        </div>
       </div>
-
-      <div id="status" class="status" style="display:none"></div>
-    </div>
-
-    <!-- IMMAGINE -->
-    <div class="viewer">
-      <div class="bar">
-        <strong>Immagine generata</strong>
-        <a id="openFull" href="#" target="_blank" style="display:none">Apri grande ↗</a>
+      <div class="actions">
+        <button class="icon-btn" id="themeToggle" aria-label="Cambia tema">🌗</button>
+        <button class="icon-btn" id="helpBtn" aria-haspopup="dialog" title="Guida rapida">❔</button>
       </div>
-      <div class="imgBox" id="imgBox">
-        <span class="muted">Nessuna immagine ancora<br><em>Scrivi un prompt e clicca "Genera" per iniziare</em></span>
-      </div>
-      <div id="imgHint">—</div>
-    </div>
+    </header>
+
+    <main class="grid" aria-live="polite">
+      <!-- LEFT: prompt -->
+      <section class="card">
+        <div class="section-title"><span class="emoji">✨</span><span>Scrivi il tuo prompt</span></div>
+
+        <div class="chips" id="styleChips" aria-label="Stili suggeriti">
+          <span class="chip" data-insert="in stile cartoon moderno">Cartoon</span>
+          <span class="chip" data-insert="fotorealistico, illuminazione cinematografica">Fotorealistico</span>
+          <span class="chip" data-insert="in stile acquerello morbido">Acquerello</span>
+          <span class="chip" data-insert="in stile Studio Ghibli">Ghibli</span>
+          <span class="chip" data-insert="in stile pittorico biblico">Biblico</span>
+          <span class="chip" data-insert="vintage anni '90, grana leggera">Vintage '90</span>
+        </div>
+
+        <div class="controls" role="group" aria-label="Impostazioni">
+          <div class="select" title="Formato">
+            <label class="sr-only" for="ratio">Formato</label>
+            <select id="ratio">
+              <option value="1-1">1:1 (Quadrato)</option>
+              <option value="3-4">3:4 (Ritratto)</option>
+              <option value="9-16">9:16 (Verticale)</option>
+              <option value="4-3">4:3 (Orizz.)</option>
+              <option value="16-9">16:9 (Wide)</option>
+            </select>
+          </div>
+          <div class="slider" title="Creatività">
+            <label for="creativity">Creatività</label>
+            <input id="creativity" type="range" min="0" max="100" value="55" />
+          </div>
+          <div class="slider" title="Dettaglio">
+            <label for="detail">Dettaglio</label>
+            <input id="detail" type="range" min="0" max="100" value="70" />
+          </div>
+        </div>
+
+        <div class="textarea">
+          <label class="sr-only" for="prompt">Prompt</label>
+          <textarea id="prompt" placeholder="Es.: Un castello magico su una collina, nuvole colorate al tramonto, in stile acquerello con luce dorata..."></textarea>
+          <div class="counter" id="counter">0/400</div>
+        </div>
+
+        <div class="btns">
+          <button class="btn primary" id="generateBtn">🎨 Genera / Trasforma (⌘↵)</button>
+          <button class="btn outline" id="surpriseBtn">🎲 Ispirami</button>
+          <button class="btn outline" id="uploadBtn">📸 Da foto</button>
+          <button class="btn outline" id="downloadBtn" disabled>📥 Scarica PNG</button>
+        </div>
+      </section>
+
+      <!-- RIGHT: preview -->
+      <section class="card">
+        <div class="section-title"><span class="emoji">🖼️</span><span>Anteprima</span></div>
+        <div class="frame ratio-1-1" id="frame">
+          <img id="resultImg" alt="Risultato generazione" />
+          <div class="placeholder" id="placeholder">
+            <div class="spinner" id="spinner" style="display:none"></div>
+            <div class="ph-content">
+              <div style="font-weight:700;opacity:.9">Nessuna immagine ancora</div>
+              <div class="small">Scrivi un prompt e premi Genera</div>
+            </div>
+          </div>
+          <div class="progress" id="progress"></div>
+        </div>
+
+        <div class="history">
+          <div class="section-title"><span class="emoji">🕘</span><span>Cronologia (ultime 6)</span></div>
+          <div class="history-grid" id="historyGrid"></div>
+        </div>
+
+        <div class="tips">
+          <strong>Suggerimenti rapidi</strong>
+          <ul style="margin:.4rem 0 0 1.1rem; line-height:1.75">
+            <li>Specificare stile, atmosfera e illuminazione migliora i risultati.</li>
+            <li>Usa riferimenti: “in stile Studio Ghibli / acquerello / fotografia analogica”.</li>
+            <li>Aggiungi elementi compositivi: primo piano, sfondo, profondità di campo.</li>
+            <li>⌘/Ctrl + Invio avvia la generazione; usa i chip per arricchire il prompt.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <input id="fileInput" type="file" accept="image/*" class="sr-only" />
   </div>
 
-  <script defer>
-  (function(){
-    "use strict";
-    window.addEventListener("DOMContentLoaded", () => {
-      const $ = (s)=>document.querySelector(s);
+  <script>
+    // --- Utilities ---
+    const $ = (sel)=>document.querySelector(sel);
+    const $$ = (sel)=>document.querySelectorAll(sel);
 
-      // UI elements
-      const genBtn   = $("#genBtn");
-      const exBtn    = $("#exBtn");
-      const dlBtn    = $("#dlBtn");
-      const imgBox   = $("#imgBox");
-      const status   = $("#status");
-      const imgHint  = $("#imgHint");
-      const promptEl = $("#prompt");
-      const openFull = $("#openFull");
-      const uploadBtn= $("#uploadBtn");
-      const fileInput= $("#fileInput");
-      const fileName = $("#fileName");
-
-      // Endpoints
-      const BASE = (()=>{
-        const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
-        return isLocal ? "http://localhost:3000" : "";
-      })();
-      const GEN_URL  = `${BASE}/api/generate`;
-      const EDIT_URL = `${BASE}/api/edit`;
-
-      // Esempio cartoon moderno
-      const example = `Trasforma questa foto in stile cartoon moderno, con colori brillanti, contorni morbidi e look da animazione digitale. Mantieni il volto riconoscibile e pulisci lo sfondo.`;
-      exBtn.addEventListener("click", ()=>{ promptEl.value = example; promptEl.focus(); });
-
-      // Lettura file -> Data URL (base64)
-      function fileToDataURL(file) {
-        return new Promise((resolve, reject) => {
-          const fr = new FileReader();
-          fr.onload = () => resolve(fr.result); // "data:image/png;base64,...."
-          fr.onerror = reject;
-          fr.readAsDataURL(file);
-        });
-      }
-
-      // Upload
-      let lastFile = null;
-      uploadBtn.addEventListener("click", ()=> fileInput.click());
-      fileInput.addEventListener("change", ()=>{
-        const f = fileInput.files?.[0] || null;
-        lastFile = f;
-        if (f){
-          fileName.textContent = `📎 ${f.name}`;
-          fileName.style.display = "inline-block";
-        } else {
-          fileName.textContent = "";
-          fileName.style.display = "none";
-        }
-      });
-
-      // Helpers
-      function showStatus(message, isErr=false){
-        status.style.display = "block";
-        status.className = "status " + (isErr? "err":"ok");
-        status.innerHTML = message;
-      }
-      function lockUI(disabled){
-        genBtn.disabled = disabled;
-        exBtn.disabled  = disabled;
-        uploadBtn.disabled = disabled;
-        promptEl.disabled = disabled;
-        dlBtn.disabled = disabled || !lastImageUrl;
-      }
-      function downloadDataUrl(filename, dataUrl){
-        const a = document.createElement("a");
-        a.href = dataUrl; a.download = filename;
-        document.body.appendChild(a); a.click(); a.remove();
-      }
-
-      let lastImageUrl = null;
-
-      // Azione principale
-      genBtn.addEventListener("click", async ()=>{
-        const prompt = (promptEl.value || "").trim();
-        if (prompt.length < 3) return showStatus("❌ Inserisci un prompt più dettagliato.", true);
-
-        lockUI(true);
-        showStatus(`<span class="spin"></span>Elaborazione in corso...`);
-        imgBox.innerHTML = `<span class="muted">⏳ Sto generando la tua immagine...</span>`;
-        openFull.style.display = "none"; openFull.removeAttribute("href");
-        dlBtn.disabled = true; lastImageUrl = null;
-
-        try {
-          let r;
-          if (lastFile) {
-            // Trasformazione foto → /api/edit (JSON con data URL)
-            const dataUrl = await fileToDataURL(lastFile);
-            imgHint.textContent = "edit: gpt-image-1";
-            r = await fetch(EDIT_URL, {
-              method:"POST",
-              headers:{ "Content-Type":"application/json" },
-              body: JSON.stringify({ prompt, image_data_url: dataUrl })
-            });
-          } else {
-            // Generazione da testo → /api/generate
-            imgHint.textContent = "generate: gpt-image-1";
-            r = await fetch(GEN_URL, {
-              method:"POST",
-              headers:{ "Content-Type":"application/json" },
-              body: JSON.stringify({ prompt })
-            });
-          }
-
-          const text = await r.text();
-          let data; try{ data = JSON.parse(text); } catch { data = { raw: text }; }
-
-          if(!r.ok){
-            const msg = data?.error || `Errore ${r.status}`;
-            showStatus(`❌ ${msg}`, true);
-            imgBox.innerHTML = `<span class="muted">😔 Nessuna immagine</span>`;
-            return;
-          }
-
-          const url = data.image_url;
-          if (url){
-            imgBox.innerHTML = "";
-            const img = new Image();
-            img.alt = "Immagine generata";
-            img.src = url;
-            img.onload = ()=>{
-              imgBox.appendChild(img);
-              openFull.href = url; openFull.style.display = "inline";
-              lastImageUrl = url; dlBtn.disabled = false;
-              showStatus("✅ Immagine generata con successo!");
-            };
-            img.onerror = ()=>{
-              imgBox.innerHTML = `<span class="muted">😞 Errore nel caricamento dell'immagine</span>`;
-              showStatus("❌ Errore caricamento immagine", true);
-            };
-          } else {
-            imgBox.innerHTML = `<span class="muted">😕 Nessuna immagine ricevuta</span>`;
-            showStatus("❌ Nessuna immagine ricevuta", true);
-          }
-        } catch (e){
-          console.error(e);
-          showStatus("❌ Errore di rete o server.", true);
-          imgBox.innerHTML = `<span class="muted">🔌 Errore di connessione</span>`;
-        } finally {
-          lockUI(false);
-        }
-      });
-
-      dlBtn.addEventListener("click", ()=>{ if(lastImageUrl) downloadDataUrl("herogen.png", lastImageUrl); });
+    // Theme toggle
+    const themeToggle = $('#themeToggle');
+    themeToggle.addEventListener('click', ()=>{
+      const root = document.documentElement;
+      const isDark = root.getAttribute('data-theme') !== 'light';
+      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
     });
-  })();
+
+    // Prompt helpers
+    const promptEl = $('#prompt');
+    const counter = $('#counter');
+    const maxChars = 400;
+    const updateCounter = ()=>{
+      const len = promptEl.value.length;
+      counter.textContent = `${len}/${maxChars}`;
+      counter.style.color = len > maxChars ? 'var(--err)' : 'var(--muted)';
+    };
+    promptEl.addEventListener('input', updateCounter);
+    updateCounter();
+
+    // Chips insert
+    $('#styleChips').addEventListener('click', (e)=>{
+      const chip = e.target.closest('.chip');
+      if(!chip) return;
+      chip.classList.toggle('active');
+      const text = chip.dataset.insert;
+      if(chip.classList.contains('active')){
+        if(promptEl.value && !/[,.;:]\s?$/.test(promptEl.value)) promptEl.value += ', ';
+        promptEl.value += text;
+      } else {
+        // remove once if present
+        promptEl.value = promptEl.value.replace(new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), '').replace(/\s+,\s+/g, ', ').replace(/^,\s+|,\s+$/g, '');
+      }
+      updateCounter();
+    });
+
+    // Ratio control
+    const ratioSel = $('#ratio');
+    const frame = $('#frame');
+    ratioSel.addEventListener('change', ()=>{
+      frame.className = `frame ratio-${ratioSel.value}`;
+    });
+
+    // Buttons
+    const generateBtn = $('#generateBtn');
+    const surpriseBtn = $('#surpriseBtn');
+    const uploadBtn = $('#uploadBtn');
+    const downloadBtn = $('#downloadBtn');
+
+    // Preview elements
+    const img = $('#resultImg');
+    const placeholder = $('#placeholder');
+    const spinner = $('#spinner');
+    const progress = $('#progress');
+
+    // History
+    const historyGrid = $('#historyGrid');
+    const history = [];
+
+    // Keyboard shortcut: Cmd/Ctrl + Enter
+    document.addEventListener('keydown', (e)=>{
+      if((e.metaKey || e.ctrlKey) && e.key === 'Enter'){ e.preventDefault(); generate(); }
+    });
+
+    // Surprise prompts
+    const examples = [
+      "Panorama di Cagliari al tramonto, stile acquerello soffuso, luce dorata, grana analogica",
+      "Ritratto fotorealistico, luce cinematografica, 85mm, bokeh, pelle naturale",
+      "Villaggio fantasy su scogliere viola, cielo stellato, in stile Studio Ghibli",
+      "Poster vintage anni '90, colori saturi, texture carta, layout tipografico bold",
+      "Paesaggio marino epico, pittorico biblico, raggi di luce tra le nuvole"
+    ];
+    surpriseBtn.addEventListener('click', ()=>{
+      const seed = (Date.now()%examples.length);
+      promptEl.value = examples[seed];
+      updateCounter();
+    });
+
+    // Upload flow (mock)
+    const fileInput = $('#fileInput');
+    uploadBtn.addEventListener('click', ()=> fileInput.click());
+    fileInput.addEventListener('change', (e)=>{
+      const file = e.target.files[0];
+      if(!file) return;
+      const url = URL.createObjectURL(file);
+      // Show uploaded as starting point
+      placeholder.style.display='none';
+      spinner.style.display='none';
+      img.src = url; img.style.display='block';
+      downloadBtn.disabled = false;
+      pushHistory(url, `Da foto: ${file.name}`);
+    });
+
+    // Generate (simulated)
+    generateBtn.addEventListener('click', generate);
+    function generate(){
+      const prompt = (promptEl.value || '').trim();
+      if(!prompt){ alert('Inserisci un prompt prima di generare!'); return; }
+      lockUI(true);
+      placeholder.style.display='flex';
+      spinner.style.display='block';
+      img.style.display='none';
+      progress.style.width='0%';
+
+      // Simulated progress
+      let p=0; const tick = setInterval(()=>{ p=Math.min(100,p+8); progress.style.width=p+'%'; }, 160);
+
+      // Simulated render -> replace with your real API call
+      simulateRender(prompt, ratioSel.value).then((dataUrl)=>{
+        clearInterval(tick); progress.style.width='100%';
+        spinner.style.display='none'; placeholder.style.display='none';
+        img.src = dataUrl; img.style.display='block';
+        downloadBtn.disabled = false;
+        pushHistory(dataUrl, prompt);
+      }).catch((err)=>{
+        console.error(err); alert('Errore durante la generazione.');
+        spinner.style.display='none';
+      }).finally(()=>{ lockUI(false); setTimeout(()=>progress.style.width='0%', 600); });
+    }
+
+    function lockUI(v){
+      [generateBtn,surpriseBtn,uploadBtn].forEach(b=>b.disabled=v);
+    }
+
+    function pushHistory(src, caption){
+      history.unshift({src,caption,date:new Date()});
+      while(history.length>6) history.pop();
+      renderHistory();
+    }
+
+    function renderHistory(){
+      historyGrid.innerHTML = history.map((h,i)=>`
+        <div class="card-thumb">
+          <img src="${h.src}" alt="Miniatura ${i+1}">
+          <div class="thumb-actions">
+            <button class="icon-btn" title="Scarica" onclick="downloadFromSrc('${h.src}')">⬇️</button>
+            <button class="icon-btn" title="Riuso prompt" onclick="reusePrompt(${i})">♻️</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.reusePrompt = (i)=>{ promptEl.value = history[i].caption; updateCounter(); }
+
+    // Download button
+    downloadBtn.addEventListener('click', ()=>{
+      if(!img.src) return alert('Nessuna immagine da scaricare.');
+      downloadFromSrc(img.src);
+    });
+
+    window.downloadFromSrc = (src)=>{
+      const a=document.createElement('a');
+      a.href=src; a.download='artemisia-ai.png'; a.click();
+    }
+
+    // Simulated renderer: draws a gradient with text on canvas and returns dataURL
+    async function simulateRender(text, ratio){
+      const [w,h] = ratioToPx(ratio);
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const ctx = c.getContext('2d');
+      const g = ctx.createLinearGradient(0,0,w,h);
+      g.addColorStop(0,'#0ea5e9'); g.addColorStop(1,'#a78bfa');
+      ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+      // glass stripe
+      ctx.fillStyle = 'rgba(255,255,255,0.16)';
+      ctx.fillRect(0,h*0.72,w,h*0.28);
+      // Title
+      ctx.fillStyle = '#0f172a';
+      ctx.font = Math.floor(h*0.06)+'px Inter, sans-serif';
+      ctx.fillText('Artemisia AI (mock)', 24, h*0.82);
+      ctx.fillStyle = '#111827';
+      ctx.font = Math.floor(h*0.035)+'px Inter, sans-serif';
+      const clipped = text.length>120 ? text.slice(0,117)+'…' : text;
+      ctx.fillText(clipped, 24, h*0.89);
+      await new Promise(r=>setTimeout(r, 1200 + Math.random()*800));
+      return c.toDataURL('image/png');
+    }
+
+    function ratioToPx(r){
+      switch(r){
+        case '3-4': return [768,1024];
+        case '9-16': return [720,1280];
+        case '4-3': return [1280,960];
+        case '16-9': return [1280,720];
+        default: return [1024,1024];
+      }
+    }
+
+    // Help modal (very light)
+    $('#helpBtn').addEventListener('click', ()=>{
+      alert('Suggerimenti:\n• Usa i chip per arricchire rapidamente il prompt.\n• Scegli il formato (1:1, 9:16, 16:9, ecc.).\n• ⌘/Ctrl + Invio per generare.');
+    });
   </script>
 </body>
 </html>
