@@ -8,26 +8,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-start: #0f172a; /* slate-900 */
-      --bg-end:   #1e1b4b; /* indigo-950 */
-      --card:  #0b1020cc;  /* glass */
-      --text:  #e2e8f0;    /* slate-200 */
-      --muted: #94a3b8;    /* slate-400 */
-      --brand:  #8b5cf6;   /* violet-500 */
-      --brand-2:#eab308;   /* amber-500 */
-      --accent: #eab308;   /* gold */
-      --ring: rgba(96,165,250,.35);
-      --ok:#34d399;--warn:#f59e0b;--err:#f87171;
-      --surface: rgba(255,255,255,.06);
-      --border: rgba(255,255,255,.14);
-      --chip: rgba(148,163,184,.16);
-      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --bg-start: #0f172a; --bg-end: #1e1b4b; --card: #0b1020cc; --text: #e2e8f0; --muted: #94a3b8;
+      --brand: #8b5cf6; --brand-2: #eab308; --accent: #eab308; --ring: rgba(96,165,250,.35);
+      --ok: #34d399; --warn: #f59e0b; --err: #f87171; --surface: rgba(255,255,255,.06);
+      --border: rgba(255,255,255,.14); --chip: rgba(148,163,184,.16); --shadow: 0 20px 60px rgba(0,0,0,.35);
     }
     [data-theme="light"]{
-      --bg-start:#e2e8f0; --bg-end:#c7d2fe;
-      --card:#ffffffee; --text:#0f172a; --muted:#475569; --surface:#f8fafc;
-      --border: rgba(2,6,23,.12); --shadow: 0 20px 60px rgba(2,6,23,.12);
-      --chip: rgba(2,6,23,.06);
+      --bg-start:#e2e8f0; --bg-end:#c7d2fe; --card:#ffffffee; --text:#0f172a; --muted:#475569; --surface:#f8fafc;
+      --border: rgba(2,6,23,.12); --shadow: 0 20px 60px rgba(2,6,23,.12); --chip: rgba(2,6,23,.06);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -39,7 +27,6 @@
       overflow-x:hidden;
     }
     .container{max-width:1200px;margin:0 auto;padding:24px}
-
     .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
     .brand{display:flex;align-items:center;gap:14px}
     .logo{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;box-shadow:var(--shadow)}
@@ -49,43 +36,34 @@
     .actions{display:flex;align-items:center;gap:8px}
     .icon-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer;transition:all .2s ease}
     .icon-btn:hover{transform:translateY(-1px);border-color:var(--accent)}
-
     .card{background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
-
     .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}
     @media(max-width:1024px){.grid{grid-template-columns:1fr;}}
-
     .section-title{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:10px}
     .section-title .emoji{font-size:20px}
-
     .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
     .chip{padding:8px 12px;border:1px solid var(--border);background:var(--chip);border-radius:999px;font-size:12px;cursor:pointer;user-select:none;transition:all .2s ease}
     .chip.active{outline:2px solid var(--ring);border-color:transparent;background:rgba(139,92,246,.2)}
     .chip:hover{background:rgba(139,92,246,.1);border-color:var(--brand)}
-
     .controls{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
     .select,.slider{display:flex;align-items:center;gap:8px;border:1px solid var(--border);background:var(--surface);padding:10px 12px;border-radius:12px}
     .select select{background:transparent;border:none;color:var(--text);font-size:14px}
     .select select:focus{outline:none}
     .slider input{accent-color:var(--brand)}
-
     .textarea{position:relative}
     textarea{width:100%;min-height:140px;resize:vertical;border:2px solid transparent;border-radius:16px;padding:16px 18px;background:var(--surface);color:var(--text);line-height:1.6;font-size:15px}
     textarea:focus{outline:none;box-shadow:0 0 0 4px var(--ring);border-color:transparent}
     textarea::placeholder{color:var(--muted);opacity:0.8}
     .counter{position:absolute;right:12px;bottom:8px;font-size:12px;color:var(--muted)}
-
     .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
     .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:all .2s ease;background:var(--surface);color:var(--text);text-decoration:none;font-weight:600;font-size:14px}
     .btn:disabled{opacity:.55;cursor:not-allowed;transform:none !important}
     .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));border-color:transparent;color:#fff;box-shadow:0 10px 24px rgba(139,92,246,.4)}
     .btn.primary:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 15px 35px rgba(139,92,246,.5)}
     .btn.outline:not(:disabled):hover{border-color:var(--accent);background:rgba(139,92,246,.1)}
-
     .status{margin-top:12px;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:500;display:none;align-items:center;gap:10px}
     .status.ok{background:rgba(52,211,153,.1);color:var(--ok);border:1px solid rgba(52,211,153,.3)}
     .status.err{background:rgba(248,113,113,.1);color:var(--err);border:1px solid rgba(248,113,113,.3)}
-
     .frame{position:relative;background:linear-gradient(135deg,#0b1020,#1f2937);border:2px solid var(--border);border-radius:18px;display:grid;place-items:center;overflow:hidden;transition:all .3s ease}
     .frame.ratio-1-1{aspect-ratio:1/1}
     .frame.ratio-3-4{aspect-ratio:3/4}
@@ -95,12 +73,10 @@
     .frame img{max-width:100%;max-height:100%;display:none;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
     .frame img.show{display:block;animation:fadeIn .4s ease-out}
     @keyframes fadeIn{from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)}}
-    
     .placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#cbd5e1;opacity:.9;text-align:center;padding:28px}
     .spinner{width:54px;height:54px;border-radius:50%;border:4px solid #ffffff20;border-top-color:var(--brand);animation:spin 1s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .progress{position:absolute;left:0;bottom:0;height:4px;width:0;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .3s ease;border-radius:0 0 16px 16px}
-
     .history{margin-top:18px}
     .history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
     .card-thumb{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .2s ease}
@@ -110,11 +86,8 @@
     .thumb-actions{display:flex;gap:6px;position:absolute;right:8px;bottom:8px;opacity:0;transition:opacity .2s ease}
     .card-thumb:hover .thumb-actions{opacity:1}
     .small{font-size:12px;color:var(--muted)}
-
     .tips{margin-top:20px;padding:18px;border-left:3px solid var(--brand);background:linear-gradient(0deg,transparent,rgba(139,92,246,.08));border-radius:12px}
-
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-
     .file-chip{display:none;align-items:center;gap:8px;padding:8px 12px;margin:10px 0;background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);border-radius:10px;color:var(--accent);font-size:12px}
     .file-chip.show{display:flex}
   </style>
@@ -123,35 +96,34 @@
   <div class="container">
     <header class="header">
       <div class="brand">
-        <div class="logo"><img src="logo-artemisia.png" alt="Artemisia AI logo" /></div>
+        <div class="logo"><img src="logo-artemisia.png" alt="Artemisia AI" /></div>
         <div class="title-wrap">
           <div class="title">Artemisia AI</div>
           <div class="subtitle">Generatore & Trasformatore di immagini AI</div>
         </div>
       </div>
       <div class="actions">
-        <button class="icon-btn" id="themeToggle" aria-label="Cambia tema">🌗</button>
-        <button class="icon-btn" id="helpBtn" title="Guida rapida">❔</button>
+        <button class="icon-btn" onclick="toggleTheme()">🌗</button>
+        <button class="icon-btn" onclick="showHelp()">❔</button>
       </div>
     </header>
 
-    <main class="grid" aria-live="polite">
+    <main class="grid">
       <section class="card">
         <div class="section-title"><span class="emoji">✨</span><span>Scrivi il tuo prompt</span></div>
 
         <div class="chips" id="styleChips">
-          <span class="chip" data-insert="in stile cartoon moderno">Cartoon</span>
-          <span class="chip" data-insert="fotorealistico, illuminazione cinematografica">Fotorealistico</span>
-          <span class="chip" data-insert="in stile acquerello morbido">Acquerello</span>
-          <span class="chip" data-insert="in stile Studio Ghibli">Ghibli</span>
-          <span class="chip" data-insert="in stile pittorico biblico">Biblico</span>
-          <span class="chip" data-insert="vintage anni '90, grana leggera">Vintage '90</span>
+          <span class="chip" onclick="toggleChip(this, 'in stile cartoon moderno')">Cartoon</span>
+          <span class="chip" onclick="toggleChip(this, 'fotorealistico, illuminazione cinematografica')">Fotorealistico</span>
+          <span class="chip" onclick="toggleChip(this, 'in stile acquerello morbido')">Acquerello</span>
+          <span class="chip" onclick="toggleChip(this, 'in stile Studio Ghibli')">Ghibli</span>
+          <span class="chip" onclick="toggleChip(this, 'in stile pittorico biblico')">Biblico</span>
+          <span class="chip" onclick="toggleChip(this, 'vintage anni 90, grana leggera')">Vintage '90</span>
         </div>
 
         <div class="controls">
-          <div class="select" title="Formato immagine">
-            <label class="sr-only" for="ratio">Formato</label>
-            <select id="ratio">
+          <div class="select">
+            <select id="ratio" onchange="updateRatio()">
               <option value="1-1">1:1 (Quadrato)</option>
               <option value="3-4">3:4 (Ritratto)</option>
               <option value="9-16">9:16 (Verticale)</option>
@@ -162,22 +134,21 @@
         </div>
 
         <div class="textarea">
-          <label class="sr-only" for="prompt">Prompt per la generazione</label>
-          <textarea id="prompt" placeholder="Es.: Trasforma in stile cartoon moderno, colori brillanti e contorni morbidi..."></textarea>
+          <textarea id="prompt" placeholder="Es.: Trasforma in stile cartoon moderno, colori brillanti e contorni morbidi..." oninput="updateCounter()"></textarea>
           <div class="counter" id="counter">0/500</div>
         </div>
 
         <div class="file-chip" id="fileChip">
           <span>📎</span>
-          <span id="fileName">Nessun file selezionato</span>
-          <button style="background:none;border:none;color:inherit;cursor:pointer;padding:0;margin-left:auto" onclick="clearFile()">✕</button>
+          <span id="fileName">Nessun file</span>
+          <button onclick="clearFile()" style="background:none;border:none;color:inherit;cursor:pointer;padding:0;margin-left:auto">✕</button>
         </div>
 
         <div class="btns">
-          <button class="btn primary" id="generateBtn">🎨 Genera / Trasforma</button>
-          <button class="btn outline" id="surpriseBtn">🎲 Ispirami</button>
-          <button class="btn outline" id="uploadBtn">📸 Da foto</button>
-          <button class="btn outline" id="downloadBtn" disabled>📥 Scarica PNG</button>
+          <button class="btn primary" onclick="generate()" id="generateBtn">🎨 Genera / Trasforma</button>
+          <button class="btn outline" onclick="surprise()">🎲 Ispirami</button>
+          <button class="btn outline" onclick="document.getElementById('fileInput').click()">📸 Da foto</button>
+          <button class="btn outline" onclick="download()" id="downloadBtn" disabled>📥 Scarica PNG</button>
         </div>
 
         <div id="status" class="status"></div>
@@ -186,7 +157,7 @@
       <section class="card">
         <div class="section-title"><span class="emoji">🖼️</span><span>Anteprima</span></div>
         <div class="frame ratio-1-1" id="frame">
-          <img id="resultImg" alt="Risultato generazione" />
+          <img id="resultImg" alt="Risultato" />
           <div class="placeholder" id="placeholder">
             <div class="spinner" id="spinner" style="display:none"></div>
             <div class="ph-content">
@@ -198,69 +169,39 @@
         </div>
 
         <div class="history">
-          <div class="section-title"><span class="emoji">🕘</span><span>Cronologia (ultime 6)</span></div>
+          <div class="section-title"><span class="emoji">🕘</span><span>Cronologia</span></div>
           <div class="history-grid" id="historyGrid">
-            <div class="small" style="grid-column:1/-1;text-align:center;padding:20px;color:var(--muted)">
-              Nessuna generazione ancora
-            </div>
+            <div class="small" style="grid-column:1/-1;text-align:center;padding:20px">Nessuna generazione ancora</div>
           </div>
         </div>
 
         <div class="tips">
           <strong>💡 Suggerimenti rapidi</strong>
           <ul style="margin:.5rem 0 0 1.2rem; line-height:1.7; font-size:14px">
-            <li>Specifica stile, atmosfera e illuminazione per risultati migliori</li>
-            <li>Usa riferimenti artistici: "in stile Studio Ghibli / acquerello / fotografia analogica"</li>
-            <li>Aggiungi dettagli compositivi: primo piano, sfondo, profondità di campo</li>
-            <li>I chip aggiungono automaticamente termini al prompt per arricchirlo</li>
+            <li>Specifica stile, atmosfera e illuminazione</li>
+            <li>Usa riferimenti: "stile Studio Ghibli / acquerello"</li>
+            <li>Aggiungi dettagli: primo piano, sfondo, luce</li>
+            <li>I chip arricchiscono automaticamente il prompt</li>
           </ul>
         </div>
       </section>
     </main>
 
-    <input id="fileInput" type="file" accept="image/*" class="sr-only" />
+    <input id="fileInput" type="file" accept="image/*" onchange="handleFile(this)" style="display:none" />
   </div>
 
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const $ = (sel) => document.querySelector(sel);
-    const $$ = (sel) => document.querySelectorAll(sel);
-
-    // Elementi UI principali
-    const promptEl = $('#prompt');
-    const counter = $('#counter');
-    const generateBtn = $('#generateBtn');
-    const surpriseBtn = $('#surpriseBtn');
-    const uploadBtn = $('#uploadBtn');
-    const downloadBtn = $('#downloadBtn');
-    const fileInput = $('#fileInput');
-    const fileChip = $('#fileChip');
-    const fileName = $('#fileName');
-    const ratioSel = $('#ratio');
-    const frame = $('#frame');
-    const img = $('#resultImg');
-    const placeholder = $('#placeholder');
-    const spinner = $('#spinner');
-    const progress = $('#progress');
-    const status = $('#status');
-    const historyGrid = $('#historyGrid');
-    const themeToggle = $('#themeToggle');
-
-    // Configurazione API - rileva automaticamente ambiente
-    const BASE = (() => {
-      const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:";
-      return isLocal ? "http://localhost:3000" : "";
-    })();
-    const GEN_URL = `${BASE}/api/generate`;
-    const EDIT_URL = `${BASE}/api/edit`;
-
-    // Stato applicazione
+    // Variabili globali
     let lastFile = null;
     let lastImageUrl = null;
     const history = [];
-    const maxChars = 500;
+    
+    // API endpoints
+    const BASE = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:" ? "http://localhost:3000" : "";
+    const GEN_URL = `${BASE}/api/generate`;
+    const EDIT_URL = `${BASE}/api/edit`;
 
-    // Esempi per il pulsante "Ispirami"
+    // Esempi per ispirami
     const examples = [
       'Un castello magico su una collina, nuvole colorate al tramonto, in stile acquerello con luce dorata',
       'Ritratto fotorealistico di una donna, illuminazione cinematografica soft, 85mm, bokeh naturale',
@@ -269,54 +210,86 @@
       'Paesaggio marino epico al tramonto, stile pittorico rinascimentale, raggi di luce tra le nuvole'
     ];
 
-    // === UTILITY FUNCTIONS ===
+    // Utility functions
     function showStatus(message, isError = false) {
+      const status = document.getElementById('status');
       status.style.display = 'flex';
       status.className = `status ${isError ? 'err' : 'ok'}`;
       status.innerHTML = message;
     }
 
     function hideStatus() {
-      status.style.display = 'none';
-    }
-
-    function lockUI(disabled) {
-      [generateBtn, surpriseBtn, uploadBtn].forEach(btn => {
-        btn.disabled = disabled;
-      });
-      promptEl.disabled = disabled;
-      downloadBtn.disabled = disabled || !lastImageUrl;
+      document.getElementById('status').style.display = 'none';
     }
 
     function updateCounter() {
-      const len = promptEl.value.length;
-      counter.textContent = `${len}/${maxChars}`;
-      counter.style.color = len > maxChars ? 'var(--err)' : 'var(--muted)';
+      const prompt = document.getElementById('prompt');
+      const counter = document.getElementById('counter');
+      const len = prompt.value.length;
+      counter.textContent = `${len}/500`;
+      counter.style.color = len > 500 ? 'var(--err)' : 'var(--muted)';
     }
 
-    function pushHistory(src, caption) {
-      history.unshift({ src, caption, date: new Date() });
-      while (history.length > 6) history.pop();
-      renderHistory();
+    function toggleTheme() {
+      const root = document.documentElement;
+      const isDark = root.getAttribute('data-theme') !== 'light';
+      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
     }
 
-    function renderHistory() {
-      if (history.length === 0) {
-        historyGrid.innerHTML = '<div class="small" style="grid-column:1/-1;text-align:center;padding:20px;color:var(--muted)">Nessuna generazione ancora</div>';
-        return;
+    function showHelp() {
+      alert('Artemisia AI - Guida:\n\n• Scrivi un prompt dettagliato\n• Usa i chip per aggiungere stili\n• Carica una foto per trasformarla\n• La cronologia salva le generazioni');
+    }
+
+    function toggleChip(chip, text) {
+      const prompt = document.getElementById('prompt');
+      chip.classList.toggle('active');
+      
+      if (chip.classList.contains('active')) {
+        if (prompt.value && !/[,.;:]\s?$/.test(prompt.value)) {
+          prompt.value += ', ';
+        }
+        prompt.value += text;
+      } else {
+        prompt.value = prompt.value.replace(text, '').replace(/\s*,\s*,\s*/g, ', ').replace(/^,\s*|,\s*$/g, '').trim();
       }
-
-      historyGrid.innerHTML = history.map((h, i) => `
-        <div class="card-thumb">
-          <img src="${h.src}" alt="Generazione ${i + 1}" loading="lazy">
-          <div class="thumb-actions">
-            <button class="icon-btn" title="Scarica" onclick="downloadFromSrc('${h.src}')">⬇️</button>
-            <button class="icon-btn" title="Riusa prompt" onclick="reusePrompt(${i})">♻️</button>
-          </div>
-        </div>
-      `).join('');
+      updateCounter();
     }
 
+    function updateRatio() {
+      const ratio = document.getElementById('ratio').value;
+      const frame = document.getElementById('frame');
+      frame.className = `frame ratio-${ratio}`;
+    }
+
+    function surprise() {
+      const prompt = document.getElementById('prompt');
+      const randomExample = examples[Math.floor(Math.random() * examples.length)];
+      prompt.value = randomExample;
+      updateCounter();
+      
+      // Reset chips
+      document.querySelectorAll('.chip.active').forEach(chip => chip.classList.remove('active'));
+    }
+
+    function handleFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+      
+      lastFile = file;
+      document.getElementById('fileName').textContent = file.name;
+      document.getElementById('fileChip').classList.add('show');
+      showStatus(`📎 File "${file.name}" caricato. Scrivi come trasformarlo.`);
+    }
+
+    function clearFile() {
+      lastFile = null;
+      document.getElementById('fileInput').value = '';
+      document.getElementById('fileChip').classList.remove('show');
+      document.getElementById('fileName').textContent = '';
+      hideStatus();
+    }
+
+    // Conversione immagine sicura
     function fileToDataURL(file) {
       return new Promise((resolve, reject) => {
         const img = new Image();
@@ -324,8 +297,6 @@
           try {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            
-            // Imposta dimensioni canvas (max 1024px per lato per ottimizzare)
             const maxSize = 1024;
             let { width, height } = img;
             
@@ -337,168 +308,64 @@
             
             canvas.width = width;
             canvas.height = height;
-            
-            // Disegna l'immagine sul canvas (converte automaticamente in RGBA)
             ctx.drawImage(img, 0, 0, width, height);
-            
-            // Restituisci come PNG (formato RGBA supportato da OpenAI)
-            const dataUrl = canvas.toDataURL('image/png', 0.9);
-            resolve(dataUrl);
+            resolve(canvas.toDataURL('image/png', 0.9));
           } catch (error) {
-            reject(new Error('Errore nella conversione dell\'immagine: ' + error.message));
+            reject(new Error('Errore conversione: ' + error.message));
           }
         };
-        
-        img.onerror = () => reject(new Error('Impossibile caricare l\'immagine'));
+        img.onerror = () => reject(new Error('Caricamento immagine fallito'));
         img.src = URL.createObjectURL(file);
       });
     }
 
-    // === EVENT LISTENERS ===
-
-    // Contatore caratteri
-    promptEl.addEventListener('input', updateCounter);
-    updateCounter();
-
-    // Cambio tema
-    if (themeToggle) {
-      themeToggle.addEventListener('click', () => {
-        const root = document.documentElement;
-        const isDark = root.getAttribute('data-theme') !== 'light';
-        root.setAttribute('data-theme', isDark ? 'light' : 'dark');
-      });
-    }
-
-    // Chip per stili
-    $('#styleChips').addEventListener('click', (e) => {
-      const chip = e.target.closest('.chip');
-      if (!chip) return;
-      
-      chip.classList.toggle('active');
-      const text = chip.dataset.insert;
-      
-      if (chip.classList.contains('active')) {
-        if (promptEl.value && !/[,.;:]\s?$/.test(promptEl.value)) {
-          promptEl.value += ', ';
-        }
-        promptEl.value += text;
-      } else {
-        // Rimuovi il testo dal prompt
-        promptEl.value = promptEl.value
-          .replace(new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), '')
-          .replace(/\s*,\s*,\s*/g, ', ')
-          .replace(/^,\s*|,\s*$/g, '')
-          .trim();
-      }
-      updateCounter();
-    });
-
-    // Cambio formato
-    ratioSel.addEventListener('change', () => {
-      frame.className = `frame ratio-${ratioSel.value}`;
-    });
-
-    // Pulsante ispirami
-    surpriseBtn.addEventListener('click', () => {
-      const randomExample = examples[Math.floor(Math.random() * examples.length)];
-      promptEl.value = randomExample;
-      updateCounter();
-      
-      // Resetta chip attivi
-      $$('.chip.active').forEach(chip => chip.classList.remove('active'));
-    });
-
-    // Upload file
-    uploadBtn.addEventListener('click', () => fileInput.click());
-    
-    fileInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      
-      lastFile = file;
-      fileName.textContent = file.name;
-      fileChip.classList.add('show');
-      
-      showStatus(`📎 File "${file.name}" caricato. Ora scrivi come trasformarlo e clicca "Genera".`);
-    });
-
-    // Scorciatoia tastiera
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-        e.preventDefault();
-        if (!generateBtn.disabled) generate();
-      }
-    });
-
-    // Download
-    downloadBtn.addEventListener('click', () => {
-      if (lastImageUrl) downloadFromSrc(lastImageUrl);
-    });
-
-    // Help
-    $('#helpBtn').addEventListener('click', () => {
-      alert('Artemisia AI - Guida Rapida:\n\n• Scrivi un prompt dettagliato per migliori risultati\n• Usa i chip per aggiungere stili rapidamente\n• Carica una foto per trasformarla\n• Ctrl/Cmd + Enter per generare velocemente\n• La cronologia salva le ultime 6 generazioni');
-    });
-
-    // Generazione principale
-    generateBtn.addEventListener('click', generate);
-
-    // === FUNZIONE PRINCIPALE DI GENERAZIONE ===
+    // Funzione principale di generazione
     async function generate() {
+      console.log('🎨 Avvio generazione...');
+      
+      const promptEl = document.getElementById('prompt');
       const prompt = promptEl.value.trim();
       
       if (!prompt || prompt.length < 3) {
-        showStatus('❌ Inserisci un prompt più dettagliato (almeno 3 caratteri)', true);
+        showStatus('❌ Inserisci un prompt più dettagliato', true);
         return;
       }
 
-      if (prompt.length > maxChars) {
-        showStatus(`❌ Il prompt è troppo lungo (${prompt.length}/${maxChars} caratteri)`, true);
-        return;
-      }
+      const generateBtn = document.getElementById('generateBtn');
+      const spinner = document.getElementById('spinner');
+      const placeholder = document.getElementById('placeholder');
+      const img = document.getElementById('resultImg');
+      const progress = document.getElementById('progress');
 
-      lockUI(true);
+      generateBtn.disabled = true;
       hideStatus();
-      
-      // UI feedback
       placeholder.style.display = 'flex';
       spinner.style.display = 'block';
-      img.classList.remove('show');
       img.style.display = 'none';
       progress.style.width = '0%';
 
-      // Animazione progress simulata
-      let progressValue = 0;
-      const progressInterval = setInterval(() => {
-        progressValue = Math.min(95, progressValue + Math.random() * 15);
-        progress.style.width = progressValue + '%';
+      let progressInterval = setInterval(() => {
+        const current = parseInt(progress.style.width) || 0;
+        progress.style.width = Math.min(95, current + Math.random() * 10) + '%';
       }, 200);
 
       try {
         let response;
         
         if (lastFile) {
-          try {
-            // Mostra feedback durante la conversione
-            showStatus('🔄 Preparando l\'immagine per la trasformazione...');
-            const dataUrl = await fileToDataURL(lastFile);
-            
-            showStatus('🎨 Trasformando la tua immagine...');
-            
-            response = await fetch(EDIT_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                prompt: prompt,
-                image_data_url: dataUrl
-              })
-            });
-          } catch (conversionError) {
-            throw new Error('Errore nella preparazione dell\'immagine: ' + conversionError.message);
-          }
+          console.log('📸 Trasformazione da file...');
+          showStatus('🔄 Preparando immagine...');
+          const dataUrl = await fileToDataURL(lastFile);
+          showStatus('🎨 Trasformando...');
+          
+          response = await fetch(EDIT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, image_data_url: dataUrl })
+          });
         } else {
-          // Generazione da testo
-          showStatus('✨ Generando la tua immagine...');
+          console.log('✨ Generazione da testo...');
+          showStatus('✨ Generando immagine...');
           
           response = await fetch(GEN_URL, {
             method: 'POST',
@@ -510,114 +377,109 @@
         clearInterval(progressInterval);
         progress.style.width = '100%';
 
-        const responseText = await response.text();
+        const text = await response.text();
         let data;
-        
         try {
-          data = JSON.parse(responseText);
+          data = JSON.parse(text);
         } catch {
-          data = { error: 'Risposta del server non valida', raw: responseText };
+          data = { error: 'Risposta server non valida', raw: text };
         }
 
         if (!response.ok) {
-          const errorMsg = data.error || `Errore ${response.status}: ${response.statusText}`;
-          throw new Error(errorMsg);
+          throw new Error(data.error || `Errore ${response.status}`);
         }
 
         const imageUrl = data.image_url;
         if (!imageUrl) {
-          throw new Error('Nessun URL immagine ricevuto dal server');
+          throw new Error('Nessun URL immagine ricevuto');
         }
 
-        // Successo - mostra immagine
+        // Mostra risultato
         spinner.style.display = 'none';
         placeholder.style.display = 'none';
-        
         img.src = imageUrl;
         img.style.display = 'block';
+        img.classList.add('show');
         
-        // Attende il caricamento dell'immagine
-        img.onload = () => {
-          img.classList.add('show');
-          lastImageUrl = imageUrl;
-          downloadBtn.disabled = false;
-          
-          // Aggiungi alla cronologia
-          const caption = lastFile ? `Trasformazione: ${prompt}` : prompt;
-          pushHistory(imageUrl, caption);
-          
-          showStatus('✅ Immagine generata con successo!');
-          
-          // Pulisci file se presente
-          if (lastFile) clearFile();
-        };
-
-        img.onerror = () => {
-          throw new Error('Errore nel caricamento dell\'immagine generata');
-        };
+        lastImageUrl = imageUrl;
+        document.getElementById('downloadBtn').disabled = false;
+        
+        // Cronologia
+        const caption = lastFile ? `Trasformazione: ${prompt}` : prompt;
+        history.unshift({ src: imageUrl, caption, date: new Date() });
+        if (history.length > 6) history.pop();
+        renderHistory();
+        
+        showStatus('✅ Generazione completata!');
+        if (lastFile) clearFile();
 
       } catch (error) {
-        console.error('Errore generazione:', error);
+        console.error('❌ Errore:', error);
         clearInterval(progressInterval);
-        
         spinner.style.display = 'none';
         showStatus(`❌ ${error.message}`, true);
-        
-        // Ripristina placeholder
         placeholder.style.display = 'flex';
-        img.style.display = 'none';
-        
       } finally {
-        lockUI(false);
-        
-        // Nasconde progress bar dopo un delay
-        setTimeout(() => {
-          progress.style.width = '0%';
-        }, 1000);
+        generateBtn.disabled = false;
+        setTimeout(() => progress.style.width = '0%', 1000);
       }
     }
 
-    // === FUNZIONI GLOBALI (per onclick negli elementi dinamici) ===
-    window.reusePrompt = (index) => {
-      if (history[index]) {
-        promptEl.value = history[index].caption.replace(/^Trasformazione: /, '');
-        updateCounter();
-        
-        // Resetta chip
-        $$('.chip.active').forEach(chip => chip.classList.remove('active'));
-        showStatus('📝 Prompt riutilizzato dalla cronologia');
+    function renderHistory() {
+      const grid = document.getElementById('historyGrid');
+      if (history.length === 0) {
+        grid.innerHTML = '<div class="small" style="grid-column:1/-1;text-align:center;padding:20px">Nessuna generazione ancora</div>';
+        return;
       }
-    };
+      
+      grid.innerHTML = history.map((h, i) => `
+        <div class="card-thumb">
+          <img src="${h.src}" alt="Generazione ${i + 1}">
+          <div class="thumb-actions">
+            <button class="icon-btn" onclick="downloadFromSrc('${h.src}')" title="Scarica">⬇️</button>
+            <button class="icon-btn" onclick="reusePrompt(${i})" title="Riusa">♻️</button>
+          </div>
+        </div>
+      `).join('');
+    }
 
-    window.downloadFromSrc = (src) => {
+    function reusePrompt(index) {
+      if (history[index]) {
+        document.getElementById('prompt').value = history[index].caption.replace(/^Trasformazione: /, '');
+        updateCounter();
+        document.querySelectorAll('.chip.active').forEach(chip => chip.classList.remove('active'));
+        showStatus('📝 Prompt riutilizzato');
+      }
+    }
+
+    function download() {
+      if (lastImageUrl) downloadFromSrc(lastImageUrl);
+    }
+
+    function downloadFromSrc(src) {
       try {
         const a = document.createElement('a');
         a.href = src;
         a.download = 'artemisia-ai.png';
-        document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
         showStatus('📥 Download avviato');
-      } catch (error) {
-        console.error('Errore download:', error);
-        // Fallback: apri in nuova tab
+      } catch {
         window.open(src, '_blank');
-        showStatus('🔗 Immagine aperta in nuova scheda');
+        showStatus('🔗 Aperto in nuova scheda');
       }
-    };
+    }
 
-    window.clearFile = () => {
-      lastFile = null;
-      fileInput.value = '';
-      fileChip.classList.remove('show');
-      fileName.textContent = '';
-      hideStatus();
-    };
+    // Scorciatoia tastiera
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        generate();
+      }
+    });
 
-    // Inizializzazione
-    console.log('🎨 Artemisia AI inizializzata correttamente');
-    console.log('📡 API Endpoints:', { GEN_URL, EDIT_URL });
-  });
+    // Init
+    console.log('🎨 Artemisia AI caricata');
+    updateCounter();
   </script>
 </body>
 </html>
