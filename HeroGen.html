@@ -6,53 +6,488 @@
   <title>HeroGen — Generatore & Trasformatore di immagini</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   <style>
-    :root{ --brand:#0d3b4f; --ink:#0f172a; --muted:#475569; --page:#f4f7fb; --ok:#0e9f6e; --err:#ef4444;
-           --card:#fff; --ring:#93c5fd; --shadow:0 8px 24px rgba(2,6,23,.08); }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:var(--page);color:var(--ink)}
-    .wrap{max-width:1200px;margin:40px auto;padding:0 16px}
-    h1{display:flex;align-items:center;gap:10px;margin:0 0 14px}
-    h1 small{font-weight:600;color:var(--muted);font-size:.9rem}
-    .card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);border:1px solid #e5e7eb}
-    .pad{padding:18px}
-    textarea{width:100%;min-height:120px;padding:12px;border-radius:12px;border:1px solid #cbd5e1;font:inherit}
-    textarea:focus{outline:none;box-shadow:0 0 0 3px var(--ring)}
-    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:12px}
-    .btn{background:var(--brand);color:#fff;border:none;border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer}
-    .btn.secondary{background:#0b1b2a}
-    .btn.ghost{background:#fff;color:var(--brand);border:1px solid #cbd5e1}
-    .status{margin-top:12px;padding:10px 12px;border-radius:10px;font-size:.95rem}
-    .ok{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
-    .err{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
-    .muted{color:var(--muted);font-size:.92rem}
-    .viewer{margin-top:16px}
-    .bar{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
-    .imgBox{display:grid;place-items:center;background:#0b1b2a;border-radius:12px;min-height:720px;padding:10px;border:1px solid #233041}
-    .imgBox img{width:100%;height:auto;max-height:100%;object-fit:contain;border-radius:10px;display:block}
-    .chip{border:1px dashed #cbd5e1;border-radius:10px;padding:6px 10px;background:#fff}
-    .spin{width:16px;height:16px;border:3px solid #93c5fd;border-top-color:transparent;border-radius:50%;display:inline-block;animation:rot 1s linear infinite;margin-right:8px}
-    @keyframes rot{to{transform:rotate(360deg)}}
+    :root {
+      --brand-primary: #4f46e5;
+      --brand-secondary: #7c3aed;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --ink: #0f172a;
+      --ink-light: #334155;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --page: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --card: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(255, 255, 255, 0.2);
+      --input-bg: #fafbfc;
+      --input-border: #e2e8f0;
+      --input-focus: #4f46e5;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 25px 80px rgba(0, 0, 0, 0.15);
+      --radius: 16px;
+      --radius-lg: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--page);
+      color: var(--ink);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header */
+    h1 {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 0 0 40px;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: white;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    h1::before {
+      content: "🛡️";
+      font-size: 3rem;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    h1 small {
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+      margin-left: 8px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--card-border);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .pad {
+      padding: 32px;
+    }
+
+    /* Form Elements */
+    label {
+      display: block;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    label::before {
+      content: "✨";
+      font-size: 1.2rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      padding: 18px;
+      border-radius: var(--radius);
+      border: 2px solid var(--input-border);
+      font: inherit;
+      font-size: 16px;
+      line-height: 1.6;
+      background: var(--input-bg);
+      transition: all 0.3s ease;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+      background: white;
+      transform: translateY(-1px);
+    }
+
+    textarea::placeholder {
+      color: var(--muted-light);
+    }
+
+    /* Buttons */
+    .row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 14px;
+      padding: 14px 24px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      min-height: 48px;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn:not(:disabled):hover {
+      transform: translateY(-2px);
+    }
+
+    .btn:not(:disabled):active {
+      transform: translateY(0);
+    }
+
+    /* Primary Button */
+    .btn:not(.secondary):not(.ghost) {
+      background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+      color: white;
+      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn:not(.secondary):not(.ghost):not(:disabled):hover {
+      box-shadow: 0 12px 35px rgba(79, 70, 229, 0.4);
+    }
+
+    /* Secondary Button */
+    .btn.secondary {
+      background: linear-gradient(135deg, #1e293b, #334155);
+      color: white;
+      box-shadow: 0 8px 25px rgba(30, 41, 59, 0.3);
+    }
+
+    .btn.secondary:not(:disabled):hover {
+      box-shadow: 0 12px 35px rgba(30, 41, 59, 0.4);
+    }
+
+    /* Ghost Button */
+    .btn.ghost {
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--brand-primary);
+      border: 2px solid var(--input-border);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn.ghost:not(:disabled):hover {
+      background: white;
+      border-color: var(--brand-primary);
+      box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15);
+    }
+
+    /* Status Messages */
+    .status {
+      margin-top: 20px;
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .status.ok {
+      background: rgba(16, 185, 129, 0.1);
+      color: #065f46;
+      border: 2px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .status.err {
+      background: rgba(239, 68, 68, 0.1);
+      color: #991b1b;
+      border: 2px solid rgba(239, 68, 68, 0.2);
+    }
+
+    /* Utility Classes */
+    .muted {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .chip {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px dashed var(--input-border);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 14px;
+      color: var(--ink-light);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Image Viewer */
+    .viewer {
+      margin-top: 32px;
+    }
+
+    .bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+
+    .bar strong {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bar strong::before {
+      content: "🖼️";
+      font-size: 1.3rem;
+    }
+
+    .bar a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .bar a:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .imgBox {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      border-radius: var(--radius-lg);
+      min-height: 500px;
+      padding: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .imgBox::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3e%3cg fill='none' fill-rule='evenodd'%3e%3cg fill='%23ffffff' fill-opacity='0.03'%3e%3cpath d='m36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e") repeat;
+      opacity: 0.4;
+    }
+
+    .imgBox > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .imgBox img {
+      width: 100%;
+      height: auto;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+      display: block;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .imgBox img:hover {
+      transform: scale(1.02);
+    }
+
+    .imgBox .muted {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    #imgHint {
+      margin-top: 12px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* Loading Spinner */
+    .spin {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(79, 70, 229, 0.3);
+      border-top-color: var(--brand-primary);
+      border-radius: 50%;
+      display: inline-block;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .wrap {
+        padding: 20px 16px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+        gap: 12px;
+      }
+      
+      h1::before {
+        font-size: 2.5rem;
+      }
+      
+      .pad {
+        padding: 24px;
+      }
+      
+      .row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      
+      .btn {
+        justify-content: center;
+        padding: 16px 24px;
+      }
+      
+      .imgBox {
+        min-height: 400px;
+        padding: 16px;
+      }
+    }
+
+    /* Smooth transitions for dynamic content */
+    [style*="display: none"] {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    [style*="display: block"], [style*="display: inline"], [style*="display: inline-block"] {
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>🛡️ HeroGen <small>— Generatore & Trasformatore di immagini</small></h1>
+    <h1>HeroGen <small>— Generatore & Trasformatore di immagini</small></h1>
 
     <!-- INPUT -->
     <div class="card pad">
-      <label for="prompt"><strong>Scrivi il tuo prompt:</strong></label>
+      <label for="prompt">Scrivi il tuo prompt:</label>
       <textarea id="prompt" placeholder="Es.: Trasforma in stile cartoon moderno, colori brillanti e contorni morbidi..."></textarea>
 
       <div class="row">
-        <button class="btn" id="genBtn" title="Se carichi una foto farà la trasformazione, altrimenti genera da testo">Genera / Trasforma</button>
-        <button class="btn ghost" id="exBtn">Usa esempio cartoon</button>
-        <button class="btn secondary" id="dlBtn" disabled>Scarica PNG</button>
+        <button class="btn" id="genBtn" title="Se carichi una foto farà la trasformazione, altrimenti genera da testo">
+          🎨 Genera / Trasforma
+        </button>
+        <button class="btn ghost" id="exBtn">
+          📝 Usa esempio cartoon
+        </button>
+        <button class="btn secondary" id="dlBtn" disabled>
+          📥 Scarica PNG
+        </button>
 
         <!-- Upload -->
         <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp" style="display:none" />
-        <button class="btn ghost" id="uploadBtn" title="Carica una foto da trasformare">Trasforma da foto</button>
+        <button class="btn ghost" id="uploadBtn" title="Carica una foto da trasformare">
+          📸 Trasforma da foto
+        </button>
         <span id="fileName" class="muted chip" style="display:none"></span>
       </div>
 
@@ -62,13 +497,13 @@
     <!-- IMMAGINE -->
     <div class="viewer">
       <div class="bar">
-        <strong>🖼️ Immagine generata</strong>
-        <a id="openFull" href="#" target="_blank" class="muted" style="display:none">Apri grande ↗</a>
+        <strong>Immagine generata</strong>
+        <a id="openFull" href="#" target="_blank" style="display:none">Apri grande ↗</a>
       </div>
       <div class="imgBox" id="imgBox">
-        <span class="muted">Nessuna immagine ancora</span>
+        <span class="muted">Nessuna immagine ancora<br><em>Scrivi un prompt e clicca "Genera" per iniziare</em></span>
       </div>
-      <div class="muted" id="imgHint">—</div>
+      <div id="imgHint">—</div>
     </div>
   </div>
 
@@ -120,7 +555,7 @@
         const f = fileInput.files?.[0] || null;
         lastFile = f;
         if (f){
-          fileName.textContent = `Selezionato: ${f.name}`;
+          fileName.textContent = `📎 ${f.name}`;
           fileName.style.display = "inline-block";
         } else {
           fileName.textContent = "";
@@ -152,11 +587,11 @@
       // Azione principale
       genBtn.addEventListener("click", async ()=>{
         const prompt = (promptEl.value || "").trim();
-        if (prompt.length < 3) return showStatus("Inserisci un prompt.", true);
+        if (prompt.length < 3) return showStatus("❌ Inserisci un prompt più dettagliato.", true);
 
         lockUI(true);
-        showStatus(`<span class="spin"></span>Elaborazione...`);
-        imgBox.innerHTML = `<span class="muted">Attendo immagine...</span>`;
+        showStatus(`<span class="spin"></span>Elaborazione in corso...`);
+        imgBox.innerHTML = `<span class="muted">⏳ Sto generando la tua immagine...</span>`;
         openFull.style.display = "none"; openFull.removeAttribute("href");
         dlBtn.disabled = true; lastImageUrl = null;
 
@@ -187,7 +622,7 @@
           if(!r.ok){
             const msg = data?.error || `Errore ${r.status}`;
             showStatus(`❌ ${msg}`, true);
-            imgBox.innerHTML = `<span class="muted">Nessuna immagine</span>`;
+            imgBox.innerHTML = `<span class="muted">😔 Nessuna immagine</span>`;
             return;
           }
 
@@ -201,19 +636,20 @@
               imgBox.appendChild(img);
               openFull.href = url; openFull.style.display = "inline";
               lastImageUrl = url; dlBtn.disabled = false;
-              showStatus("✅ Fatto!");
+              showStatus("✅ Immagine generata con successo!");
             };
             img.onerror = ()=>{
-              imgBox.innerHTML = `<span class="muted">Immagine non caricata</span>`;
+              imgBox.innerHTML = `<span class="muted">😞 Errore nel caricamento dell'immagine</span>`;
               showStatus("❌ Errore caricamento immagine", true);
             };
           } else {
-            imgBox.innerHTML = `<span class="muted">Nessuna immagine ricevuta</span>`;
+            imgBox.innerHTML = `<span class="muted">😕 Nessuna immagine ricevuta</span>`;
             showStatus("❌ Nessuna immagine ricevuta", true);
           }
         } catch (e){
           console.error(e);
           showStatus("❌ Errore di rete o server.", true);
+          imgBox.innerHTML = `<span class="muted">🔌 Errore di connessione</span>`;
         } finally {
           lockUI(false);
         }
