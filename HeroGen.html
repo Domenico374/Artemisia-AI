@@ -336,7 +336,14 @@
       if(!img.src) return alert('Nessuna immagine da scaricare.');
       downloadFromSrc(img.src);
     });
-    window.downloadFromSrc = (src)=>{ const a=document.createElement('a'); a.href=src; a.download='artemisia-ai.png'; a.click(); };
+    window.downloadFromSrc = (src)=>{
+      // Se è un dataURL, scarica direttamente; per URL esterni apri nuova scheda (evita problemi CORS)
+      if(/^data:/i.test(src)){
+        const a=document.createElement('a'); a.href=src; a.download='artemisia-ai.png'; a.click();
+      } else {
+        window.open(src, '_blank');
+      }
+    };
 
     // --- Mock renderer (fallback sicuro) ---
     if (typeof window.simulateRender !== 'function') {
@@ -344,16 +351,29 @@
         const m = { '3-4':[768,1024], '9-16':[720,1280], '4-3':[1280,960], '16-9':[1280,720], '1-1':[1024,1024] };
         const [w,h] = m[ratio] || m['1-1'];
 
-        // Se il prompt parla di gatti/kitten -> usa un'immagine reale di test
+        // Se il prompt parla di gatti/kitten, prova a caricare un'immagine reale SENZA fetch (evita CORS)
         if (/(gatt|cat|kitten)/i.test(text)) {
-          const res = await fetch(`https://placekitten.com/${w}/${h}?_=${Date.now()}`);
-          if (!res.ok) throw new Error('placekitten non raggiungibile');
-          const blob = await res.blob();
-          // Restituisco un ObjectURL, così possiamo scaricare e mettere in cronologia
-          return URL.createObjectURL(blob);
+          const loadImgURL = (url) => new Promise((resolve, reject)=>{
+            const im = new Image();
+            im.onload = () => resolve(url);
+            im.onerror = () => reject(new Error('Immagine non raggiungibile'));
+            im.src = url;
+          });
+
+          try {
+            // 1° tentativo: placekitten
+            return await loadImgURL(`https://placekitten.com/${w}/${h}?_=${Date.now()}`);
+          } catch (e) {
+            // 2° tentativo: picsum
+            try {
+              return await loadImgURL(`https://picsum.photos/seed/kitten-${w}x${h}/${w}/${h}`);
+            } catch (e2) {
+              // Fallback al mock
+            }
+          }
         }
 
-        // Altrimenti, fallback mock (canvas con gradiente e testo)
+        // Fallback mock (canvas con gradiente e testo)
         const c = document.createElement('canvas'); c.width=w; c.height=h;
         const ctx = c.getContext('2d');
         const g = ctx.createLinearGradient(0,0,w,h);
@@ -369,6 +389,7 @@
         return c.toDataURL('image/png');
       }
     }
+  
 
     function ratioToPx(r){ switch(r){ case '3-4':return [768,1024]; case '9-16':return [720,1280]; case '4-3':return [1280,960]; case '16-9':return [1280,720]; default:return [1024,1024]; } }
 
