@@ -5,22 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Artemisia AI — Generatore Immagini AI</title>
   <link rel="icon" href="logo-artemisia.png" />
-  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-start: #0f172a; /* slate-900 */
-      --bg-end: #1e1b4b;   /* indigo-950 */
-      --card: #0b1020cc;   /* glass */
-      --text: #e2e8f0;     /* slate-200 */
+      --bg-end:   #1e1b4b; /* indigo-950 */
+      --card:  #0b1020cc;  /* glass */
+      --text:  #e2e8f0;    /* slate-200 */
       --muted: #94a3b8;    /* slate-400 */
-      --brand: #8b5cf6;  /* violet-500 */    /* blue-400 */
-      --brand-2: #eab308; /* amber-500 */  /* violet-400 */
-      --accent: #eab308;  /* gold accent */   /* cyan-400 */
-      --ring: rgba(96, 165, 250, .35);
-      --ok: #34d399;       /* emerald-400 */
-      --warn: #f59e0b;     /* amber-500 */
-      --err: #f87171;      /* red-400 */
+      --brand:  #8b5cf6;   /* violet-500 */
+      --brand-2:#eab308;   /* amber-500 */
+      --accent: #eab308;   /* gold */
+      --ring: rgba(96,165,250,.35);
+      --ok:#34d399;--warn:#f59e0b;--err:#f87171;
       --surface: rgba(255,255,255,.06);
       --border: rgba(255,255,255,.14);
       --chip: rgba(148,163,184,.16);
@@ -35,8 +32,7 @@
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--text);
+      margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);
       background: radial-gradient(1000px 600px at -10% -10%, #0ea5e980, transparent 60%),
                   radial-gradient(800px 500px at 110% 10%, #a78bfa66, transparent 60%),
                   linear-gradient(135deg, var(--bg-start), var(--bg-end));
@@ -44,24 +40,21 @@
     }
     .container{max-width:1200px;margin:0 auto;padding:24px}
 
-    /* Header */
     .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
     .brand{display:flex;align-items:center;gap:14px}
     .logo{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;box-shadow:var(--shadow)}
+    .logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:12px}
     .title-wrap .title{font-size:28px;font-weight:800;letter-spacing:.2px}
     .title-wrap .subtitle{font-size:14px;color:var(--muted)}
     .actions{display:flex;align-items:center;gap:8px}
     .icon-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer;transition:all .2s ease}
     .icon-btn:hover{transform:translateY(-1px);border-color:var(--accent)}
 
-    /* Card */
     .card{background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
 
-    /* Grid layout */
     .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}
     @media(max-width:1024px){.grid{grid-template-columns:1fr;}}
 
-    /* Prompt */
     .section-title{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:10px}
     .section-title .emoji{font-size:20px}
 
@@ -76,9 +69,7 @@
     .slider input{accent-color:var(--brand)}
 
     .textarea{position:relative}
-    textarea{
-      width:100%;min-height:140px;resize:vertical;border:2px solid transparent;border-radius:16px;padding:16px 18px;background:var(--surface);color:var(--text);line-height:1.6
-    }
+    textarea{width:100%;min-height:140px;resize:vertical;border:2px solid transparent;border-radius:16px;padding:16px 18px;background:var(--surface);color:var(--text);line-height:1.6}
     textarea:focus{outline:none;box-shadow:0 0 0 4px var(--ring);border-color:transparent}
     .counter{position:absolute;right:12px;bottom:8px;font-size:12px;color:var(--muted)}
 
@@ -89,7 +80,6 @@
     .btn.primary:hover{transform:translateY(-1px)}
     .btn.outline:hover{border-color:var(--accent)}
 
-    /* Preview */
     .frame{position:relative;background:linear-gradient(135deg,#0b1020,#1f2937);border:2px solid var(--border);border-radius:18px;display:grid;place-items:center;overflow:hidden}
     .frame.ratio-1-1{aspect-ratio:1/1}
     .frame.ratio-3-4{aspect-ratio:3/4}
@@ -102,7 +92,6 @@
     @keyframes spin{to{transform:rotate(360deg)}}
     .progress{position:absolute;left:0;bottom:0;height:4px;width:0;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .2s}
 
-    /* History */
     .history{margin-top:18px}
     .history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
     .card-thumb{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
@@ -110,12 +99,9 @@
     .thumb-actions{display:flex;gap:6px;position:absolute;right:8px;bottom:8px}
     .small{font-size:12px;color:var(--muted)}
 
-    /* Tips */
     .tips{margin-top:20px;padding:18px;border-left:3px solid var(--brand);background:linear-gradient(0deg,transparent,rgba(96,165,250,.08));border-radius:12px}
 
-    /* Accessibility helpers */
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    .logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:12px}
   </style>
 </head>
 <body>
@@ -135,7 +121,6 @@
     </header>
 
     <main class="grid" aria-live="polite">
-      <!-- LEFT: prompt -->
       <section class="card">
         <div class="section-title"><span class="emoji">✨</span><span>Scrivi il tuo prompt</span></div>
 
@@ -183,7 +168,6 @@
         </div>
       </section>
 
-      <!-- RIGHT: preview -->
       <section class="card">
         <div class="section-title"><span class="emoji">🖼️</span><span>Anteprima</span></div>
         <div class="frame ratio-1-1" id="frame">
@@ -219,203 +203,169 @@
   </div>
 
   <script>
-    // --- Utilities ---
-    const $ = (sel)=>document.querySelector(sel);
+  // === SAFETY NET & BOOT ===
+  window.addEventListener('error', e => {
+    console.error(e.error || e.message);
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const $  = (sel)=>document.querySelector(sel);
     const $$ = (sel)=>document.querySelectorAll(sel);
 
-    // Theme toggle
     const themeToggle = $('#themeToggle');
-    themeToggle.addEventListener('click', ()=>{
+    if (themeToggle) themeToggle.addEventListener('click', ()=>{
       const root = document.documentElement;
       const isDark = root.getAttribute('data-theme') !== 'light';
       root.setAttribute('data-theme', isDark ? 'light' : 'dark');
     });
 
-    // Prompt helpers
     const promptEl = $('#prompt');
-    const counter = $('#counter');
+    const counter  = $('#counter');
     const maxChars = 400;
     const updateCounter = ()=>{
       const len = promptEl.value.length;
       counter.textContent = `${len}/${maxChars}`;
       counter.style.color = len > maxChars ? 'var(--err)' : 'var(--muted)';
     };
-    promptEl.addEventListener('input', updateCounter);
-    updateCounter();
+    promptEl.addEventListener('input', updateCounter); updateCounter();
 
-    // Chips insert
     $('#styleChips').addEventListener('click', (e)=>{
-      const chip = e.target.closest('.chip');
-      if(!chip) return;
+      const chip = e.target.closest('.chip'); if(!chip) return;
       chip.classList.toggle('active');
       const text = chip.dataset.insert;
       if(chip.classList.contains('active')){
         if(promptEl.value && !/[,.;:]\s?$/.test(promptEl.value)) promptEl.value += ', ';
         promptEl.value += text;
       } else {
-        // remove once if present
-        promptEl.value = promptEl.value.replace(new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), '').replace(/\s+,\s+/g, ', ').replace(/^,\s+|,\s+$/g, '');
+        promptEl.value = promptEl.value
+          .replace(new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), '')
+          .replace(/\s+,\s+/g, ', ').replace(/^,\s+|,\s+$/g, '');
       }
       updateCounter();
     });
 
-    // Ratio control
     const ratioSel = $('#ratio');
-    const frame = $('#frame');
+    const frame    = $('#frame');
     ratioSel.addEventListener('change', ()=>{
       frame.className = `frame ratio-${ratioSel.value}`;
     });
 
-    // Buttons
     const generateBtn = $('#generateBtn');
     const surpriseBtn = $('#surpriseBtn');
-    const uploadBtn = $('#uploadBtn');
+    const uploadBtn   = $('#uploadBtn');
     const downloadBtn = $('#downloadBtn');
 
-    // Preview elements
     const img = $('#resultImg');
     const placeholder = $('#placeholder');
     const spinner = $('#spinner');
     const progress = $('#progress');
 
-    // History
     const historyGrid = $('#historyGrid');
     const history = [];
 
-    // Keyboard shortcut: Cmd/Ctrl + Enter
     document.addEventListener('keydown', (e)=>{
       if((e.metaKey || e.ctrlKey) && e.key === 'Enter'){ e.preventDefault(); generate(); }
     });
 
-    // Surprise prompts
     const examples = [
-      "Panorama di Cagliari al tramonto, stile acquerello soffuso, luce dorata, grana analogica",
-      "Ritratto fotorealistico, luce cinematografica, 85mm, bokeh, pelle naturale",
-      "Villaggio fantasy su scogliere viola, cielo stellato, in stile Studio Ghibli",
+      'Panorama di Cagliari al tramonto, stile acquerello soffuso, luce dorata, grana analogica',
+      'Ritratto fotorealistico, luce cinematografica, 85mm, bokeh, pelle naturale',
+      'Villaggio fantasy su scogliere viola, cielo stellato, in stile Studio Ghibli',
       "Poster vintage anni '90, colori saturi, texture carta, layout tipografico bold",
-      "Paesaggio marino epico, pittorico biblico, raggi di luce tra le nuvole"
+      'Paesaggio marino epico, pittorico biblico, raggi di luce tra le nuvole'
     ];
     surpriseBtn.addEventListener('click', ()=>{
       const seed = (Date.now()%examples.length);
-      promptEl.value = examples[seed];
-      updateCounter();
+      promptEl.value = examples[seed]; updateCounter();
     });
 
-    // Upload flow (mock)
     const fileInput = $('#fileInput');
     uploadBtn.addEventListener('click', ()=> fileInput.click());
     fileInput.addEventListener('change', (e)=>{
-      const file = e.target.files[0];
-      if(!file) return;
+      const file = e.target.files[0]; if(!file) return;
       const url = URL.createObjectURL(file);
-      // Show uploaded as starting point
-      placeholder.style.display='none';
-      spinner.style.display='none';
+      placeholder.style.display='none'; spinner.style.display='none';
       img.src = url; img.style.display='block';
-      downloadBtn.disabled = false;
-      pushHistory(url, `Da foto: ${file.name}`);
+      downloadBtn.disabled = false; pushHistory(url, `Da foto: ${file.name}`);
     });
 
-    // Generate (simulated)
+    // Ensure binding even if something overrides it
     generateBtn.addEventListener('click', generate);
+    generateBtn.setAttribute('onclick','generate()');
+
     function generate(){
       const prompt = (promptEl.value || '').trim();
       if(!prompt){ alert('Inserisci un prompt prima di generare!'); return; }
       lockUI(true);
-      placeholder.style.display='flex';
-      spinner.style.display='block';
-      img.style.display='none';
-      progress.style.width='0%';
+      placeholder.style.display='flex'; spinner.style.display='block';
+      img.style.display='none'; progress.style.width='0%';
+      let p=0; const tick=setInterval(()=>{ p=Math.min(100,p+8); progress.style.width=p+'%'; },160);
 
-      // Simulated progress
-      let p=0; const tick = setInterval(()=>{ p=Math.min(100,p+8); progress.style.width=p+'%'; }, 160);
-
-      // Simulated render -> replace with your real API call
       simulateRender(prompt, ratioSel.value).then((dataUrl)=>{
         clearInterval(tick); progress.style.width='100%';
         spinner.style.display='none'; placeholder.style.display='none';
-        img.src = dataUrl; img.style.display='block';
-        downloadBtn.disabled = false;
-        pushHistory(dataUrl, prompt);
+        img.src=dataUrl; img.style.display='block';
+        downloadBtn.disabled=false; pushHistory(dataUrl, prompt);
       }).catch((err)=>{
-        console.error(err); alert('Errore durante la generazione.');
+        console.error(err); alert('Errore durante la generazione: '+err.message);
         spinner.style.display='none';
-      }).finally(()=>{ lockUI(false); setTimeout(()=>progress.style.width='0%', 600); });
+      }).finally(()=>{ lockUI(false); setTimeout(()=>progress.style.width='0%',600); });
     }
+    window.generate = generate; // disponibile anche da onclick
 
-    function lockUI(v){
-      [generateBtn,surpriseBtn,uploadBtn].forEach(b=>b.disabled=v);
-    }
+    function lockUI(v){ [generateBtn,surpriseBtn,uploadBtn].forEach(b=>b.disabled=v); }
 
     function pushHistory(src, caption){
       history.unshift({src,caption,date:new Date()});
       while(history.length>6) history.pop();
       renderHistory();
     }
-
     function renderHistory(){
       historyGrid.innerHTML = history.map((h,i)=>`
-        <div class="card-thumb">
-          <img src="${h.src}" alt="Miniatura ${i+1}">
-          <div class="thumb-actions">
-            <button class="icon-btn" title="Scarica" onclick="downloadFromSrc('${h.src}')">⬇️</button>
-            <button class="icon-btn" title="Riuso prompt" onclick="reusePrompt(${i})">♻️</button>
+        <div class='card-thumb'>
+          <img src='${h.src}' alt='Miniatura ${i+1}'>
+          <div class='thumb-actions'>
+            <button class='icon-btn' title='Scarica' onclick="downloadFromSrc('${h.src}')">⬇️</button>
+            <button class='icon-btn' title='Riuso prompt' onclick='reusePrompt(${i})'>♻️</button>
           </div>
-        </div>
-      `).join('');
+        </div>`).join('');
     }
+    window.reusePrompt = (i)=>{ promptEl.value = history[i].caption; updateCounter(); };
 
-    window.reusePrompt = (i)=>{ promptEl.value = history[i].caption; updateCounter(); }
-
-    // Download button
     downloadBtn.addEventListener('click', ()=>{
       if(!img.src) return alert('Nessuna immagine da scaricare.');
       downloadFromSrc(img.src);
     });
+    window.downloadFromSrc = (src)=>{ const a=document.createElement('a'); a.href=src; a.download='artemisia-ai.png'; a.click(); };
 
-    window.downloadFromSrc = (src)=>{
-      const a=document.createElement('a');
-      a.href=src; a.download='artemisia-ai.png'; a.click();
-    }
-
-    // Simulated renderer: draws a gradient with text on canvas and returns dataURL
-    async function simulateRender(text, ratio){
-      const [w,h] = ratioToPx(ratio);
-      const c = document.createElement('canvas');
-      c.width = w; c.height = h;
-      const ctx = c.getContext('2d');
-      const g = ctx.createLinearGradient(0,0,w,h);
-      g.addColorStop(0,'#0ea5e9'); g.addColorStop(1,'#a78bfa');
-      ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
-      // glass stripe
-      ctx.fillStyle = 'rgba(255,255,255,0.16)';
-      ctx.fillRect(0,h*0.72,w,h*0.28);
-      // Title
-      ctx.fillStyle = '#0f172a';
-      ctx.font = Math.floor(h*0.06)+'px Inter, sans-serif';
-      ctx.fillText('Artemisia AI (mock)', 24, h*0.82);
-      ctx.fillStyle = '#111827';
-      ctx.font = Math.floor(h*0.035)+'px Inter, sans-serif';
-      const clipped = text.length>120 ? text.slice(0,117)+'…' : text;
-      ctx.fillText(clipped, 24, h*0.89);
-      await new Promise(r=>setTimeout(r, 1200 + Math.random()*800));
-      return c.toDataURL('image/png');
-    }
-
-    function ratioToPx(r){
-      switch(r){
-        case '3-4': return [768,1024];
-        case '9-16': return [720,1280];
-        case '4-3': return [1280,960];
-        case '16-9': return [1280,720];
-        default: return [1024,1024];
+    // --- Mock renderer (fallback sicuro) ---
+    if (typeof window.simulateRender !== 'function') {
+      window.simulateRender = async function(text, ratio){
+        const m = { '3-4':[768,1024], '9-16':[720,1280], '4-3':[1280,960], '16-9':[1280,720], '1-1':[1024,1024] };
+        const [w,h] = m[ratio] || m['1-1'];
+        const c = document.createElement('canvas'); c.width=w; c.height=h;
+        const ctx = c.getContext('2d');
+        const g = ctx.createLinearGradient(0,0,w,h);
+        g.addColorStop(0,'#0ea5e9'); g.addColorStop(1,'#a78bfa');
+        ctx.fillStyle = g; ctx.fillRect(0,0,w,h);
+        ctx.fillStyle = 'rgba(255,255,255,0.16)'; ctx.fillRect(0,h*0.72,w,h*0.28);
+        ctx.fillStyle = '#0f172a'; ctx.font = Math.floor(h*0.06)+'px Inter, sans-serif';
+        ctx.fillText('Artemisia AI (mock)', 24, h*0.82);
+        ctx.fillStyle = '#111827'; ctx.font = Math.floor(h*0.035)+'px Inter, sans-serif';
+        const clipped = text.length>120 ? text.slice(0,117)+'…' : text;
+        ctx.fillText(clipped, 24, h*0.89);
+        await new Promise(r=>setTimeout(r, 1200 + Math.random()*800));
+        return c.toDataURL('image/png');
       }
     }
 
-    // Help modal (very light)
-    $('#helpBtn').addEventListener('click', ()=>{
-      alert('Suggerimenti:\n• Usa i chip per arricchire rapidamente il prompt.\n• Scegli il formato (1:1, 9:16, 16:9, ecc.).\n• ⌘/Ctrl + Invio per generare.');
+    function ratioToPx(r){ switch(r){ case '3-4':return [768,1024]; case '9-16':return [720,1280]; case '4-3':return [1280,960]; case '16-9':return [1280,720]; default:return [1024,1024]; } }
+
+    const helpBtn = document.getElementById('helpBtn');
+    helpBtn.addEventListener('click', ()=>{
+      alert('Suggerimenti:\n• Usa i chip per arricchire il prompt.\n• Scegli il formato (1:1, 9:16, 16:9, ecc.).\n• ⌘/Ctrl + Invio per generare.');
     });
+  });
   </script>
 </body>
 </html>
