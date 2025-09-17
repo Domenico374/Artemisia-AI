@@ -319,6 +319,18 @@
       });
     }
 
+    // Determina se è una trasformazione drastica
+    function isDrasticTransformation(prompt) {
+      const drasticKeywords = [
+        'trasforma', 'transform', 'diventa', 'become', 'cavaliere', 'knight', 'robot', 'cartoon', 
+        'anime', 'dipinto', 'painting', 'pittore', 'artist', 'medieval', 'fantasy', 'creature',
+        'mostro', 'monster', 'supereroe', 'superhero', 'principessa', 'princess', 'guerriero', 'warrior'
+      ];
+      
+      const lowerPrompt = prompt.toLowerCase();
+      return drasticKeywords.some(keyword => lowerPrompt.includes(keyword));
+    }
+
     // Funzione principale di generazione
     async function generate() {
       console.log('🎨 Avvio generazione...');
@@ -353,16 +365,37 @@
         let response;
         
         if (lastFile) {
-          console.log('📸 Trasformazione da file...');
-          showStatus('🔄 Preparando immagine...');
-          const dataUrl = await fileToDataURL(lastFile);
-          showStatus('🎨 Trasformando...');
+          const isDrastic = isDrasticTransformation(prompt);
+          console.log(`📸 Trasformazione ${isDrastic ? 'drastica' : 'semplice'} da file...`);
           
-          response = await fetch(EDIT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt, image_data_url: dataUrl })
-          });
+          if (isDrastic) {
+            // Per trasformazioni drastiche usa /api/generate con descrizione
+            showStatus('🎨 Creando trasformazione drastica...');
+            
+            const transformPrompt = `Transform this person: ${prompt}. Keep the person recognizable but apply the transformation completely. High quality, detailed result.`;
+            
+            response = await fetch(GEN_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                prompt: transformPrompt,
+                style: 'neutral' // Lascia che il prompt guidi lo stile
+              })
+            });
+            
+            showStatus('🎨 Trasformazione drastica in corso...');
+          } else {
+            // Per modifiche semplici usa /api/edit
+            showStatus('🔄 Preparando immagine...');
+            const dataUrl = await fileToDataURL(lastFile);
+            showStatus('🎨 Applicando modifiche sottili...');
+            
+            response = await fetch(EDIT_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ prompt, image_data_url: dataUrl })
+            });
+          }
         } else {
           console.log('✨ Generazione da testo...');
           showStatus('✨ Generando immagine...');
