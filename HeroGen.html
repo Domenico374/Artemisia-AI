@@ -138,16 +138,15 @@
           <div class="counter" id="counter">0/500</div>
         </div>
 
-        <div class="file-chip" id="fileChip">
+        <div class="file-chip" id="fileChip" style="display:none;">
           <span>📎</span>
           <span id="fileName">Nessun file</span>
           <button onclick="clearFile()" style="background:none;border:none;color:inherit;cursor:pointer;padding:0;margin-left:auto">✕</button>
         </div>
 
         <div class="btns">
-          <button class="btn primary" onclick="generate()" id="generateBtn">🎨 Genera / Trasforma</button>
+          <button class="btn primary" onclick="generate()" id="generateBtn">🎨 Genera Immagine</button>
           <button class="btn outline" onclick="surprise()">🎲 Ispirami</button>
-          <button class="btn outline" onclick="document.getElementById('fileInput').click()">📸 Da foto</button>
           <button class="btn outline" onclick="download()" id="downloadBtn" disabled>📥 Scarica PNG</button>
         </div>
 
@@ -319,18 +318,6 @@
       });
     }
 
-    // Determina se è una trasformazione drastica
-    function isDrasticTransformation(prompt) {
-      const drasticKeywords = [
-        'trasforma', 'transform', 'diventa', 'become', 'cavaliere', 'knight', 'robot', 'cartoon', 
-        'anime', 'dipinto', 'painting', 'pittore', 'artist', 'medieval', 'fantasy', 'creature',
-        'mostro', 'monster', 'supereroe', 'superhero', 'principessa', 'princess', 'guerriero', 'warrior'
-      ];
-      
-      const lowerPrompt = prompt.toLowerCase();
-      return drasticKeywords.some(keyword => lowerPrompt.includes(keyword));
-    }
-
     // Funzione principale di generazione
     async function generate() {
       console.log('🎨 Avvio generazione...');
@@ -362,50 +349,14 @@
       }, 200);
 
       try {
-        let response;
+        console.log('✨ Generazione da testo...');
+        showStatus('✨ Generando immagine...');
         
-        if (lastFile) {
-          const isDrastic = isDrasticTransformation(prompt);
-          console.log(`📸 Trasformazione ${isDrastic ? 'drastica' : 'semplice'} da file...`);
-          
-          if (isDrastic) {
-            // Per trasformazioni drastiche usa /api/generate con descrizione
-            showStatus('🎨 Creando trasformazione drastica...');
-            
-            const transformPrompt = `Transform this person: ${prompt}. Keep the person recognizable but apply the transformation completely. High quality, detailed result.`;
-            
-            response = await fetch(GEN_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ 
-                prompt: transformPrompt,
-                style: 'neutral' // Lascia che il prompt guidi lo stile
-              })
-            });
-            
-            showStatus('🎨 Trasformazione drastica in corso...');
-          } else {
-            // Per modifiche semplici usa /api/edit
-            showStatus('🔄 Preparando immagine...');
-            const dataUrl = await fileToDataURL(lastFile);
-            showStatus('🎨 Applicando modifiche sottili...');
-            
-            response = await fetch(EDIT_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ prompt, image_data_url: dataUrl })
-            });
-          }
-        } else {
-          console.log('✨ Generazione da testo...');
-          showStatus('✨ Generando immagine...');
-          
-          response = await fetch(GEN_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt })
-          });
-        }
+        const response = await fetch(GEN_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        });
 
         clearInterval(progressInterval);
         progress.style.width = '100%';
@@ -438,13 +389,11 @@
         document.getElementById('downloadBtn').disabled = false;
         
         // Cronologia
-        const caption = lastFile ? `Trasformazione: ${prompt}` : prompt;
-        history.unshift({ src: imageUrl, caption, date: new Date() });
+        history.unshift({ src: imageUrl, caption: prompt, date: new Date() });
         if (history.length > 6) history.pop();
         renderHistory();
         
-        showStatus('✅ Generazione completata!');
-        if (lastFile) clearFile();
+        showStatus('✅ Immagine generata con successo!');
 
       } catch (error) {
         console.error('❌ Errore:', error);
