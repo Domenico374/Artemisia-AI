@@ -430,3 +430,298 @@
       if (!prompt || prompt.length < 3) {
         showStatus('❌ Inserisci un prompt più dettagliato', true);
         return;
+      }
+
+      batchInProgress = true;
+      comparisonImages = [];
+      
+      for (let i = 0; i < batchSize; i++) {
+        showStatus(`🔄 Generando ${i+1}/${batchSize}...`);
+        await generate();
+        if (lastImageUrl) {
+          comparisonImages.push(lastImageUrl);
+        }
+        if (i < batchSize - 1) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+      
+      batchInProgress = false;
+      if (comparisonImages.length > 1) {
+        document.getElementById('compareBtn').disabled = false;
+        showStatus(`✅ Batch completato! ${comparisonImages.length} immagini generate`);
+      }
+    }
+
+    // Conversione immagine sicura
+    function fileToDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const maxSize = 1024;
+            let { width, height } = img;
+            
+            if (width > maxSize || height > maxSize) {
+              const ratio = Math.min(maxSize / width, maxSize / height);
+              width *= ratio;
+              height *= ratio;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/png', 0.9));
+          } catch (error) {
+            reject(new Error('Errore conversione: ' + error.message));
+          }
+        };
+        img.onerror = () => reject(new Error('Caricamento immagine fallito'));
+        img.src = URL.createObjectURL(file);
+      });
+    }
+
+    // Funzione principale di generazione
+    async function generate() {
+      console.log('🎨 Avvio generazione...');
+      
+      const promptEl = document.getElementById('prompt');
+      const prompt = promptEl.value.trim();
+      
+      if (!prompt || prompt.length < 3) {
+        showStatus('❌ Inserisci un prompt più dettagliato', true);
+        return;
+      }
+
+      const generateBtn = document.getElementById('generateBtn');
+      const spinner = document.getElementById('spinner');
+      const placeholder = document.getElementById('placeholder');
+      const img = document.getElementById('resultImg');
+      const progress = document.getElementById('progress');
+
+      generateBtn.disabled = true;
+      hideStatus();
+      placeholder.style.display = 'flex';
+      spinner.style.display = 'block';
+      img.style.display = 'none';
+      progress.style.width = '0%';
+
+      let progressInterval = setInterval(() => {
+        const current = parseInt(progress.style.width) || 0;
+        progress.style.width = Math.min(95, current + Math.random() * 10) + '%';
+      }, 200);
+
+      try {
+        console.log('✨ Generazione da testo...');
+        showStatus('✨ Generando immagine...');
+        
+        // Aggiungi parametri avanzati
+        const creativity = document.getElementById('creativity').value;
+        const quality = document.getElementById('quality').value;
+        const variants = document.getElementById('variants').value;
+        
+        const response = await fetch(GEN_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            prompt, 
+            creativity: parseInt(creativity),
+            quality: parseInt(quality),
+            variants: parseInt(variants)
+          })
+        });
+
+        clearInterval(progressInterval);
+        progress.style.width = '100%';
+
+        const text = await response.text();
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch {
+          data = { error: 'Risposta server non valida', raw: text };
+        }
+
+        if (!response.ok) {
+          throw new Error(data.error || `Errore ${response.status}`);
+        }
+
+        const imageUrl = data.image_url;
+        if (!imageUrl) {
+          throw new Error('Nessun URL immagine ricevuto');
+        }
+
+        // Mostra risultato
+        spinner.style.display = 'none';
+        placeholder.style.display = 'none';
+        img.src = imageUrl;
+        img.style.display = 'block';
+        img.classList.add('show');
+        
+        lastImageUrl = imageUrl;
+        document.getElementById('downloadBtn').disabled = false;
+        document.getElementById('exportBtn').disabled = false;
+        document.getElementById('ratingSystem').style.display = 'flex';
+        
+        // Cronologia
+        history.unshift({ src: imageUrl, caption: prompt, date: new Date(), rating: 0 });
+        if (history.length > 6) history.pop();
+        renderHistory();
+        
+        if (!batchInProgress) {
+          showStatus('✅ Immagine generata con successo!');
+        }
+
+      } catch (error) {
+        console.error('❌ Errore:', error);
+        clearInterval(progressInterval);
+        spinner.style.display = 'none';
+        showStatus(`❌ ${error.message}`, true);
+        placeholder.style.display = 'flex';
+      } finally {
+        generateBtn.disabled = false;
+        setTimeout(() => progress.style.width = '0%', 1000);
+      }
+    }
+
+    // Rating system
+    function rateImage(rating) {
+      currentRating = rating;
+      const stars = document.querySelectorAll('.star');
+      stars.forEach((star, index) => {
+        star.classList.toggle('active', index < rating);
+      });
+      
+      // Salva rating nella cronologia
+      if (history.length > 0) {
+        history[0].rating = rating;
+      }
+      
+      showStatus(`⭐ Valutazione salvata: ${rating}/5`);
+      setTimeout(hideStatus, 2000);
+    }
+
+    // Comparison functions
+    function toggleComparison() {
+      const comparisonMode = document.getElementById('comparisonMode');
+      const isVisible = comparisonMode.style.display !== 'none';
+      
+      if (isVisible) {
+        comparisonMode.style.display = 'none';
+        document.getElementById('compareBtn').textContent = 'Confronta';
+      } else {
+        if (comparisonImages.length >= 2) {
+          document.getElementById('compareImg1').src = comparisonImages[comparisonImages.length - 2];
+          document.getElementById('compareImg2').src = comparisonImages[comparisonImages.length - 1];
+          comparisonMode.style.display = 'block';
+          document.getElementById('compareBtn').textContent = 'Chiudi Confronto';
+        } else {
+          showStatus('❌ Serve almeno 2 immagini per confrontare', true);
+        }
+      }
+    }
+
+    function selectWinner(choice) {
+      const winnerUrl = choice === 1 ? comparisonImages[comparisonImages.length - 2] : comparisonImages[comparisonImages.length - 1];
+      showStatus(`🏆 Hai scelto l'immagine ${choice === 1 ? 'A' : 'B'}`);
+      
+      // Mostra l'immagine vincente nel frame principale
+      document.getElementById('resultImg').src = winnerUrl;
+      lastImageUrl = winnerUrl;
+      
+      setTimeout(() => {
+        toggleComparison();
+      }, 1500);
+    }
+
+    // Export functions
+    function exportMultiple() {
+      if (!lastImageUrl) return;
+      
+      const formats = ['png', 'jpg', 'webp'];
+      formats.forEach(format => {
+        downloadAsFormat(lastImageUrl, format);
+      });
+      showStatus('📤 Export multiplo avviato');
+    }
+
+    function downloadAsFormat(url, format) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        
+        const link = document.createElement('a');
+        link.download = `artemisia-ai.${format}`;
+        link.href = canvas.toDataURL(`image/${format}`);
+        link.click();
+      };
+      
+      img.src = url;
+    }
+
+    function renderHistory() {
+      const grid = document.getElementById('historyGrid');
+      if (history.length === 0) {
+        grid.innerHTML = '<div class="small" style="grid-column:1/-1;text-align:center;padding:20px">Nessuna generazione ancora</div>';
+        return;
+      }
+      
+      grid.innerHTML = history.map((h, i) => `
+        <div class="card-thumb">
+          <img src="${h.src}" alt="Generazione ${i + 1}">
+          <div class="thumb-actions">
+            <button class="icon-btn" onclick="downloadFromSrc('${h.src}')" title="Scarica">⬇️</button>
+            <button class="icon-btn" onclick="reusePrompt(${i})" title="Riusa">♻️</button>
+            ${h.rating ? `<span title="Rating: ${h.rating}/5" style="color:var(--accent)">${'⭐'.repeat(h.rating)}</span>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function reusePrompt(index) {
+      if (history[index]) {
+        document.getElementById('prompt').value = history[index].caption.replace(/^Trasformazione: /, '');
+        updateCounter();
+        document.querySelectorAll('.chip.active').forEach(chip => chip.classList.remove('active'));
+        showStatus('📝 Prompt riutilizzato');
+      }
+    }
+
+    function download() {
+      if (lastImageUrl) downloadFromSrc(lastImageUrl);
+    }
+
+    function downloadFromSrc(src) {
+      try {
+        const a = document.createElement('a');
+        a.href = src;
+        a.download = 'artemisia-ai.png';
+        a.click();
+        showStatus('📥 Download avviato');
+      } catch {
+        window.open(src, '_blank');
+        showStatus('🔗 Aperto in nuova scheda');
+      }
+    }
+
+    // Scorciatoia tastiera
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        generate();
+      }
+    });
+
+    // Init
+    console.log('🎨 Artemisia AI caricata');
+    updateCounter();
+  </script>
+</body>
+</html>
