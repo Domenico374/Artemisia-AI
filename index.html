@@ -45,6 +45,12 @@
     .chip{padding:8px 12px;border:1px solid var(--border);background:var(--chip);border-radius:999px;font-size:12px;cursor:pointer;user-select:none;transition:all .2s ease}
     .chip.active{outline:2px solid var(--ring);border-color:transparent;background:rgba(139,92,246,.2)}
     .chip:hover{background:rgba(139,92,246,.1);border-color:var(--brand)}
+    .chip.business{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.1)}
+    .chip.business.active{background:rgba(34,197,94,.2);outline-color:rgba(34,197,94,.5)}
+    .chip.creative{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.1)}
+    .chip.creative.active{background:rgba(245,158,11,.2);outline-color:rgba(245,158,11,.5)}
+    .chip.photo{border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.1)}
+    .chip.photo.active{background:rgba(59,130,246,.2);outline-color:rgba(59,130,246,.5)}
     .controls{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
     .select,.slider{display:flex;align-items:center;gap:8px;border:1px solid var(--border);background:var(--surface);padding:10px 12px;border-radius:12px}
     .select select{background:transparent;border:none;color:var(--text);font-size:14px}
@@ -90,6 +96,7 @@
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .file-chip{display:none;align-items:center;gap:8px;padding:8px 12px;margin:10px 0;background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);border-radius:10px;color:var(--accent);font-size:12px}
     .file-chip.show{display:flex}
+    .preset-section{margin-top:16px}
   </style>
 </head>
 <body>
@@ -119,6 +126,34 @@
           <span class="chip" onclick="toggleChip(this, 'in stile Studio Ghibli')">Ghibli</span>
           <span class="chip" onclick="toggleChip(this, 'in stile pittorico biblico')">Biblico</span>
           <span class="chip" onclick="toggleChip(this, 'vintage anni 90, grana leggera')">Vintage '90</span>
+        </div>
+
+        <div class="preset-section">
+          <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">🎯</span><span>Business & Marketing</span></div>
+          <div class="chips">
+            <span class="chip business" onclick="toggleChip(this, 'logo aziendale minimalista, design pulito, sfondo bianco, tipografia moderna')">Logo Business</span>
+            <span class="chip business" onclick="toggleChip(this, 'fotografia commerciale, prodotto su sfondo neutro, illuminazione da studio professionale')">Prodotto</span>
+            <span class="chip business" onclick="toggleChip(this, 'design per social media, colori vivaci, layout accattivante, formato quadrato')">Social Post</span>
+            <span class="chip business" onclick="toggleChip(this, 'brochure aziendale, layout professionale, colori corporate, tipografia elegante')">Brochure</span>
+          </div>
+
+          <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">🎨</span><span>Arte & Creatività</span></div>
+          <div class="chips">
+            <span class="chip creative" onclick="toggleChip(this, 'concept art fantasy, dettagli epici, atmosfera drammatica, colori cinematografici')">Fantasy Art</span>
+            <span class="chip creative" onclick="toggleChip(this, 'illustrazione per bambini, stile cartoon dolce, colori pastello, forme arrotondate')">Per Bambini</span>
+            <span class="chip creative" onclick="toggleChip(this, 'arte astratta moderna, forme geometriche, gradazioni di colore, composizione dinamica')">Arte Astratta</span>
+            <span class="chip creative" onclick="toggleChip(this, 'copertina libro, design editoriale, tipografia accattivante, atmosfera misteriosa')">Copertina Libro</span>
+            <span class="chip creative" onclick="toggleChip(this, 'character design anime, stile manga, colori vivaci, dettagli espressivi')">Character Anime</span>
+          </div>
+
+          <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">📸</span><span>Fotografia</span></div>
+          <div class="chips">
+            <span class="chip photo" onclick="toggleChip(this, 'ritratto professionale, 85mm, illuminazione soft, bokeh naturale, alta risoluzione')">Ritratto Pro</span>
+            <span class="chip photo" onclick="toggleChip(this, 'paesaggio naturale, golden hour, dettagli fotorealistici, colori saturi, composizione panoramica')">Paesaggio</span>
+            <span class="chip photo" onclick="toggleChip(this, 'architettura moderna, linee pulite, prospettiva geometrica, illuminazione naturale')">Architettura</span>
+            <span class="chip photo" onclick="toggleChip(this, 'food photography, macro dettagli, illuminazione appetitosa, styling professionale')">Food</span>
+            <span class="chip photo" onclick="toggleChip(this, 'street photography urbana, momento candido, contrasti drammatici, atmosfera autentica')">Street</span>
+          </div>
         </div>
 
         <div class="controls">
@@ -177,10 +212,10 @@
         <div class="tips">
           <strong>💡 Suggerimenti rapidi</strong>
           <ul style="margin:.5rem 0 0 1.2rem; line-height:1.7; font-size:14px">
-            <li>Specifica stile, atmosfera e illuminazione</li>
-            <li>Usa riferimenti: "stile Studio Ghibli / acquerello"</li>
-            <li>Aggiungi dettagli: primo piano, sfondo, luce</li>
-            <li>I chip arricchiscono automaticamente il prompt</li>
+            <li>Usa i preset specifici per risultati ottimizzati</li>
+            <li>Combina stili generali con preset specializzati</li>
+            <li>Specifica dettagli: illuminazione, colori, prospettiva</li>
+            <li>Per il testo nelle immagini: usa caratteri minuscoli</li>
           </ul>
         </div>
       </section>
@@ -200,13 +235,17 @@
     const GEN_URL = `${BASE}/api/generate`;
     const EDIT_URL = `${BASE}/api/edit`;
 
-    // Esempi per ispirami
+    // Esempi aggiornati per ispirami
     const examples = [
       'Un castello magico su una collina, nuvole colorate al tramonto, in stile acquerello con luce dorata',
       'Ritratto fotorealistico di una donna, illuminazione cinematografica soft, 85mm, bokeh naturale',
       'Villaggio fantasy tra le nuvole, cielo stellato, in stile Studio Ghibli con colori pastello',
-      'Poster vintage anni 90, colori saturi neon, texture analogica, layout tipografico bold',
-      'Paesaggio marino epico al tramonto, stile pittorico rinascimentale, raggi di luce tra le nuvole'
+      'Logo aziendale minimalista per startup tech, design pulito, sfondo bianco, tipografia moderna',
+      'Character design anime di una guerriera, stile manga, colori vivaci, dettagli espressivi',
+      'Food photography di pasta italiana, macro dettagli, illuminazione appetitosa, styling professionale',
+      'Paesaggio naturale montano, golden hour, dettagli fotorealistici, colori saturi',
+      'Concept art fantasy di una città volante, dettagli epici, atmosfera drammatica',
+      'Copertina libro fantasy, design editoriale, tipografia accattivante, atmosfera misteriosa'
     ];
 
     // Utility functions
@@ -236,7 +275,7 @@
     }
 
     function showHelp() {
-      alert('Artemisia AI - Guida:\n\n• Scrivi un prompt dettagliato\n• Usa i chip per aggiungere stili\n• Carica una foto per trasformarla\n• La cronologia salva le generazioni');
+      alert('Artemisia AI - Guida:\n\n• Scrivi un prompt dettagliato\n• Usa i chip per aggiungere stili\n• Prova i preset specifici per risultati ottimizzati\n• Carica una foto per trasformarla\n• La cronologia salva le generazioni');
     }
 
     function toggleChip(chip, text) {
@@ -438,30 +477,4 @@
       if (lastImageUrl) downloadFromSrc(lastImageUrl);
     }
 
-    function downloadFromSrc(src) {
-      try {
-        const a = document.createElement('a');
-        a.href = src;
-        a.download = 'artemisia-ai.png';
-        a.click();
-        showStatus('📥 Download avviato');
-      } catch {
-        window.open(src, '_blank');
-        showStatus('🔗 Aperto in nuova scheda');
-      }
-    }
-
-    // Scorciatoia tastiera
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-        e.preventDefault();
-        generate();
-      }
-    });
-
-    // Init
-    console.log('🎨 Artemisia AI caricata');
-    updateCounter();
-  </script>
-</body>
-</html>
+    function downloadFromSrc(
