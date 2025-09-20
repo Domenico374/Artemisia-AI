@@ -56,6 +56,7 @@
     .select select{background:transparent;border:none;color:var(--text);font-size:14px}
     .select select:focus{outline:none}
     .slider input{accent-color:var(--brand)}
+    .slider span{font-size:12px;color:var(--muted);min-width:50px}
     .textarea{position:relative}
     textarea{width:100%;min-height:140px;resize:vertical;border:2px solid transparent;border-radius:16px;padding:16px 18px;background:var(--surface);color:var(--text);line-height:1.6;font-size:15px}
     textarea:focus{outline:none;box-shadow:0 0 0 4px var(--ring);border-color:transparent}
@@ -97,6 +98,19 @@
     .file-chip{display:none;align-items:center;gap:8px;padding:8px 12px;margin:10px 0;background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);border-radius:10px;color:var(--accent);font-size:12px}
     .file-chip.show{display:flex}
     .preset-section{margin-top:16px}
+    .batch-controls{display:flex;align-items:center;gap:10px;margin:10px 0;padding:12px;background:var(--surface);border-radius:12px;border:1px solid var(--border)}
+    .rating-system{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:12px}
+    .stars{display:flex;gap:4px}
+    .star{cursor:pointer;transition:transform .2s ease;font-size:16px}
+    .star:hover{transform:scale(1.2)}
+    .star.active{color:var(--accent)}
+    .comparison-mode{display:none;margin:20px 0}
+    .comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .compare-item{text-align:center}
+    .compare-item img{width:100%;border-radius:12px;border:2px solid var(--border)}
+    .compare-controls{margin-top:8px}
+    .export-options{display:flex;gap:8px;margin-top:8px}
+    .advanced-params{margin-top:16px}
   </style>
 </head>
 <body>
@@ -156,6 +170,29 @@
           </div>
         </div>
 
+        <div class="advanced-params">
+          <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">⚙️</span><span>Parametri Avanzati</span></div>
+          <div class="controls">
+            <div class="slider">
+              <label>Creatività:</label>
+              <input type="range" id="creativity" min="0" max="100" value="70" oninput="updateCreativity()" />
+              <span id="creativityValue">70</span>
+            </div>
+            <div class="slider">
+              <label>Qualità:</label>
+              <input type="range" id="quality" min="1" max="4" value="2" oninput="updateQuality()" />
+              <span id="qualityValue">Standard</span>
+            </div>
+            <div class="select">
+              <select id="variants">
+                <option value="1">1 Variante</option>
+                <option value="2">2 Varianti</option>
+                <option value="4">4 Varianti</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
         <div class="controls">
           <div class="select">
             <select id="ratio" onchange="updateRatio()">
@@ -179,10 +216,35 @@
           <button onclick="clearFile()" style="background:none;border:none;color:inherit;cursor:pointer;padding:0;margin-left:auto">✕</button>
         </div>
 
+        <div class="batch-controls">
+          <span style="font-size:14px;font-weight:600">Workflow Avanzato:</span>
+          <div class="select">
+            <select id="batchSize">
+              <option value="1">Genera 1</option>
+              <option value="2">Genera 2</option>
+              <option value="4">Genera 4</option>
+            </select>
+          </div>
+          <button class="btn outline" onclick="generateBatch()">Batch Generate</button>
+          <button class="btn outline" onclick="toggleComparison()" id="compareBtn" disabled>Confronta</button>
+        </div>
+
         <div class="btns">
           <button class="btn primary" onclick="generate()" id="generateBtn">🎨 Genera Immagine</button>
           <button class="btn outline" onclick="surprise()">🎲 Ispirami</button>
           <button class="btn outline" onclick="download()" id="downloadBtn" disabled>📥 Scarica PNG</button>
+          <button class="btn outline" onclick="exportMultiple()" id="exportBtn" disabled>📤 Export Multi</button>
+        </div>
+
+        <div class="rating-system" id="ratingSystem" style="display:none;">
+          <span>Valuta risultato:</span>
+          <div class="stars" id="starRating">
+            <span class="star" onclick="rateImage(1)">⭐</span>
+            <span class="star" onclick="rateImage(2)">⭐</span>
+            <span class="star" onclick="rateImage(3)">⭐</span>
+            <span class="star" onclick="rateImage(4)">⭐</span>
+            <span class="star" onclick="rateImage(5)">⭐</span>
+          </div>
         </div>
 
         <div id="status" class="status"></div>
@@ -202,6 +264,24 @@
           <div class="progress" id="progress"></div>
         </div>
 
+        <div class="comparison-mode" id="comparisonMode">
+          <div class="section-title"><span class="emoji">⚖️</span><span>Confronto Risultati</span></div>
+          <div class="comparison-grid">
+            <div class="compare-item">
+              <img id="compareImg1" />
+              <div class="compare-controls">
+                <button class="btn outline" onclick="selectWinner(1)">Preferisci A</button>
+              </div>
+            </div>
+            <div class="compare-item">
+              <img id="compareImg2" />
+              <div class="compare-controls">
+                <button class="btn outline" onclick="selectWinner(2)">Preferisci B</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="history">
           <div class="section-title"><span class="emoji">🕘</span><span>Cronologia</span></div>
           <div class="history-grid" id="historyGrid">
@@ -213,8 +293,9 @@
           <strong>💡 Suggerimenti rapidi</strong>
           <ul style="margin:.5rem 0 0 1.2rem; line-height:1.7; font-size:14px">
             <li>Usa i preset specifici per risultati ottimizzati</li>
-            <li>Combina stili generali con preset specializzati</li>
-            <li>Specifica dettagli: illuminazione, colori, prospettiva</li>
+            <li>Sperimenta con i parametri di creatività e qualità</li>
+            <li>Il batch generate crea variazioni multiple automaticamente</li>
+            <li>Usa il confronto per scegliere tra risultati simili</li>
             <li>Per il testo nelle immagini: usa caratteri minuscoli</li>
           </ul>
         </div>
@@ -228,6 +309,9 @@
     // Variabili globali
     let lastFile = null;
     let lastImageUrl = null;
+    let comparisonImages = [];
+    let currentRating = 0;
+    let batchInProgress = false;
     const history = [];
     
     // API endpoints
@@ -268,6 +352,17 @@
       counter.style.color = len > 500 ? 'var(--err)' : 'var(--muted)';
     }
 
+    function updateCreativity() {
+      const value = document.getElementById('creativity').value;
+      document.getElementById('creativityValue').textContent = value;
+    }
+
+    function updateQuality() {
+      const value = document.getElementById('quality').value;
+      const labels = ['Bassa', 'Standard', 'Alta', 'Ultra'];
+      document.getElementById('qualityValue').textContent = labels[value-1];
+    }
+
     function toggleTheme() {
       const root = document.documentElement;
       const isDark = root.getAttribute('data-theme') !== 'light';
@@ -275,7 +370,7 @@
     }
 
     function showHelp() {
-      alert('Artemisia AI - Guida:\n\n• Scrivi un prompt dettagliato\n• Usa i chip per aggiungere stili\n• Prova i preset specifici per risultati ottimizzati\n• Carica una foto per trasformarla\n• La cronologia salva le generazioni');
+      alert('Artemisia AI - Guida:\n\n• Scrivi un prompt dettagliato\n• Usa i chip per aggiungere stili\n• Prova i preset specifici per risultati ottimizzati\n• Regola creatività e qualità nei parametri avanzati\n• Usa batch generate per variazioni multiple\n• Confronta risultati per scegliere il migliore\n• Carica una foto per trasformarla\n• La cronologia salva le generazioni');
     }
 
     function toggleChip(chip, text) {
@@ -327,180 +422,11 @@
       hideStatus();
     }
 
-    // Conversione immagine sicura
-    function fileToDataURL(file) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-          try {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const maxSize = 1024;
-            let { width, height } = img;
-            
-            if (width > maxSize || height > maxSize) {
-              const ratio = Math.min(maxSize / width, maxSize / height);
-              width *= ratio;
-              height *= ratio;
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL('image/png', 0.9));
-          } catch (error) {
-            reject(new Error('Errore conversione: ' + error.message));
-          }
-        };
-        img.onerror = () => reject(new Error('Caricamento immagine fallito'));
-        img.src = URL.createObjectURL(file);
-      });
-    }
-
-    // Funzione principale di generazione
-    async function generate() {
-      console.log('🎨 Avvio generazione...');
-      
-      const promptEl = document.getElementById('prompt');
-      const prompt = promptEl.value.trim();
+    // Batch generation
+    async function generateBatch() {
+      const batchSize = parseInt(document.getElementById('batchSize').value);
+      const prompt = document.getElementById('prompt').value.trim();
       
       if (!prompt || prompt.length < 3) {
         showStatus('❌ Inserisci un prompt più dettagliato', true);
         return;
-      }
-
-      const generateBtn = document.getElementById('generateBtn');
-      const spinner = document.getElementById('spinner');
-      const placeholder = document.getElementById('placeholder');
-      const img = document.getElementById('resultImg');
-      const progress = document.getElementById('progress');
-
-      generateBtn.disabled = true;
-      hideStatus();
-      placeholder.style.display = 'flex';
-      spinner.style.display = 'block';
-      img.style.display = 'none';
-      progress.style.width = '0%';
-
-      let progressInterval = setInterval(() => {
-        const current = parseInt(progress.style.width) || 0;
-        progress.style.width = Math.min(95, current + Math.random() * 10) + '%';
-      }, 200);
-
-      try {
-        console.log('✨ Generazione da testo...');
-        showStatus('✨ Generando immagine...');
-        
-        const response = await fetch(GEN_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt })
-        });
-
-        clearInterval(progressInterval);
-        progress.style.width = '100%';
-
-        const text = await response.text();
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch {
-          data = { error: 'Risposta server non valida', raw: text };
-        }
-
-        if (!response.ok) {
-          throw new Error(data.error || `Errore ${response.status}`);
-        }
-
-        const imageUrl = data.image_url;
-        if (!imageUrl) {
-          throw new Error('Nessun URL immagine ricevuto');
-        }
-
-        // Mostra risultato
-        spinner.style.display = 'none';
-        placeholder.style.display = 'none';
-        img.src = imageUrl;
-        img.style.display = 'block';
-        img.classList.add('show');
-        
-        lastImageUrl = imageUrl;
-        document.getElementById('downloadBtn').disabled = false;
-        
-        // Cronologia
-        history.unshift({ src: imageUrl, caption: prompt, date: new Date() });
-        if (history.length > 6) history.pop();
-        renderHistory();
-        
-        showStatus('✅ Immagine generata con successo!');
-
-      } catch (error) {
-        console.error('❌ Errore:', error);
-        clearInterval(progressInterval);
-        spinner.style.display = 'none';
-        showStatus(`❌ ${error.message}`, true);
-        placeholder.style.display = 'flex';
-      } finally {
-        generateBtn.disabled = false;
-        setTimeout(() => progress.style.width = '0%', 1000);
-      }
-    }
-
-    function renderHistory() {
-      const grid = document.getElementById('historyGrid');
-      if (history.length === 0) {
-        grid.innerHTML = '<div class="small" style="grid-column:1/-1;text-align:center;padding:20px">Nessuna generazione ancora</div>';
-        return;
-      }
-      
-      grid.innerHTML = history.map((h, i) => `
-        <div class="card-thumb">
-          <img src="${h.src}" alt="Generazione ${i + 1}">
-          <div class="thumb-actions">
-            <button class="icon-btn" onclick="downloadFromSrc('${h.src}')" title="Scarica">⬇️</button>
-            <button class="icon-btn" onclick="reusePrompt(${i})" title="Riusa">♻️</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function reusePrompt(index) {
-      if (history[index]) {
-        document.getElementById('prompt').value = history[index].caption.replace(/^Trasformazione: /, '');
-        updateCounter();
-        document.querySelectorAll('.chip.active').forEach(chip => chip.classList.remove('active'));
-        showStatus('📝 Prompt riutilizzato');
-      }
-    }
-
-    function download() {
-      if (lastImageUrl) downloadFromSrc(lastImageUrl);
-    }
-
-    function downloadFromSrc(src) {
-      try {
-        const a = document.createElement('a');
-        a.href = src;
-        a.download = 'artemisia-ai.png';
-        a.click();
-        showStatus('📥 Download avviato');
-      } catch {
-        window.open(src, '_blank');
-        showStatus('🔗 Aperto in nuova scheda');
-      }
-    }
-
-    // Scorciatoia tastiera
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-        e.preventDefault();
-        generate();
-      }
-    });
-
-    // Init
-    console.log('🎨 Artemisia AI caricata');
-    updateCounter();
-  </script>
-</body>
-</html>
