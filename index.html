@@ -477,4 +477,30 @@
       if (lastImageUrl) downloadFromSrc(lastImageUrl);
     }
 
-    function downloadFromSrc(
+    function downloadFromSrc(src) {
+      try {
+        const a = document.createElement('a');
+        a.href = src;
+        a.download = 'artemisia-ai.png';
+        a.click();
+        showStatus('📥 Download avviato');
+      } catch {
+        window.open(src, '_blank');
+        showStatus('🔗 Aperto in nuova scheda');
+      }
+    }
+
+    // Scorciatoia tastiera
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        generate();
+      }
+    });
+
+    // Init
+    console.log('🎨 Artemisia AI caricata');
+    updateCounter();
+  </script>
+</body>
+</html>
