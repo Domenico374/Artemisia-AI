@@ -1,64 +1,76 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" class="h-full">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Artemisia Story — Laboratorio di Creatività Digitale</title>
-  <meta name="description" content="Generatore e trasformazione di immagini e storie con AI. Artemisia Story unisce arte e intelligenza artificiale con un'interfaccia semplice e potente." />
+  <title>Artemisia Story — Generatore & Trasformatore di Immagini AI</title>
+  <meta name="description" content="Artemisia Story: genera immagini e storie con AI. Preset di stile, qualità, formato, cronologia, export e modalità esperto." />
   <meta property="og:title" content="Artemisia Story" />
-  <meta property="og:description" content="Genera immagini e storie con AI: prompt, stili, qualità, formati." />
+  <meta property="og:description" content="Preset di stile, suggerimenti rapidi e generazione immagini/storie con AI." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://artemisia-story.vercel.app" />
   <link rel="icon" href="/favicon.ico" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { ink:'#cbd5e1', panel:'#0b1220', panel2:'#0f172a', brand:'#7c5cff', brand2:'#936dff' }
+        }
+      },
+      darkMode: 'class'
+    }
+  </script>
   <style>
-    :root{--brand:#6f54ff;--ink:#0f172a;--bg:#f8f7ff}
-    body{background:linear-gradient(180deg,#f5f3ff, #f8f7ff)}
-    .card{border-radius:1.25rem; box-shadow:0 8px 30px rgba(0,0,0,.08)}
+    html,body{background:#0b1220}
+    .card{border-radius:1.25rem; box-shadow:0 12px 40px rgba(0,0,0,.35); background:#0f172a}
     .pill{border-radius:999px}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+    .chip{background:rgba(148,163,184,.12); border:1px solid rgba(148,163,184,.16)}
+    .chip.active{background:rgba(124,92,255,.15); border-color:rgba(124,92,255,.6)}
   </style>
 </head>
-<body class="text-slate-900">
+<body class="text-ink h-full">
   <!-- Header -->
-  <header class="max-w-6xl mx-auto px-4 pt-8 pb-2">
+  <header class="max-w-7xl mx-auto px-5 pt-8 pb-4 flex items-center justify-between">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 grid place-items-center rounded-2xl bg-violet-600 text-white font-bold">A</div>
+      <img src="/logo.svg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\'><rect rx=\'12\' width=\'40\' height=\'40\' fill=\'%237c5cff\'/><text x=\'20\' y=\'26\' font-family=\'Segoe UI, Arial\' font-size=\'20\' text-anchor=\'middle\' fill=\'white\'>A</text></svg>'" alt="logo" class="w-10 h-10 rounded-2xl bg-brand"/>
       <div>
-        <h1 class="text-2xl md:text-3xl font-bold">Artemisia Story</h1>
-        <p class="text-sm text-slate-600 -mt-1">Laboratorio di Creatività Digitale — genera <span class="font-medium">immagini</span> e <span class="font-medium">storie</span> dall'AI</p>
+        <h1 class="text-2xl md:text-3xl font-semibold text-white">Artemisia Story</h1>
+        <p class="text-sm text-slate-400 -mt-1">Generatore & Trasformatore di immagini AI</p>
       </div>
     </div>
+    <div class="text-xs text-slate-400">v1.0</div>
   </header>
 
-  <!-- Main -->
-  <main class="max-w-6xl mx-auto px-4 pb-16 grid md:grid-cols-2 gap-6">
-    <!-- Controls -->
-    <section class="card bg-white p-5 md:p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-semibold">Scrivi il tuo prompt</h2>
-        <div class="inline-flex p-1 bg-slate-100 pill">
-          <button id="mode-image" class="px-3 py-1 text-sm pill bg-white shadow border border-slate-200">Immagine</button>
-          <button id="mode-story" class="px-3 py-1 text-sm pill">Storia</button>
+  <!-- Main Grid -->
+  <main class="max-w-7xl mx-auto px-5 pb-14 grid lg:grid-cols-2 gap-6">
+    <!-- Left: Controls -->
+    <section class="card p-5 md:p-6">
+      <h2 class="text-white font-medium mb-3">Scrivi il tuo prompt</h2>
+      <div class="flex items-center gap-2 mb-3">
+        <button id="mode-image" class="pill px-3 py-1.5 text-sm bg-brand text-white">Immagine</button>
+        <button id="mode-story" class="pill px-3 py-1.5 text-sm bg-slate-700/40 hover:bg-slate-700/60">Storia</button>
+      </div>
+
+      <textarea id="prompt" rows="6" placeholder="Esempio: Vendemmia tradizionale al tramonto, stile acquerello caldo, atmosfera di festa…" class="w-full resize-y rounded-xl border border-slate-600/40 bg-panel2 text-slate-200 p-3 focus:outline-none focus:ring-2 focus:ring-brand"></textarea>
+
+      <!-- Preset chips -->
+      <div class="mt-4">
+        <div class="text-xs uppercase tracking-wide text-slate-400 mb-2">Stili rapidi</div>
+        <div class="flex flex-wrap gap-2 text-sm">
+          <span class="chip pill px-3 py-1 cursor-pointer quick" data-add="Cartoon">Cartoon</span>
+          <span class="chip pill px-3 py-1 cursor-pointer quick" data-add="Fotorealistico">Fotorealistico</span>
+          <span class="chip pill px-3 py-1 cursor-pointer quick" data-add="Acquerello">Acquerello</span>
+          <span class="chip pill px-3 py-1 cursor-pointer quick" data-add="Stile Ghibli">Stile Ghibli</span>
+          <span class="chip pill px-3 py-1 cursor-pointer quick" data-add="Vintage '90">Vintage '90</span>
+          <span class="chip pill px-3 py-1 cursor-pointer quick" data-add="Arte Digitale">Arte Digitale</span>
         </div>
       </div>
 
-      <textarea id="prompt" rows="6" placeholder="Esempio: Vendemmia tradizionale al tramonto, stile acquerello caldo, atmosfera di festa…" class="w-full resize-y rounded-xl border border-slate-200 p-3 focus:outline-none focus:ring-2 focus:ring-violet-400"></textarea>
-
-      <!-- Tags quick pick -->
-      <div class="mt-3 flex flex-wrap gap-2 text-sm">
-        <span class="px-3 py-1 bg-slate-100 pill cursor-pointer quick" data-add="Cartoon">Cartoon</span>
-        <span class="px-3 py-1 bg-slate-100 pill cursor-pointer quick" data-add="Fotorealistico">Fotorealistico</span>
-        <span class="px-3 py-1 bg-slate-100 pill cursor-pointer quick" data-add="Acquerello">Acquerello</span>
-        <span class="px-3 py-1 bg-slate-100 pill cursor-pointer quick" data-add="Ghibli">Stile Ghibli</span>
-        <span class="px-3 py-1 bg-slate-100 pill cursor-pointer quick" data-add="Vintage 90">Vintage 90</span>
-      </div>
-
-      <!-- Advanced params -->
-      <div class="grid sm:grid-cols-3 gap-3 mt-5">
+      <div class="mt-4 grid sm:grid-cols-3 gap-3">
         <div>
-          <label class="block text-sm mb-1">Stile</label>
-          <select id="style" class="w-full rounded-lg border border-slate-200 p-2">
+          <label class="block text-sm text-slate-400 mb-1">Stile</label>
+          <select id="style" class="w-full rounded-lg border border-slate-600/40 bg-panel2 p-2">
             <option value="">Automatico</option>
             <option>Cartoon</option>
             <option>Fotorealistico</option>
@@ -69,16 +81,16 @@
           </select>
         </div>
         <div>
-          <label class="block text-sm mb-1">Qualità</label>
-          <select id="quality" class="w-full rounded-lg border border-slate-200 p-2">
+          <label class="block text-sm text-slate-400 mb-1">Qualità</label>
+          <select id="quality" class="w-full rounded-lg border border-slate-600/40 bg-panel2 p-2">
             <option>Standard</option>
             <option>Alta</option>
             <option>Bozza</option>
           </select>
         </div>
         <div>
-          <label class="block text-sm mb-1">Formato</label>
-          <select id="format" class="w-full rounded-lg border border-slate-200 p-2">
+          <label class="block text-sm text-slate-400 mb-1">Formato</label>
+          <select id="format" class="w-full rounded-lg border border-slate-600/40 bg-panel2 p-2">
             <option value="1:1">Quadrato (1:1)</option>
             <option value="16:9">Orizzontale (16:9)</option>
             <option value="9:16">Verticale (9:16)</option>
@@ -87,42 +99,64 @@
         </div>
       </div>
 
-      <!-- Actions -->
-      <div class="mt-5 flex flex-wrap items-center gap-3">
-        <button id="btn-generate" class="px-5 py-2.5 rounded-xl bg-violet-600 text-white font-medium hover:bg-violet-700">Genera</button>
-        <button id="btn-clear" class="px-4 py-2 rounded-xl border border-slate-200">Cancella</button>
-        <span id="status" class="text-sm text-slate-500"></span>
+      <div class="mt-4 grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-sm text-slate-400 mb-1">Creatività</label>
+          <input id="creativity" type="range" min="0" max="100" value="70" class="w-full" />
+        </div>
+        <div>
+          <label class="block text-sm text-slate-400 mb-1">Varianti</label>
+          <select id="variants" class="w-full rounded-lg border border-slate-600/40 bg-panel2 p-2">
+            <option>1 Variante</option>
+            <option>2 Varianti</option>
+            <option>4 Varianti</option>
+          </select>
+        </div>
       </div>
 
-      <!-- Debug (collapsible) -->
+      <div class="mt-5 flex flex-wrap items-center gap-3">
+        <button id="btn-generate" class="px-5 py-2.5 rounded-xl bg-brand text-white font-medium hover:bg-brand2">Genera Immagine</button>
+        <button id="btn-inspire" class="px-4 py-2 rounded-xl bg-slate-700/30 hover:bg-slate-700/50">Ispirami</button>
+        <button id="btn-clear" class="px-4 py-2 rounded-xl border border-slate-700/40">Cancella</button>
+        <span id="status" class="text-sm text-slate-400"></span>
+      </div>
+
+      <div class="mt-4 p-4 rounded-xl bg-slate-800/40">
+        <div class="text-sm font-medium text-white mb-1">Suggerimenti rapidi</div>
+        <ul class="text-sm text-slate-400 list-disc pl-4 space-y-1">
+          <li>Combina <em>soggetto</em> + <em>stile</em> + <em>atmosfera</em> + <em>luce</em>.</li>
+          <li>Usa i preset di stile e prova 2–4 varianti.</li>
+          <li>Per testo in immagine, usa lettere minuscole.</li>
+        </ul>
+      </div>
+
       <details class="mt-4">
-        <summary class="cursor-pointer text-sm text-slate-600">Dettagli richiesta (debug)</summary>
-        <pre id="debug" class="mono text-xs bg-slate-50 rounded-lg p-3 overflow-auto"></pre>
+        <summary class="cursor-pointer text-sm text-slate-400">Modalità esperto (payload)</summary>
+        <pre id="debug" class="text-xs bg-panel2 rounded-lg p-3 overflow-auto"></pre>
       </details>
     </section>
 
-    <!-- Preview / Output -->
-    <section class="card bg-white p-5 md:p-6">
-      <h2 class="text-lg font-semibold mb-3">Anteprima</h2>
-      <div id="preview" class="aspect-square md:aspect-[4/3] w-full bg-slate-50 rounded-xl grid place-items-center overflow-hidden">
-        <div class="text-slate-400 text-sm">Il risultato apparirà qui</div>
+    <!-- Right: Preview -->
+    <section class="card p-5 md:p-6">
+      <h2 class="text-white font-medium mb-3">Anteprima</h2>
+      <div id="preview" class="aspect-square md:aspect-[4/3] w-full bg-slate-800/40 rounded-xl grid place-items-center overflow-hidden">
+        <div class="text-slate-500 text-sm">Il risultato apparirà qui</div>
       </div>
-      <div class="mt-4 flex gap-3">
-        <button id="btn-download" class="px-4 py-2 rounded-xl border border-slate-200 disabled:opacity-50" disabled>Scarica PNG</button>
-        <button id="btn-copy" class="px-4 py-2 rounded-xl border border-slate-200 disabled:opacity-50" disabled>Copia testo</button>
+      <div class="mt-4 flex gap-3 flex-wrap">
+        <button id="btn-download" class="px-4 py-2 rounded-xl border border-slate-700/40 disabled:opacity-40" disabled>Scarica PNG</button>
+        <button id="btn-copy" class="px-4 py-2 rounded-xl border border-slate-700/40 disabled:opacity-40" disabled>Copia testo</button>
+        <button id="btn-save" class="px-4 py-2 rounded-xl border border-slate-700/40 disabled:opacity-40" disabled>Salva Preset</button>
       </div>
 
-      <h3 class="mt-6 mb-2 font-medium">Cronologia</h3>
+      <h3 class="mt-6 mb-2 font-medium text-white">Cronologia</h3>
       <div id="history" class="grid grid-cols-4 gap-2"></div>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="max-w-6xl mx-auto px-4 pb-10 text-xs text-slate-500">
-    <div>© <span id="year"></span> Artemisia Story · dove l'arte incontra l'AI</div>
-  </footer>
+  <footer class="max-w-7xl mx-auto px-5 pb-10 text-xs text-slate-500">© <span id="year"></span> Artemisia Story · dove l'arte incontra l'AI</footer>
 
   <script>
+    // ====== UI bindings ======
     const els = {
       modeImage: document.getElementById('mode-image'),
       modeStory: document.getElementById('mode-story'),
@@ -130,50 +164,47 @@
       style: document.getElementById('style'),
       quality: document.getElementById('quality'),
       format: document.getElementById('format'),
+      creativity: document.getElementById('creativity'),
+      variants: document.getElementById('variants'),
       btnGenerate: document.getElementById('btn-generate'),
+      btnInspire: document.getElementById('btn-inspire'),
       btnClear: document.getElementById('btn-clear'),
       btnDownload: document.getElementById('btn-download'),
       btnCopy: document.getElementById('btn-copy'),
+      btnSave: document.getElementById('btn-save'),
       status: document.getElementById('status'),
       preview: document.getElementById('preview'),
       history: document.getElementById('history'),
       debug: document.getElementById('debug'),
     };
 
-    let mode = 'image'; // 'image' | 'story'
-    const API_ENDPOINT = '/api/generate'; // <— Assicurati che esista nel progetto
+    let mode = 'image';
+    const API_ENDPOINT = '/api/generate'; // backend
 
-    // UI helpers
     function setMode(newMode){
       mode = newMode;
-      els.modeImage.classList.toggle('bg-white', mode==='image');
-      els.modeImage.classList.toggle('shadow', mode==='image');
-      els.modeImage.classList.toggle('border', mode==='image');
-      els.modeStory.classList.toggle('bg-white', mode==='story');
-      els.modeStory.classList.toggle('shadow', mode==='story');
-      els.modeStory.classList.toggle('border', mode==='story');
+      els.modeImage.classList.toggle('bg-brand', mode==='image');
+      els.modeImage.classList.toggle('text-white', mode==='image');
+      els.modeStory.classList.toggle('bg-brand', mode==='story');
+      els.modeStory.classList.toggle('text-white', mode==='story');
       els.btnCopy.disabled = (mode !== 'story');
     }
-
     els.modeImage.addEventListener('click', ()=>setMode('image'));
     els.modeStory.addEventListener('click', ()=>setMode('story'));
 
-    // Quick tags → append to prompt
+    // quick chips
     document.querySelectorAll('.quick').forEach(chip=>{
       chip.addEventListener('click',()=>{
+        chip.classList.toggle('active');
         const add = chip.dataset.add;
         const cur = els.prompt.value.trim();
         els.prompt.value = cur ? cur + ', ' + add : add;
       })
-    })
+    });
 
-    // Download helper
-    function downloadURI(uri, name) {
-      const a = document.createElement('a');
-      a.download = name; a.href = uri; document.body.appendChild(a); a.click(); a.remove();
-    }
+    // helpers
+    function downloadURI(uri, name) { const a = document.createElement('a'); a.download = name; a.href = uri; document.body.appendChild(a); a.click(); a.remove(); }
 
-    // Render helpers
     function renderImage(src){
       els.preview.innerHTML = '';
       const img = document.createElement('img');
@@ -181,29 +212,21 @@
       els.preview.appendChild(img);
       els.btnDownload.disabled = false;
       els.btnCopy.disabled = true;
+      els.btnSave.disabled = false;
       els.btnDownload.onclick = () => downloadURI(src, 'artemisia-story.png');
-      // push to history
-      const thumb = img.cloneNode();
-      thumb.className = 'w-full h-24 object-cover rounded-lg';
+      const thumb = img.cloneNode(); thumb.className = 'w-full h-24 object-cover rounded-lg';
       els.history.prepend(thumb);
     }
 
     function renderText(text){
       els.preview.innerHTML = '';
       const box = document.createElement('div');
-      box.className = 'p-4 text-sm max-h-full overflow-auto';
+      box.className = 'p-4 text-sm max-h-full overflow-auto text-slate-300';
       box.textContent = text;
       els.preview.appendChild(box);
-      els.btnCopy.disabled = false;
-      els.btnDownload.disabled = true;
-      els.btnCopy.onclick = async () => {
-        try { await navigator.clipboard.writeText(text); els.status.textContent = 'Testo copiato'; } catch(e){ console.warn(e); }
-      };
-      // history item
-      const cap = document.createElement('div');
-      cap.className = 'text-[10px] bg-slate-100 rounded p-1 line-clamp-3';
-      cap.textContent = text;
-      els.history.prepend(cap);
+      els.btnCopy.disabled = false; els.btnDownload.disabled = true; els.btnSave.disabled = false;
+      els.btnCopy.onclick = async () => { try { await navigator.clipboard.writeText(text); els.status.textContent = 'Testo copiato'; } catch(e){} };
+      const cap = document.createElement('div'); cap.className = 'text-[10px] bg-slate-800/50 rounded p-1 line-clamp-3'; cap.textContent = text; els.history.prepend(cap);
     }
 
     function combinePrompt(){
@@ -211,83 +234,76 @@
       const style = els.style.value.trim();
       const format = els.format.value;
       const quality = els.quality.value;
-      // Uniamo come nel vecchio Artemisia AI
+      const creativity = els.creativity.value;
       const parts = [base];
       if(style) parts.push('stile: ' + style);
       parts.push('qualità: ' + quality);
       parts.push('formato: ' + format);
+      parts.push('creatività: ' + creativity);
       return parts.filter(Boolean).join(', ');
     }
 
     async function generate(){
       const userPrompt = els.prompt.value.trim();
-      if(!userPrompt){
-        els.status.textContent = 'Scrivi una descrizione prima di generare.';
-        return;
-      }
-      els.status.textContent = 'Genero…';
-      els.btnGenerate.disabled = true;
+      if(!userPrompt){ els.status.textContent = 'Scrivi una descrizione.'; return; }
+      els.status.textContent = 'Genero…'; els.btnGenerate.disabled = true;
 
       const payload = {
-        type: mode,               // 'image' | 'story'
-        prompt: combinePrompt(),  // testo completo
-        rawPrompt: userPrompt,    // comodo per il backend
+        type: mode,
+        prompt: combinePrompt(),
+        rawPrompt: userPrompt,
         style: els.style.value || null,
         quality: els.quality.value,
-        format: els.format.value
+        format: els.format.value,
+        creativity: Number(els.creativity.value),
+        variants: els.variants.value
       };
-
       els.debug.textContent = JSON.stringify({ endpoint: API_ENDPOINT, payload }, null, 2);
 
       try{
-        const res = await fetch(API_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if(!res.ok){
-          const t = await res.text();
-          throw new Error('HTTP ' + res.status + ' — ' + t);
+        const res = await fetch(API_ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+        const text = await res.text();
+        let json; try{ json = JSON.parse(text); } catch{ json = { raw:text }; }
+        // supporto ampio formati risposta
+        const imageCandidates = [];
+        if(json.imageUrl) imageCandidates.push(json.imageUrl);
+        if(json.imageB64) imageCandidates.push('data:image/png;base64,'+json.imageB64);
+        if(Array.isArray(json.images)){
+          const first = json.images[0];
+          if(first){ imageCandidates.push(first.url || first.src || first); }
         }
-        const json = await res.json();
-        // Possibili forme di risposta supportate
-        if(json.imageUrl){
-          renderImage(json.imageUrl);
-        } else if(json.imageB64){
-          renderImage('data:image/png;base64,' + json.imageB64);
-        } else if(Array.isArray(json.images) && json.images.length){
-          const src = json.images[0].url || json.images[0];
-          renderImage(src);
-        } else if(json.text){
-          renderText(json.text);
-        } else if(json.story){
-          renderText(json.story);
-        } else {
-          renderText('Risposta ricevuta ma non riconosciuta: ' + JSON.stringify(json));
+        if(json.data && Array.isArray(json.data)){
+          // stile OpenAI responses {data:[{url:..}]}
+          const maybe = json.data[0]; if(maybe && (maybe.url||maybe.b64_json)) imageCandidates.push(maybe.url || 'data:image/png;base64,'+maybe.b64_json);
         }
-        els.status.textContent = 'Pronto';
-      } catch(err){
-        console.error(err);
-        els.status.textContent = 'Errore: ' + err.message;
-        renderText('Errore: ' + err.message);
-      } finally {
-        els.btnGenerate.disabled = false;
-      }
+        if(json.url) imageCandidates.push(json.url);
+
+        if(imageCandidates.length){ renderImage(imageCandidates[0]); els.status.textContent='Pronto'; return; }
+
+        // testo/storia
+        const story = json.text || json.story || json.output || json.content || json.result || json.raw || '';
+        if(story){ renderText(story); els.status.textContent='Pronto'; return; }
+
+        renderText('Risposta non riconosciuta: '+ (text?.slice(0,500)||'')); els.status.textContent='OK (formato sconosciuto)';
+      }catch(err){
+        renderText('Errore: '+err.message); els.status.textContent='Errore';
+      }finally{ els.btnGenerate.disabled = false; }
     }
 
     els.btnGenerate.addEventListener('click', generate);
-    els.btnClear.addEventListener('click', ()=>{
-      els.prompt.value = '';
-      els.preview.innerHTML = '<div class="text-slate-400 text-sm">Il risultato apparirà qui</div>';
-      els.status.textContent = '';
-      els.debug.textContent = '';
-      els.btnDownload.disabled = true;
-      els.btnCopy.disabled = true;
+    els.btnClear.addEventListener('click', ()=>{ els.prompt.value=''; els.preview.innerHTML='<div class="text-slate-500 text-sm">Il risultato apparirà qui</div>'; els.status.textContent=''; els.debug.textContent=''; els.btnDownload.disabled=true; els.btnCopy.disabled=true; els.btnSave.disabled=true; });
+    els.btnInspire.addEventListener('click', ()=>{
+      const samples = [
+        'Vendemmia tradizionale al tramonto, acquerello caldo, atmosfera di festa, vigneti sullo sfondo',
+        'Donna che balla sotto la pioggia, fotografia street, luci al neon, scie d\'acqua, bokeh',
+        'Città perduta nella giungla, stile cinematografico, nebbia mattutina, luce radente',
+        'Ritratto pro, luce Rembrandt, pelle naturale, sfondo scuro, 85mm'
+      ];
+      els.prompt.value = samples[Math.floor(Math.random()*samples.length)];
     });
 
-    // init
-    setMode('image');
     document.getElementById('year').textContent = new Date().getFullYear();
+    setMode('image');
   </script>
 </body>
 </html>
