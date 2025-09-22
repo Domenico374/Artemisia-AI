@@ -1,169 +1,777 @@
-<!-- MODIFICHE PRINCIPALI PER IL REBRAND -->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artemisia Story - Laboratorio di Creatività Digitale</title>
+    <meta name="description" content="Artemisia Story - Laboratorio di Creatività Digitale. Genera narrazioni visive straordinarie con l'intelligenza artificiale. Trasforma le tue idee in storie attraverso l'arte digitale.">
+    
+    <style>
+        /* CSS COMPLETO PER ARTEMISIA STORY */
+        
+        /* Reset e Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<!-- 1. AGGIORNA IL TITLE -->
-<title>Artemisia Story - Laboratorio di Creatività Digitale</title>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            padding: 20px;
+        }
 
-<!-- 2. AGGIORNA META DESCRIPTION -->
-<meta name="description" content="Artemisia Story - Laboratorio di Creatività Digitale. Genera narrazioni visive straordinarie con l'intelligenza artificiale. Trasforma le tue idee in storie attraverso l'arte digitale.">
+        /* Container principale */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
 
-<!-- 3. AGGIORNA L'HEADER PRINCIPALE -->
-<header class="main-header">
-    <div class="header-content">
-        <img src="logo-artemisia.png" alt="Artemisia Story Logo" class="logo">
-        <div class="title-section">
-            <h1>Artemisia Story</h1>
-            <p class="subtitle">Laboratorio di Creatività Digitale</p>
+        /* Header */
+        .main-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .title-section {
+            text-align: center;
+        }
+
+        .title-section h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #c7d2fe;
+            font-style: italic;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        /* Sezioni categorie */
+        .category-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .category-section h3 {
+            color: #c7d2fe;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Preset chips */
+        .preset-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .preset-chip {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 8px 16px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ffffff;
+            user-select: none;
+        }
+
+        .preset-chip:hover {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        .preset-chip:active {
+            transform: translateY(0);
+        }
+
+        /* Area di input */
+        .input-section {
+            margin: 30px 0;
+        }
+
+        #promptInput {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            color: #ffffff;
+            font-size: 1em;
+            line-height: 1.5;
+            resize: vertical;
+            backdrop-filter: blur(10px);
+        }
+
+        #promptInput::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #promptInput:focus {
+            outline: none;
+            border-color: rgba(99, 102, 241, 0.5);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Controlli */
+        .controls-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .control-group {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #c7d2fe;
+        }
+
+        .control-group select,
+        .control-group input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #ffffff;
+            font-size: 0.9em;
+        }
+
+        .control-group select option {
+            background: #1e293b;
+            color: #ffffff;
+        }
+
+        /* Bottoni */
+        .button-section {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #6366f1, #8b5cf6);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, #5b5bf6, #7c3aed);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Sezione esempi */
+        .examples-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .examples-section h3 {
+            color: #c7d2fe;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .example-prompts {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .example-item {
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+            color: #e0e7ff;
+        }
+
+        .example-item:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Risultati */
+        .results-section {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .image-result {
+            margin: 20px 0;
+        }
+
+        .generated-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Cronologia */
+        .history-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .history-section h3 {
+            color: #c7d2fe;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .history-thumbnail {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        /* Footer */
+        .app-footer {
+            margin-top: 50px;
+            padding: 30px 0 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-section h4 {
+            color: #c7d2fe;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .footer-section p {
+            font-size: 0.9em;
+            color: #a5b4fc;
+            margin: 6px 0;
+            line-height: 1.5;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #c7d2fe;
+        }
+
+        .loading::after {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #6366f1;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Status message */
+        .status-message {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            color: #c7d2fe;
+        }
+
+        .status-message.success {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .status-message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .title-section h1 {
+                font-size: 2em;
+            }
+            
+            .preset-chips {
+                justify-content: center;
+            }
+            
+            .button-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .controls-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title-section h1 {
+                font-size: 1.8em;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+            
+            .container {
+                padding: 15px;
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-content">
+                <img src="logo-artemisia.png" alt="Artemisia Story Logo" class="logo">
+                <div class="title-section">
+                    <h1>Artemisia Story</h1>
+                    <p class="subtitle">Laboratorio di Creatività Digitale</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Racconta la tua Storia -->
+        <div class="category-section">
+            <h3>📚 Racconta la tua Storia</h3>
+            <div class="preset-chips">
+                <span class="preset-chip" onclick="addToPrompt('fiaba moderna')">Fiaba Moderna</span>
+                <span class="preset-chip" onclick="addToPrompt('avventura epica')">Avventura Epica</span>
+                <span class="preset-chip" onclick="addToPrompt('racconto fantasy')">Racconto Fantasy</span>
+                <span class="preset-chip" onclick="addToPrompt('storia romantica')">Storia Romantica</span>
+                <span class="preset-chip" onclick="addToPrompt('leggenda antica')">Leggenda Antica</span>
+            </div>
         </div>
+
+        <!-- Stili Artistici -->
+        <div class="category-section">
+            <h3>🎨 Stili Artistici</h3>
+            <div class="preset-chips">
+                <span class="preset-chip" onclick="addToPrompt('cartoon')">Cartoon</span>
+                <span class="preset-chip" onclick="addToPrompt('fotorealistico')">Fotorealistico</span>
+                <span class="preset-chip" onclick="addToPrompt('acquerello')">Acquerello</span>
+                <span class="preset-chip" onclick="addToPrompt('stile Ghibli')">Stile Ghibli</span>
+                <span class="preset-chip" onclick="addToPrompt('vintage')">Vintage</span>
+                <span class="preset-chip" onclick="addToPrompt('arte digitale')">Arte Digitale</span>
+            </div>
+        </div>
+
+        <!-- Business & Marketing -->
+        <div class="category-section">
+            <h3>💼 Business & Marketing</h3>
+            <div class="preset-chips">
+                <span class="preset-chip" onclick="addToPrompt('logo aziendale')">Logo Aziendale</span>
+                <span class="preset-chip" onclick="addToPrompt('post social')">Post Social</span>
+                <span class="preset-chip" onclick="addToPrompt('brochure')">Brochure</span>
+                <span class="preset-chip" onclick="addToPrompt('presentazione')">Presentazione</span>
+            </div>
+        </div>
+
+        <!-- Fotografia -->
+        <div class="category-section">
+            <h3>📸 Fotografia</h3>
+            <div class="preset-chips">
+                <span class="preset-chip" onclick="addToPrompt('ritratto professionale')">Ritratto Pro</span>
+                <span class="preset-chip" onclick="addToPrompt('paesaggio')">Paesaggio</span>
+                <span class="preset-chip" onclick="addToPrompt('architettura')">Architettura</span>
+                <span class="preset-chip" onclick="addToPrompt('food photography')">Food</span>
+                <span class="preset-chip" onclick="addToPrompt('street photography')">Street</span>
+            </div>
+        </div>
+
+        <!-- Area di input -->
+        <div class="input-section">
+            <textarea 
+                id="promptInput" 
+                placeholder="Racconta la tua storia... Descrivi una scena, un personaggio, un'ambientazione magica. Artemisia Story darà vita alle tue parole!"
+                maxlength="500">
+            </textarea>
+        </div>
+
+        <!-- Controlli -->
+        <div class="controls-section">
+            <div class="control-group">
+                <label for="styleSelect">Stile</label>
+                <select id="styleSelect">
+                    <option value="">Seleziona stile</option>
+                    <option value="realistico">Realistico</option>
+                    <option value="cartoon">Cartoon</option>
+                    <option value="artistico">Artistico</option>
+                    <option value="fantasy">Fantasy</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="qualitySelect">Qualità</label>
+                <select id="qualitySelect">
+                    <option value="standard">Standard</option>
+                    <option value="hd">HD</option>
+                    <option value="ultra">Ultra HD</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="formatSelect">Formato</label>
+                <select id="formatSelect">
+                    <option value="square">Quadrato (1:1)</option>
+                    <option value="portrait">Verticale (3:4)</option>
+                    <option value="landscape">Orizzontale (4:3)</option>
+                    <option value="wide">Panoramico (16:9)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Esempi -->
+        <div class="examples-section">
+            <h3>🌟 Storie di Esempio</h3>
+            <div class="example-prompts">
+                <div class="example-item" onclick="setPrompt(this.dataset.prompt)" 
+                     data-prompt="Principessa coraggiosa in un castello magico, illuminazione dorata al tramonto, stile fantasy art">
+                    "Principessa coraggiosa in un castello magico, illuminazione dorata al tramonto..."
+                </div>
+                <div class="example-item" onclick="setPrompt(this.dataset.prompt)" 
+                     data-prompt="Avventuriero che scopre una città perduta nella giungla, atmosfera misteriosa, stile cinematografico">
+                    "Avventuriero che scopre una città perduta nella giungla, atmosfera misteriosa..."
+                </div>
+                <div class="example-item" onclick="setPrompt(this.dataset.prompt)" 
+                     data-prompt="Vecchio saggio che racconta storie sotto le stelle, fuoco del camino, stile Studio Ghibli">
+                    "Vecchio saggio che racconta storie sotto le stelle, fuoco del camino..."
+                </div>
+                <div class="example-item" onclick="setPrompt(this.dataset.prompt)" 
+                     data-prompt="Vendemmia tradizionale con donne che danzano nelle tinozze, atmosfera di festa, stile impressionista">
+                    "Vendemmia tradizionale con donne che danzano nelle tinozze, atmosfera di festa..."
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottoni -->
+        <div class="button-section">
+            <button class="btn" onclick="generateImage()">
+                ✨ Genera Storia
+            </button>
+            <button class="btn btn-secondary" onclick="clearAll()">
+                🗑️ Cancella
+            </button>
+            <button class="btn btn-secondary" onclick="downloadImage()" style="display: none;" id="downloadBtn">
+                💾 Scarica
+            </button>
+        </div>
+
+        <!-- Status message -->
+        <div id="statusMessage" class="status-message" style="display: none;"></div>
+
+        <!-- Risultati -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <div class="image-result">
+                <img id="generatedImage" class="generated-image" alt="Immagine generata">
+            </div>
+        </div>
+
+        <!-- Cronologia -->
+        <div class="history-section" id="historySection" style="display: none;">
+            <h3>📋 Cronologia</h3>
+            <div class="history-grid" id="historyGrid">
+                <!-- Immagini precedenti verranno inserite qui -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Artemisia Story</h4>
+                    <p>Laboratorio di Creatività Digitale</p>
+                    <p>Dove l'arte rinascimentale incontra l'intelligenza artificiale</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Ispirazione</h4>
+                    <p>Dedicato ad Artemisia Gentileschi (1593-1653)</p>
+                    <p>Pittrice che raccontava storie attraverso l'arte</p>
+                </div>
+            </div>
+        </footer>
     </div>
-</header>
 
-<!-- 4. AGGIORNA I PRESET CON FOCUS NARRATIVO -->
-<div class="category-section">
-    <h3>📚 Racconta la tua Storia</h3>
-    <div class="preset-chips">
-        <span class="preset-chip" onclick="addToPrompt('fiaba moderna')">Fiaba Moderna</span>
-        <span class="preset-chip" onclick="addToPrompt('avventura epica')">Avventura Epica</span>
-        <span class="preset-chip" onclick="addToPrompt('racconto fantasy')">Racconto Fantasy</span>
-        <span class="preset-chip" onclick="addToPrompt('storia romantica')">Storia Romantica</span>
-        <span class="preset-chip" onclick="addToPrompt('leggenda antica')">Leggenda Antica</span>
-    </div>
-</div>
+    <script>
+        // Messaggi aggiornati per Artemisia Story
+        const messages = {
+            generating: "✨ Artemisia Story sta creando la tua narrazione visiva...",
+            success: "🎨 La tua storia è stata creata con successo!",
+            error: "❌ Errore nella creazione della storia. Riprova.",
+            empty: "📝 Scrivi la tua storia nel campo di testo per iniziare",
+            saved: "💾 Storia salvata nella cronologia!"
+        };
 
-<!-- 5. AGGIORNA GLI ESEMPI DI PROMPT -->
-<div class="examples-section">
-    <h3>🌟 Storie di Esempio</h3>
-    <div class="example-prompts">
-        <div class="example-item" onclick="setPrompt(this.dataset.prompt)" 
-             data-prompt="Principessa coraggiosa in un castello magico, illuminazione dorata al tramonto, stile fantasy art">
-            "Principessa coraggiosa in un castello magico..."
-        </div>
-        <div class="example-item" onclick="setPrompt(this.dataset.prompt)" 
-             data-prompt="Avventuriero che scopre una città perduta nella giungla, atmosfera misteriosa, stile cinematografico">
-            "Avventuriero che scopre una città perduta..."
-        </div>
-        <div class="example-item" onclick="setPrompt(this.dataset.prompt)" 
-             data-prompt="Vecchio saggio che racconta storie sotto le stelle, fuoco del camino, stile Studio Ghibli">
-            "Vecchio saggio che racconta storie sotto le stelle..."
-        </div>
-    </div>
-</div>
+        // Funzioni principali
+        function addToPrompt(text) {
+            const promptInput = document.getElementById('promptInput');
+            const currentText = promptInput.value.trim();
+            
+            if (currentText === '') {
+                promptInput.value = text;
+            } else {
+                promptInput.value = currentText + ', ' + text;
+            }
+            
+            promptInput.focus();
+        }
 
-<!-- 6. AGGIORNA IL FOOTER -->
-<footer class="app-footer">
-    <div class="footer-content">
-        <div class="footer-section">
-            <h4>Artemisia Story</h4>
-            <p>Laboratorio di Creatività Digitale</p>
-            <p>Dove l'arte rinascimentale incontra l'intelligenza artificiale</p>
-        </div>
-        <div class="footer-section">
-            <h4>Ispirazione</h4>
-            <p>Dedicato ad Artemisia Gentileschi (1593-1653)</p>
-            <p>Pittrice che raccontava storie attraverso l'arte</p>
-        </div>
-    </div>
-</footer>
+        function setPrompt(prompt) {
+            document.getElementById('promptInput').value = prompt;
+        }
 
-<!-- 7. AGGIORNA I PLACEHOLDER NEL TEXTAREA -->
-<textarea 
-    id="promptInput" 
-    placeholder="Racconta la tua storia... Descrivi una scena, un personaggio, un'ambientazione magica. Artemisia Story darà vita alle tue parole!"
-    maxlength="500">
-</textarea>
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${type}`;
+            statusEl.style.display = 'block';
+            
+            if (type === 'success' || type === 'error') {
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 5000);
+            }
+        }
 
-<!-- 8. AGGIORNA I MESSAGGI DI STATO -->
-<script>
-// Aggiorna i messaggi di successo/errore
-const messages = {
-    generating: "✨ Artemisia Story sta creando la tua narrazione visiva...",
-    success: "🎨 La tua storia è stata creata con successo!",
-    error: "❌ Errore nella creazione della storia. Riprova.",
-    empty: "📝 Scrivi la tua storia nel campo di testo per iniziare",
-    saved: "💾 Storia salvata nella cronologia!"
-};
+        function generateImage() {
+            const prompt = document.getElementById('promptInput').value.trim();
+            
+            if (prompt === '') {
+                showStatus(messages.empty, 'error');
+                return;
+            }
 
-// Aggiorna il nome dell'app nelle console.log
-console.log("🎨 Artemisia Story - Laboratorio di Creatività Digitale inizializzato!");
-</script>
+            showStatus(messages.generating);
+            
+            // Simula generazione immagine (sostituisci con la tua API)
+            setTimeout(() => {
+                // Placeholder per dimostrazione
+                const imageUrl = `https://picsum.photos/512/512?random=${Date.now()}`;
+                displayImage(imageUrl);
+                showStatus(messages.success, 'success');
+                addToHistory(prompt, imageUrl);
+            }, 3000);
+        }
 
-<!-- 9. CSS AGGIUNTIVO PER IL NUOVO BRAND -->
-<style>
-.subtitle {
-    font-size: 0.9em;
-    color: #888;
-    font-style: italic;
-    margin-top: 5px;
-}
+        function displayImage(imageUrl) {
+            const resultsSection = document.getElementById('resultsSection');
+            const generatedImage = document.getElementById('generatedImage');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            generatedImage.src = imageUrl;
+            resultsSection.style.display = 'block';
+            downloadBtn.style.display = 'inline-flex';
+        }
 
-.title-section {
-    text-align: center;
-}
+        function addToHistory(prompt, imageUrl) {
+            const historySection = document.getElementById('historySection');
+            const historyGrid = document.getElementById('historyGrid');
+            
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.onclick = () => setPrompt(prompt);
+            
+            historyItem.innerHTML = `
+                <img src="${imageUrl}" class="history-thumbnail" alt="Storia precedente">
+                <p style="font-size: 0.8em; color: #a5b4fc; margin-top: 5px;">${prompt.substring(0, 50)}...</p>
+            `;
+            
+            historyGrid.insertBefore(historyItem, historyGrid.firstChild);
+            historySection.style.display = 'block';
+            
+            // Mantieni solo le ultime 6 immagini
+            while (historyGrid.children.length > 6) {
+                historyGrid.removeChild(historyGrid.lastChild);
+            }
+        }
 
-.category-section h3 {
-    color: #6366f1;
-    font-weight: 600;
-    margin-bottom: 12px;
-}
+        function clearAll() {
+            document.getElementById('promptInput').value = '';
+            document.getElementById('statusMessage').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('downloadBtn').style.display = 'none';
+        }
 
-.examples-section {
-    margin: 20px 0;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
-}
+        function downloadImage() {
+            const image = document.getElementById('generatedImage');
+            if (image.src) {
+                const link = document.createElement('a');
+                link.download = `artemisia-story-${Date.now()}.png`;
+                link.href = image.src;
+                link.click();
+            }
+        }
 
-.example-prompts {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+        // Scorciatoia tastiera
+        document.getElementById('promptInput').addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                generateImage();
+            }
+        });
 
-.example-item {
-    padding: 10px 15px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9em;
-    color: #ddd;
-}
-
-.example-item:hover {
-    background: rgba(99, 102, 241, 0.2);
-    transform: translateY(-2px);
-}
-
-.app-footer {
-    margin-top: 40px;
-    padding: 20px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: center;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.footer-section h4 {
-    color: #6366f1;
-    margin-bottom: 8px;
-}
-
-.footer-section p {
-    font-size: 0.85em;
-    color: #aaa;
-    margin: 4px 0;
-}
-
-@media (max-width: 768px) {
-    .footer-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-}
-</style>
+        // Inizializzazione
+        console.log("🎨 Artemisia Story - Laboratorio di Creatività Digitale inizializzato!");
+    </script>
+</body>
+</html>
