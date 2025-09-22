@@ -1,833 +1,293 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artemisia Story - Laboratorio di Creatività Digitale</title>
-    <meta name="description" content="Artemisia Story - Laboratorio di Creatività Digitale. Genera narrazioni visive straordinarie con l'intelligenza artificiale. Trasforma le tue idee in storie attraverso l'arte digitale.">
-    
-    <style>
-        /* CSS COMPLETO PER ARTEMISIA STORY */
-        
-        /* Reset e Base */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #ffffff;
-            padding: 20px;
-        }
-
-        /* Container principale */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Header */
-        .main-header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .title-section {
-            text-align: center;
-        }
-
-        .title-section h1 {
-            font-size: 2.5em;
-            font-weight: 700;
-            background: linear-gradient(45deg, #fff, #e0e7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 5px;
-        }
-
-        .subtitle {
-            font-size: 1.1em;
-            color: #c7d2fe;
-            font-style: italic;
-            margin-top: 5px;
-            opacity: 0.9;
-        }
-
-        /* Sezioni categorie */
-        .category-section {
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .category-section h3 {
-            color: #c7d2fe;
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Preset chips */
-        .preset-chips {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .preset-chip {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 25px;
-            padding: 8px 16px;
-            font-size: 0.9em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #ffffff;
-            user-select: none;
-        }
-
-        .preset-chip:hover {
-            background: rgba(99, 102, 241, 0.3);
-            border-color: rgba(99, 102, 241, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-        }
-
-        .preset-chip:active {
-            transform: translateY(0);
-        }
-
-        /* Area di input */
-        .input-section {
-            margin: 30px 0;
-        }
-
-        #promptInput {
-            width: 100%;
-            min-height: 120px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 15px;
-            color: #ffffff;
-            font-size: 1em;
-            line-height: 1.5;
-            resize: vertical;
-            backdrop-filter: blur(10px);
-        }
-
-        #promptInput::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        #promptInput:focus {
-            outline: none;
-            border-color: rgba(99, 102, 241, 0.5);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-        }
-
-        /* Controlli */
-        .controls-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-
-        .control-group {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .control-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #c7d2fe;
-        }
-
-        .control-group select,
-        .control-group input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 8px 12px;
-            color: #ffffff;
-            font-size: 0.9em;
-        }
-
-        .control-group select option {
-            background: #1e293b;
-            color: #ffffff;
-        }
-
-        /* Bottoni */
-        .button-section {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 30px 0;
-        }
-
-        .btn {
-            background: linear-gradient(45deg, #6366f1, #8b5cf6);
-            border: none;
-            border-radius: 12px;
-            padding: 12px 24px;
-            color: #ffffff;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1em;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn:hover {
-            background: linear-gradient(45deg, #5b5bf6, #7c3aed);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: none !important;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2) !important;
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Sezione esempi */
-        .examples-section {
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .examples-section h3 {
-            color: #c7d2fe;
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
-
-        .example-prompts {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .example-item {
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.95em;
-            color: #e0e7ff;
-        }
-
-        .example-item:hover {
-            background: rgba(99, 102, 241, 0.2);
-            border-color: rgba(99, 102, 241, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
-        }
-
-        /* Risultati */
-        .results-section {
-            margin: 30px 0;
-            text-align: center;
-        }
-
-        .image-result {
-            margin: 20px 0;
-        }
-
-        .generated-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        /* Cronologia */
-        .history-section {
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .history-section h3 {
-            color: #c7d2fe;
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-        }
-
-        .history-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .history-item {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .history-item:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .history-thumbnail {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 8px;
-        }
-
-        /* Footer */
-        .app-footer {
-            margin-top: 50px;
-            padding: 30px 0 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .footer-section h4 {
-            color: #c7d2fe;
-            margin-bottom: 12px;
-            font-size: 1.1em;
-            font-weight: 600;
-        }
-
-        .footer-section p {
-            font-size: 0.9em;
-            color: #a5b4fc;
-            margin: 6px 0;
-            line-height: 1.5;
-        }
-
-        /* Status message */
-        .status-message {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 15px;
-            margin: 20px 0;
-            text-align: center;
-            color: #c7d2fe;
-        }
-
-        .status-message.success {
-            background: rgba(34, 197, 94, 0.1);
-            border-color: rgba(34, 197, 94, 0.3);
-            color: #86efac;
-        }
-
-        .status-message.error {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: rgba(239, 68, 68, 0.3);
-            color: #fca5a5;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                margin: 10px;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .title-section h1 {
-                font-size: 2em;
-            }
-            
-            .preset-chips {
-                justify-content: center;
-            }
-            
-            .button-section {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 300px;
-                justify-content: center;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 20px;
-                text-align: center;
-            }
-            
-            .controls-section {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .title-section h1 {
-                font-size: 1.8em;
-            }
-            
-            .subtitle {
-                font-size: 1em;
-            }
-            
-            .container {
-                padding: 15px;
-                margin: 5px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Artemisia Story — Laboratorio di Creatività Digitale</title>
+  <meta name="description" content="Generatore e trasformazione di immagini e storie con AI. Artemisia Story unisce arte e intelligenza artificiale con un'interfaccia semplice e potente." />
+  <meta property="og:title" content="Artemisia Story" />
+  <meta property="og:description" content="Genera immagini e storie con AI: prompt, stili, qualità, formati." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://artemisia-story.vercel.app" />
+  <link rel="icon" href="/favicon.ico" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{--brand:#6f54ff;--ink:#0f172a;--bg:#f8f7ff}
+    body{background:linear-gradient(180deg,#f5f3ff, #f8f7ff)}
+    .card{border-radius:1.25rem; box-shadow:0 8px 30px rgba(0,0,0,.08)}
+    .pill{border-radius:999px}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+  </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <header class="main-header">
-            <div class="header-content">
-                <img src="logo-artemisia.png" alt="Artemisia Story Logo" class="logo">
-                <div class="title-section">
-                    <h1>Artemisia Story</h1>
-                    <p class="subtitle">Laboratorio di Creatività Digitale</p>
-                </div>
-            </div>
-        </header>
-
-        <!-- Racconta la tua Storia -->
-        <div class="category-section">
-            <h3>📚 Racconta la tua Storia</h3>
-            <div class="preset-chips">
-                <span class="preset-chip">Fiaba Moderna</span>
-                <span class="preset-chip">Avventura Epica</span>
-                <span class="preset-chip">Racconto Fantasy</span>
-                <span class="preset-chip">Storia Romantica</span>
-                <span class="preset-chip">Leggenda Antica</span>
-            </div>
-        </div>
-
-        <!-- Stili Artistici -->
-        <div class="category-section">
-            <h3>🎨 Stili Artistici</h3>
-            <div class="preset-chips">
-                <span class="preset-chip">Cartoon</span>
-                <span class="preset-chip">Fotorealistico</span>
-                <span class="preset-chip">Acquerello</span>
-                <span class="preset-chip">Stile Ghibli</span>
-                <span class="preset-chip">Vintage</span>
-                <span class="preset-chip">Arte Digitale</span>
-            </div>
-        </div>
-
-        <!-- Business & Marketing -->
-        <div class="category-section">
-            <h3>💼 Business & Marketing</h3>
-            <div class="preset-chips">
-                <span class="preset-chip">Logo Aziendale</span>
-                <span class="preset-chip">Post Social</span>
-                <span class="preset-chip">Brochure</span>
-                <span class="preset-chip">Presentazione</span>
-            </div>
-        </div>
-
-        <!-- Fotografia -->
-        <div class="category-section">
-            <h3>📸 Fotografia</h3>
-            <div class="preset-chips">
-                <span class="preset-chip">Ritratto Pro</span>
-                <span class="preset-chip">Paesaggio</span>
-                <span class="preset-chip">Architettura</span>
-                <span class="preset-chip">Food</span>
-                <span class="preset-chip">Street</span>
-            </div>
-        </div>
-
-        <!-- Area di input -->
-        <div class="input-section">
-            <textarea 
-                id="promptInput" 
-                placeholder="Racconta la tua storia... Descrivi una scena, un personaggio, un'ambientazione magica. Artemisia Story darà vita alle tue parole!"
-                maxlength="500">
-            </textarea>
-        </div>
-
-        <!-- Controlli -->
-        <div class="controls-section">
-            <div class="control-group">
-                <label for="styleSelect">Stile</label>
-                <select id="styleSelect">
-                    <option value="">Seleziona stile</option>
-                    <option value="realistico">Realistico</option>
-                    <option value="cartoon">Cartoon</option>
-                    <option value="artistico">Artistico</option>
-                    <option value="fantasy">Fantasy</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label for="qualitySelect">Qualità</label>
-                <select id="qualitySelect">
-                    <option value="standard">Standard</option>
-                    <option value="hd">HD</option>
-                    <option value="ultra">Ultra HD</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label for="formatSelect">Formato</label>
-                <select id="formatSelect">
-                    <option value="square">Quadrato (1:1)</option>
-                    <option value="portrait">Verticale (3:4)</option>
-                    <option value="landscape">Orizzontale (4:3)</option>
-                    <option value="wide">Panoramico (16:9)</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Esempi -->
-        <div class="examples-section">
-            <h3>🌟 Storie di Esempio</h3>
-            <div class="example-prompts">
-                <div class="example-item" data-prompt="Principessa coraggiosa in un castello magico, illuminazione dorata al tramonto, stile fantasy art">
-                    "Principessa coraggiosa in un castello magico, illuminazione dorata al tramonto..."
-                </div>
-                <div class="example-item" data-prompt="Avventuriero che scopre una città perduta nella giungla, atmosfera misteriosa, stile cinematografico">
-                    "Avventuriero che scopre una città perduta nella giungla, atmosfera misteriosa..."
-                </div>
-                <div class="example-item" data-prompt="Vecchio saggio che racconta storie sotto le stelle, fuoco del camino, stile Studio Ghibli">
-                    "Vecchio saggio che racconta storie sotto le stelle, fuoco del camino..."
-                </div>
-                <div class="example-item" data-prompt="Vendemmia tradizionale con donne che danzano nelle tinozze, atmosfera di festa, stile impressionista">
-                    "Vendemmia tradizionale con donne che danzano nelle tinozze, atmosfera di festa..."
-                </div>
-            </div>
-        </div>
-
-        <!-- Bottoni -->
-        <div class="button-section">
-            <button class="btn" id="generateBtn">
-                ✨ Genera Storia
-            </button>
-            <button class="btn btn-secondary" id="clearBtn">
-                🗑️ Cancella
-            </button>
-            <button class="btn btn-secondary" style="display: none;" id="downloadBtn">
-                💾 Scarica
-            </button>
-        </div>
-
-        <!-- Status message -->
-        <div id="statusMessage" class="status-message" style="display: none;"></div>
-
-        <!-- Risultati -->
-        <div class="results-section" id="resultsSection" style="display: none;">
-            <div class="image-result">
-                <img id="generatedImage" class="generated-image" alt="Immagine generata">
-            </div>
-        </div>
-
-        <!-- Cronologia -->
-        <div class="history-section" id="historySection" style="display: none;">
-            <h3>📋 Cronologia</h3>
-            <div class="history-grid" id="historyGrid"></div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="app-footer">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Artemisia Story</h4>
-                    <p>Laboratorio di Creatività Digitale</p>
-                    <p>Dove l'arte rinascimentale incontra l'intelligenza artificiale</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Ispirazione</h4>
-                    <p>Dedicato ad Artemisia Gentileschi (1593-1653)</p>
-                    <p>Pittrice che raccontava storie attraverso l'arte</p>
-                </div>
-            </div>
-        </footer>
+<body class="text-slate-900">
+  <!-- Header -->
+  <header class="max-w-6xl mx-auto px-4 pt-8 pb-2">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 grid place-items-center rounded-2xl bg-violet-600 text-white font-bold">A</div>
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold">Artemisia Story</h1>
+        <p class="text-sm text-slate-600 -mt-1">Laboratorio di Creatività Digitale — genera <span class="font-medium">immagini</span> e <span class="font-medium">storie</span> dall'AI</p>
+      </div>
     </div>
+  </header>
 
-    <script>
-        console.log("🎨 Artemisia Story - Caricamento script...");
+  <!-- Main -->
+  <main class="max-w-6xl mx-auto px-4 pb-16 grid md:grid-cols-2 gap-6">
+    <!-- Controls -->
+    <section class="card bg-white p-5 md:p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold">Scrivi il tuo prompt</h2>
+        <div class="inline-flex p-1 bg-slate-100 pill">
+          <button id="mode-image" class="px-3 py-1 text-sm pill bg-white shadow border border-slate-200">Immagine</button>
+          <button id="mode-story" class="px-3 py-1 text-sm pill">Storia</button>
+        </div>
+      </div>
 
-        // Messaggi
-        const messages = {
-            generating: "✨ Artemisia Story sta creando la tua narrazione visiva...",
-            success: "🎨 La tua storia è stata creata con successo!",
-            error: "❌ Errore nella creazione della storia. Riprova.",
-            empty: "📝 Scrivi la tua storia nel campo di testo per iniziare",
-            saved: "💾 Storia salvata nella cronologia!"
-        };
+      <textarea id="prompt" rows="6" placeholder="Esempio: Vendemmia tradizionale al tramonto, stile acquerello caldo, atmosfera di festa…" class="w-full resize-y rounded-xl border border-slate-200 p-3 focus:outline-none focus:ring-2 focus:ring-violet-400"></textarea>
 
-        // Funzioni principali
-        function addToPrompt(text) {
-            console.log("➕ Aggiunto preset:", text);
-            const promptInput = document.getElementById('promptInput');
-            const currentText = promptInput.value.trim();
-            
-            if (currentText === '') {
-                promptInput.value = text;
-            } else {
-                promptInput.value = currentText + ', ' + text;
-            }
-            
-            promptInput.focus();
-        }
+      <!-- Tags quick pick -->
+      <div class="mt-3 flex flex-wrap gap-2 text-sm">
+        <span class="px-3 py-1 bg-slate-100 pill cursor-pointer quick" data-add="Cartoon">Cartoon</span>
+        <span class="px-3 py-1 bg-slate-100 pill cursor-pointer quick" data-add="Fotorealistico">Fotorealistico</span>
+        <span class="px-3 py-1 bg-slate-100 pill cursor-pointer quick" data-add="Acquerello">Acquerello</span>
+        <span class="px-3 py-1 bg-slate-100 pill cursor-pointer quick" data-add="Ghibli">Stile Ghibli</span>
+        <span class="px-3 py-1 bg-slate-100 pill cursor-pointer quick" data-add="Vintage 90">Vintage 90</span>
+      </div>
 
-        function setPrompt(prompt) {
-            console.log("📝 Impostato prompt:", prompt);
-            document.getElementById('promptInput').value = prompt;
-        }
+      <!-- Advanced params -->
+      <div class="grid sm:grid-cols-3 gap-3 mt-5">
+        <div>
+          <label class="block text-sm mb-1">Stile</label>
+          <select id="style" class="w-full rounded-lg border border-slate-200 p-2">
+            <option value="">Automatico</option>
+            <option>Cartoon</option>
+            <option>Fotorealistico</option>
+            <option>Acquerello</option>
+            <option>Stile Ghibli</option>
+            <option>Vintage</option>
+            <option>Arte Digitale</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm mb-1">Qualità</label>
+          <select id="quality" class="w-full rounded-lg border border-slate-200 p-2">
+            <option>Standard</option>
+            <option>Alta</option>
+            <option>Bozza</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm mb-1">Formato</label>
+          <select id="format" class="w-full rounded-lg border border-slate-200 p-2">
+            <option value="1:1">Quadrato (1:1)</option>
+            <option value="16:9">Orizzontale (16:9)</option>
+            <option value="9:16">Verticale (9:16)</option>
+            <option value="4:5">Ritratto (4:5)</option>
+          </select>
+        </div>
+      </div>
 
-        function showStatus(message, type = 'info') {
-            console.log("📢 Status:", message, type);
-            const statusEl = document.getElementById('statusMessage');
-            statusEl.textContent = message;
-            statusEl.className = `status-message ${type}`;
-            statusEl.style.display = 'block';
-            
-            if (type === 'success' || type === 'error') {
-                setTimeout(() => {
-                    statusEl.style.display = 'none';
-                }, 5000);
-            }
-        }
+      <!-- Actions -->
+      <div class="mt-5 flex flex-wrap items-center gap-3">
+        <button id="btn-generate" class="px-5 py-2.5 rounded-xl bg-violet-600 text-white font-medium hover:bg-violet-700">Genera</button>
+        <button id="btn-clear" class="px-4 py-2 rounded-xl border border-slate-200">Cancella</button>
+        <span id="status" class="text-sm text-slate-500"></span>
+      </div>
 
-        function generateImage() {
-            console.log("🎨 Genera Storia cliccato!");
-            
-            const prompt = document.getElementById('promptInput').value.trim();
-            console.log("📝 Prompt:", prompt);
-            
-            if (prompt === '') {
-                showStatus(messages.empty, 'error');
-                return;
-            }
+      <!-- Debug (collapsible) -->
+      <details class="mt-4">
+        <summary class="cursor-pointer text-sm text-slate-600">Dettagli richiesta (debug)</summary>
+        <pre id="debug" class="mono text-xs bg-slate-50 rounded-lg p-3 overflow-auto"></pre>
+      </details>
+    </section>
 
-            showStatus(messages.generating);
-            console.log("✨ Generazione iniziata...");
-            
-            // Simulazione per test
-            setTimeout(() => {
-                console.log("🖼️ Simulazione completata");
-                const imageUrl = `https://picsum.photos/512/512?random=${Date.now()}`;
-                console.log("📎 URL immagine:", imageUrl);
-                
-                displayImage(imageUrl);
-                showStatus(messages.success, 'success');
-                addToHistory(prompt, imageUrl);
-                
-                console.log("✅ Processo completato");
-            }, 2000);
-        }
+    <!-- Preview / Output -->
+    <section class="card bg-white p-5 md:p-6">
+      <h2 class="text-lg font-semibold mb-3">Anteprima</h2>
+      <div id="preview" class="aspect-square md:aspect-[4/3] w-full bg-slate-50 rounded-xl grid place-items-center overflow-hidden">
+        <div class="text-slate-400 text-sm">Il risultato apparirà qui</div>
+      </div>
+      <div class="mt-4 flex gap-3">
+        <button id="btn-download" class="px-4 py-2 rounded-xl border border-slate-200 disabled:opacity-50" disabled>Scarica PNG</button>
+        <button id="btn-copy" class="px-4 py-2 rounded-xl border border-slate-200 disabled:opacity-50" disabled>Copia testo</button>
+      </div>
 
-        function displayImage(imageUrl) {
-            console.log("🖼️ Mostrando immagine:", imageUrl);
-            const resultsSection = document.getElementById('resultsSection');
-            const generatedImage = document.getElementById('generatedImage');
-            const downloadBtn = document.getElementById('downloadBtn');
-            
-            generatedImage.src = imageUrl;
-            resultsSection.style.display = 'block';
-            downloadBtn.style.display = 'inline-flex';
-        }
+      <h3 class="mt-6 mb-2 font-medium">Cronologia</h3>
+      <div id="history" class="grid grid-cols-4 gap-2"></div>
+    </section>
+  </main>
 
-        function addToHistory(prompt, imageUrl) {
-            console.log("📋 Aggiunto alla cronologia:", prompt);
-            const historySection = document.getElementById('historySection');
-            const historyGrid = document.getElementById('historyGrid');
-            
-            const historyItem = document.createElement('div');
-            historyItem.className = 'history-item';
-            historyItem.onclick = () => setPrompt(prompt);
-            
-            historyItem.innerHTML = `
-                <img src="${imageUrl}" class="history-thumbnail" alt="Storia precedente">
-                <p style="font-size: 0.8em; color: #a5b4fc; margin-top: 5px;">${prompt.substring(0, 50)}...</p>
-            `;
-            
-            historyGrid.insertBefore(historyItem, historyGrid.firstChild);
-            historySection.style.display = 'block';
-            
-            // Mantieni solo le ultime 6 immagini
-            while (historyGrid.children.length > 6) {
-                historyGrid.removeChild(historyGrid.lastChild);
-            }
-        }
+  <!-- Footer -->
+  <footer class="max-w-6xl mx-auto px-4 pb-10 text-xs text-slate-500">
+    <div>© <span id="year"></span> Artemisia Story · dove l'arte incontra l'AI</div>
+  </footer>
 
-        function clearAll() {
-            console.log("🗑️ Cancellazione tutto");
-            document.getElementById('promptInput').value = '';
-            document.getElementById('statusMessage').style.display = 'none';
-            document.getElementById('resultsSection').style.display = 'none';
-            document.getElementById('downloadBtn').style.display = 'none';
-        }
+  <script>
+    const els = {
+      modeImage: document.getElementById('mode-image'),
+      modeStory: document.getElementById('mode-story'),
+      prompt: document.getElementById('prompt'),
+      style: document.getElementById('style'),
+      quality: document.getElementById('quality'),
+      format: document.getElementById('format'),
+      btnGenerate: document.getElementById('btn-generate'),
+      btnClear: document.getElementById('btn-clear'),
+      btnDownload: document.getElementById('btn-download'),
+      btnCopy: document.getElementById('btn-copy'),
+      status: document.getElementById('status'),
+      preview: document.getElementById('preview'),
+      history: document.getElementById('history'),
+      debug: document.getElementById('debug'),
+    };
 
-        function downloadImage() {
-            console.log("💾 Download immagine");
-            const image = document.getElementById('generatedImage');
-            if (image.src) {
-                const link = document.createElement('a');
-                link.download = `artemisia-story-${Date.now()}.png`;
-                link.href = image.src;
-                link.click();
-            }
-        }
+    let mode = 'image'; // 'image' | 'story'
+    const API_ENDPOINT = '/api/generate'; // <— Assicurati che esista nel progetto
 
-        // Inizializzazione quando il DOM è caricato
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("🚀 DOM caricato - Inizializzazione...");
-            
-            // Test elementi
-            const promptInput = document.getElementById('promptInput');
-            const generateBtn = document.getElementById('generateBtn');
-            const clearBtn = document.getElementById('clearBtn');
-            
-            console.log("📝 Prompt input:", promptInput ? "✅" : "❌");
-            console.log("🔘 Generate button:", generateBtn ? "✅" : "❌");
-            console.log("🗑️ Clear button:", clearBtn ? "✅" : "❌");
-            
-            // Event listeners per i bottoni
-            if (generateBtn) {
-                generateBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log("🔘 Generate cliccato!");
-                    generateImage();
-                });
-            }
-            
-            if (clearBtn) {
-                clearBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log("🗑️ Clear cliccato!");
-                    clearAll();
-                });
-            }
-            
-            // Event listeners per i preset chips
-            const presetChips = document.querySelectorAll('.preset-chip');
-            console.log("🎯 Preset chips trovati:", presetChips.length);
-            
-            presetChips.forEach(chip => {
-                chip.addEventListener('click', function() {
-                    const text = this.textContent.trim();
-                    console.log("🎯 Chip cliccato:", text);
-                    addToPrompt(text);
-                });
-            });
-            
-            // Event listeners per gli esempi
-            const exampleItems = document.querySelectorAll('.example-item');
-            console.log("🌟 Esempi trovati:", exampleItems.length);
-            
-            exampleItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const prompt = this.getAttribute('data-prompt');
-                    console.log("🌟 Esempio cliccato:", prompt);
-                    setPrompt(prompt);
-                });
-            });
-            
-            // Scorciatoia tastiera
-            if (promptInput) {
-                promptInput.addEventListener('keydown', function(e) {
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                        console.log("⌨️ Scorciatoia tastiera usata!");
-                        generateImage();
-                    }
-                });
-            }
-            
-            console.log("✅ Inizializzazione completata!");
+    // UI helpers
+    function setMode(newMode){
+      mode = newMode;
+      els.modeImage.classList.toggle('bg-white', mode==='image');
+      els.modeImage.classList.toggle('shadow', mode==='image');
+      els.modeImage.classList.toggle('border', mode==='image');
+      els.modeStory.classList.toggle('bg-white', mode==='story');
+      els.modeStory.classList.toggle('shadow', mode==='story');
+      els.modeStory.classList.toggle('border', mode==='story');
+      els.btnCopy.disabled = (mode !== 'story');
+    }
+
+    els.modeImage.addEventListener('click', ()=>setMode('image'));
+    els.modeStory.addEventListener('click', ()=>setMode('story'));
+
+    // Quick tags → append to prompt
+    document.querySelectorAll('.quick').forEach(chip=>{
+      chip.addEventListener('click',()=>{
+        const add = chip.dataset.add;
+        const cur = els.prompt.value.trim();
+        els.prompt.value = cur ? cur + ', ' + add : add;
+      })
+    })
+
+    // Download helper
+    function downloadURI(uri, name) {
+      const a = document.createElement('a');
+      a.download = name; a.href = uri; document.body.appendChild(a); a.click(); a.remove();
+    }
+
+    // Render helpers
+    function renderImage(src){
+      els.preview.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = src; img.alt = 'Generazione'; img.className = 'w-full h-full object-cover';
+      els.preview.appendChild(img);
+      els.btnDownload.disabled = false;
+      els.btnCopy.disabled = true;
+      els.btnDownload.onclick = () => downloadURI(src, 'artemisia-story.png');
+      // push to history
+      const thumb = img.cloneNode();
+      thumb.className = 'w-full h-24 object-cover rounded-lg';
+      els.history.prepend(thumb);
+    }
+
+    function renderText(text){
+      els.preview.innerHTML = '';
+      const box = document.createElement('div');
+      box.className = 'p-4 text-sm max-h-full overflow-auto';
+      box.textContent = text;
+      els.preview.appendChild(box);
+      els.btnCopy.disabled = false;
+      els.btnDownload.disabled = true;
+      els.btnCopy.onclick = async () => {
+        try { await navigator.clipboard.writeText(text); els.status.textContent = 'Testo copiato'; } catch(e){ console.warn(e); }
+      };
+      // history item
+      const cap = document.createElement('div');
+      cap.className = 'text-[10px] bg-slate-100 rounded p-1 line-clamp-3';
+      cap.textContent = text;
+      els.history.prepend(cap);
+    }
+
+    function combinePrompt(){
+      const base = els.prompt.value.trim();
+      const style = els.style.value.trim();
+      const format = els.format.value;
+      const quality = els.quality.value;
+      // Uniamo come nel vecchio Artemisia AI
+      const parts = [base];
+      if(style) parts.push('stile: ' + style);
+      parts.push('qualità: ' + quality);
+      parts.push('formato: ' + format);
+      return parts.filter(Boolean).join(', ');
+    }
+
+    async function generate(){
+      const userPrompt = els.prompt.value.trim();
+      if(!userPrompt){
+        els.status.textContent = 'Scrivi una descrizione prima di generare.';
+        return;
+      }
+      els.status.textContent = 'Genero…';
+      els.btnGenerate.disabled = true;
+
+      const payload = {
+        type: mode,               // 'image' | 'story'
+        prompt: combinePrompt(),  // testo completo
+        rawPrompt: userPrompt,    // comodo per il backend
+        style: els.style.value || null,
+        quality: els.quality.value,
+        format: els.format.value
+      };
+
+      els.debug.textContent = JSON.stringify({ endpoint: API_ENDPOINT, payload }, null, 2);
+
+      try{
+        const res = await fetch(API_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
         });
-
-        // Test function
-        function testApp() {
-            console.log("🧪 Test dell'app...");
-            console.log("📝 Input:", document.getElementById('promptInput'));
-            console.log("📋 Status:", document.getElementById('statusMessage'));
-            console.log("🖼️ Results:", document.getElementById('resultsSection'));
-            console.log("⏰ History:", document.getElementById('historySection'));
+        if(!res.ok){
+          const t = await res.text();
+          throw new Error('HTTP ' + res.status + ' — ' + t);
         }
+        const json = await res.json();
+        // Possibili forme di risposta supportate
+        if(json.imageUrl){
+          renderImage(json.imageUrl);
+        } else if(json.imageB64){
+          renderImage('data:image/png;base64,' + json.imageB64);
+        } else if(Array.isArray(json.images) && json.images.length){
+          const src = json.images[0].url || json.images[0];
+          renderImage(src);
+        } else if(json.text){
+          renderText(json.text);
+        } else if(json.story){
+          renderText(json.story);
+        } else {
+          renderText('Risposta ricevuta ma non riconosciuta: ' + JSON.stringify(json));
+        }
+        els.status.textContent = 'Pronto';
+      } catch(err){
+        console.error(err);
+        els.status.textContent = 'Errore: ' + err.message;
+        renderText('Errore: ' + err.message);
+      } finally {
+        els.btnGenerate.disabled = false;
+      }
+    }
 
-        console.log("🎨 Script caricato completamente!");
-    </script>
+    els.btnGenerate.addEventListener('click', generate);
+    els.btnClear.addEventListener('click', ()=>{
+      els.prompt.value = '';
+      els.preview.innerHTML = '<div class="text-slate-400 text-sm">Il risultato apparirà qui</div>';
+      els.status.textContent = '';
+      els.debug.textContent = '';
+      els.btnDownload.disabled = true;
+      els.btnCopy.disabled = true;
+    });
+
+    // init
+    setMode('image');
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
