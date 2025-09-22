@@ -377,29 +377,6 @@
             line-height: 1.5;
         }
 
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #c7d2fe;
-        }
-
-        .loading::after {
-            content: "";
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #6366f1;
-            animation: spin 1s ease-in-out infinite;
-            margin-left: 10px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         /* Status message */
         .status-message {
             background: rgba(255, 255, 255, 0.1);
@@ -498,11 +475,11 @@
         <div class="category-section">
             <h3>📚 Racconta la tua Storia</h3>
             <div class="preset-chips">
-                <span class="preset-chip" onclick="addToPrompt('fiaba moderna')">Fiaba Moderna</span>
-                <span class="preset-chip" onclick="addToPrompt('avventura epica')">Avventura Epica</span>
-                <span class="preset-chip" onclick="addToPrompt('racconto fantasy')">Racconto Fantasy</span>
-                <span class="preset-chip" onclick="addToPrompt('storia romantica')">Storia Romantica</span>
-                <span class="preset-chip" onclick="addToPrompt('leggenda antica')">Leggenda Antica</span>
+                <span class="preset-chip">Fiaba Moderna</span>
+                <span class="preset-chip">Avventura Epica</span>
+                <span class="preset-chip">Racconto Fantasy</span>
+                <span class="preset-chip">Storia Romantica</span>
+                <span class="preset-chip">Leggenda Antica</span>
             </div>
         </div>
 
@@ -510,12 +487,12 @@
         <div class="category-section">
             <h3>🎨 Stili Artistici</h3>
             <div class="preset-chips">
-                <span class="preset-chip" onclick="addToPrompt('cartoon')">Cartoon</span>
-                <span class="preset-chip" onclick="addToPrompt('fotorealistico')">Fotorealistico</span>
-                <span class="preset-chip" onclick="addToPrompt('acquerello')">Acquerello</span>
-                <span class="preset-chip" onclick="addToPrompt('stile Ghibli')">Stile Ghibli</span>
-                <span class="preset-chip" onclick="addToPrompt('vintage')">Vintage</span>
-                <span class="preset-chip" onclick="addToPrompt('arte digitale')">Arte Digitale</span>
+                <span class="preset-chip">Cartoon</span>
+                <span class="preset-chip">Fotorealistico</span>
+                <span class="preset-chip">Acquerello</span>
+                <span class="preset-chip">Stile Ghibli</span>
+                <span class="preset-chip">Vintage</span>
+                <span class="preset-chip">Arte Digitale</span>
             </div>
         </div>
 
@@ -523,10 +500,10 @@
         <div class="category-section">
             <h3>💼 Business & Marketing</h3>
             <div class="preset-chips">
-                <span class="preset-chip" onclick="addToPrompt('logo aziendale')">Logo Aziendale</span>
-                <span class="preset-chip" onclick="addToPrompt('post social')">Post Social</span>
-                <span class="preset-chip" onclick="addToPrompt('brochure')">Brochure</span>
-                <span class="preset-chip" onclick="addToPrompt('presentazione')">Presentazione</span>
+                <span class="preset-chip">Logo Aziendale</span>
+                <span class="preset-chip">Post Social</span>
+                <span class="preset-chip">Brochure</span>
+                <span class="preset-chip">Presentazione</span>
             </div>
         </div>
 
@@ -534,11 +511,11 @@
         <div class="category-section">
             <h3>📸 Fotografia</h3>
             <div class="preset-chips">
-                <span class="preset-chip" onclick="addToPrompt('ritratto professionale')">Ritratto Pro</span>
-                <span class="preset-chip" onclick="addToPrompt('paesaggio')">Paesaggio</span>
-                <span class="preset-chip" onclick="addToPrompt('architettura')">Architettura</span>
-                <span class="preset-chip" onclick="addToPrompt('food photography')">Food</span>
-                <span class="preset-chip" onclick="addToPrompt('street photography')">Street</span>
+                <span class="preset-chip">Ritratto Pro</span>
+                <span class="preset-chip">Paesaggio</span>
+                <span class="preset-chip">Architettura</span>
+                <span class="preset-chip">Food</span>
+                <span class="preset-chip">Street</span>
             </div>
         </div>
 
@@ -586,20 +563,16 @@
         <div class="examples-section">
             <h3>🌟 Storie di Esempio</h3>
             <div class="example-prompts">
-                <div class="example-item" onclick="setPrompt(this.dataset.prompt)" 
-                     data-prompt="Principessa coraggiosa in un castello magico, illuminazione dorata al tramonto, stile fantasy art">
+                <div class="example-item" data-prompt="Principessa coraggiosa in un castello magico, illuminazione dorata al tramonto, stile fantasy art">
                     "Principessa coraggiosa in un castello magico, illuminazione dorata al tramonto..."
                 </div>
-                <div class="example-item" onclick="setPrompt(this.dataset.prompt)" 
-                     data-prompt="Avventuriero che scopre una città perduta nella giungla, atmosfera misteriosa, stile cinematografico">
+                <div class="example-item" data-prompt="Avventuriero che scopre una città perduta nella giungla, atmosfera misteriosa, stile cinematografico">
                     "Avventuriero che scopre una città perduta nella giungla, atmosfera misteriosa..."
                 </div>
-                <div class="example-item" onclick="setPrompt(this.dataset.prompt)" 
-                     data-prompt="Vecchio saggio che racconta storie sotto le stelle, fuoco del camino, stile Studio Ghibli">
+                <div class="example-item" data-prompt="Vecchio saggio che racconta storie sotto le stelle, fuoco del camino, stile Studio Ghibli">
                     "Vecchio saggio che racconta storie sotto le stelle, fuoco del camino..."
                 </div>
-                <div class="example-item" onclick="setPrompt(this.dataset.prompt)" 
-                     data-prompt="Vendemmia tradizionale con donne che danzano nelle tinozze, atmosfera di festa, stile impressionista">
+                <div class="example-item" data-prompt="Vendemmia tradizionale con donne che danzano nelle tinozze, atmosfera di festa, stile impressionista">
                     "Vendemmia tradizionale con donne che danzano nelle tinozze, atmosfera di festa..."
                 </div>
             </div>
@@ -607,13 +580,13 @@
 
         <!-- Bottoni -->
         <div class="button-section">
-            <button class="btn" id="generateBtn" onclick="generateImage()">
+            <button class="btn" id="generateBtn">
                 ✨ Genera Storia
             </button>
-            <button class="btn btn-secondary" onclick="clearAll()">
+            <button class="btn btn-secondary" id="clearBtn">
                 🗑️ Cancella
             </button>
-            <button class="btn btn-secondary" onclick="downloadImage()" style="display: none;" id="downloadBtn">
+            <button class="btn btn-secondary" style="display: none;" id="downloadBtn">
                 💾 Scarica
             </button>
         </div>
@@ -631,9 +604,7 @@
         <!-- Cronologia -->
         <div class="history-section" id="historySection" style="display: none;">
             <h3>📋 Cronologia</h3>
-            <div class="history-grid" id="historyGrid">
-                <!-- Immagini precedenti verranno inserite qui -->
-            </div>
+            <div class="history-grid" id="historyGrid"></div>
         </div>
 
         <!-- Footer -->
@@ -654,7 +625,9 @@
     </div>
 
     <script>
-        // Messaggi aggiornati per Artemisia Story
+        console.log("🎨 Artemisia Story - Caricamento script...");
+
+        // Messaggi
         const messages = {
             generating: "✨ Artemisia Story sta creando la tua narrazione visiva...",
             success: "🎨 La tua storia è stata creata con successo!",
@@ -663,40 +636,9 @@
             saved: "💾 Storia salvata nella cronologia!"
         };
 
-        // FUNZIONE PRINCIPALE AGGIORNATA CON DEBUG
-        function generateImage() {
-            console.log("🎨 Genera Storia cliccato!"); // Debug
-            
-            const prompt = document.getElementById('promptInput').value.trim();
-            console.log("📝 Prompt:", prompt); // Debug
-            
-            if (prompt === '') {
-                showStatus(messages.empty, 'error');
-                return;
-            }
-
-            showStatus(messages.generating);
-            console.log("✨ Generazione iniziata..."); // Debug
-            
-            // VERSIONE TEST - Usa immagini placeholder
-            setTimeout(() => {
-                console.log("🖼️ Simulazione completata"); // Debug
-                
-                // Genera URL immagine placeholder diversa ogni volta
-                const imageUrl = `https://picsum.photos/512/512?random=${Date.now()}`;
-                console.log("📎 URL immagine:", imageUrl); // Debug
-                
-                displayImage(imageUrl);
-                showStatus(messages.success, 'success');
-                addToHistory(prompt, imageUrl);
-                
-                console.log("✅ Processo completato"); // Debug
-            }, 2000); // Ridotto a 2 secondi per test
-        }
-
-        // Funzioni di supporto
+        // Funzioni principali
         function addToPrompt(text) {
-            console.log("➕ Aggiunto preset:", text); // Debug
+            console.log("➕ Aggiunto preset:", text);
             const promptInput = document.getElementById('promptInput');
             const currentText = promptInput.value.trim();
             
@@ -710,12 +652,12 @@
         }
 
         function setPrompt(prompt) {
-            console.log("📝 Impostato prompt esempio:", prompt); // Debug
+            console.log("📝 Impostato prompt:", prompt);
             document.getElementById('promptInput').value = prompt;
         }
 
         function showStatus(message, type = 'info') {
-            console.log("📢 Status:", message, type); // Debug
+            console.log("📢 Status:", message, type);
             const statusEl = document.getElementById('statusMessage');
             statusEl.textContent = message;
             statusEl.className = `status-message ${type}`;
@@ -728,8 +670,36 @@
             }
         }
 
+        function generateImage() {
+            console.log("🎨 Genera Storia cliccato!");
+            
+            const prompt = document.getElementById('promptInput').value.trim();
+            console.log("📝 Prompt:", prompt);
+            
+            if (prompt === '') {
+                showStatus(messages.empty, 'error');
+                return;
+            }
+
+            showStatus(messages.generating);
+            console.log("✨ Generazione iniziata...");
+            
+            // Simulazione per test
+            setTimeout(() => {
+                console.log("🖼️ Simulazione completata");
+                const imageUrl = `https://picsum.photos/512/512?random=${Date.now()}`;
+                console.log("📎 URL immagine:", imageUrl);
+                
+                displayImage(imageUrl);
+                showStatus(messages.success, 'success');
+                addToHistory(prompt, imageUrl);
+                
+                console.log("✅ Processo completato");
+            }, 2000);
+        }
+
         function displayImage(imageUrl) {
-            console.log("🖼️ Mostrando immagine:", imageUrl); // Debug
+            console.log("🖼️ Mostrando immagine:", imageUrl);
             const resultsSection = document.getElementById('resultsSection');
             const generatedImage = document.getElementById('generatedImage');
             const downloadBtn = document.getElementById('downloadBtn');
@@ -740,7 +710,7 @@
         }
 
         function addToHistory(prompt, imageUrl) {
-            console.log("📋 Aggiunto alla cronologia:", prompt); // Debug
+            console.log("📋 Aggiunto alla cronologia:", prompt);
             const historySection = document.getElementById('historySection');
             const historyGrid = document.getElementById('historyGrid');
             
@@ -763,7 +733,7 @@
         }
 
         function clearAll() {
-            console.log("🗑️ Cancellazione tutto"); // Debug
+            console.log("🗑️ Cancellazione tutto");
             document.getElementById('promptInput').value = '';
             document.getElementById('statusMessage').style.display = 'none';
             document.getElementById('resultsSection').style.display = 'none';
@@ -771,7 +741,7 @@
         }
 
         function downloadImage() {
-            console.log("💾 Download immagine"); // Debug
+            console.log("💾 Download immagine");
             const image = document.getElementById('generatedImage');
             if (image.src) {
                 const link = document.createElement('a');
@@ -781,7 +751,74 @@
             }
         }
 
-        // FUNZIONE DI TEST
+        // Inizializzazione quando il DOM è caricato
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("🚀 DOM caricato - Inizializzazione...");
+            
+            // Test elementi
+            const promptInput = document.getElementById('promptInput');
+            const generateBtn = document.getElementById('generateBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            
+            console.log("📝 Prompt input:", promptInput ? "✅" : "❌");
+            console.log("🔘 Generate button:", generateBtn ? "✅" : "❌");
+            console.log("🗑️ Clear button:", clearBtn ? "✅" : "❌");
+            
+            // Event listeners per i bottoni
+            if (generateBtn) {
+                generateBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log("🔘 Generate cliccato!");
+                    generateImage();
+                });
+            }
+            
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log("🗑️ Clear cliccato!");
+                    clearAll();
+                });
+            }
+            
+            // Event listeners per i preset chips
+            const presetChips = document.querySelectorAll('.preset-chip');
+            console.log("🎯 Preset chips trovati:", presetChips.length);
+            
+            presetChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    const text = this.textContent.trim();
+                    console.log("🎯 Chip cliccato:", text);
+                    addToPrompt(text);
+                });
+            });
+            
+            // Event listeners per gli esempi
+            const exampleItems = document.querySelectorAll('.example-item');
+            console.log("🌟 Esempi trovati:", exampleItems.length);
+            
+            exampleItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const prompt = this.getAttribute('data-prompt');
+                    console.log("🌟 Esempio cliccato:", prompt);
+                    setPrompt(prompt);
+                });
+            });
+            
+            // Scorciatoia tastiera
+            if (promptInput) {
+                promptInput.addEventListener('keydown', function(e) {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                        console.log("⌨️ Scorciatoia tastiera usata!");
+                        generateImage();
+                    }
+                });
+            }
+            
+            console.log("✅ Inizializzazione completata!");
+        });
+
+        // Test function
         function testApp() {
             console.log("🧪 Test dell'app...");
             console.log("📝 Input:", document.getElementById('promptInput'));
@@ -790,22 +827,7 @@
             console.log("⏰ History:", document.getElementById('historySection'));
         }
 
-        // EVENT LISTENERS AGGIORNATI
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("🚀 DOM caricato completamente");
-            
-            // Test se gli elementi esistono
-            const promptInput = document.getElementById('promptInput');
-            const generateBtn = document.getElementById('generateBtn');
-            
-            console.log("📝 Prompt input trovato:", promptInput ? "✅" : "❌");
-            console.log("🔘 Bottone trovato:", generateBtn ? "✅" : "❌");
-            
-            // Aggiungi listener di backup al bottone
-            if (generateBtn) {
-                generateBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log("🔘 Bottone cliccato via event listener!");
-                    generateImage();
-                });
-            }
+        console.log("🎨 Script caricato completamente!");
+    </script>
+</body>
+</html>
