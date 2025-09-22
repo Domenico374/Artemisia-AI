@@ -233,13 +233,13 @@
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1) !important;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: none;
+            box-shadow: none !important;
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.2) !important;
             border-color: rgba(255, 255, 255, 0.3);
         }
 
@@ -607,7 +607,7 @@
 
         <!-- Bottoni -->
         <div class="button-section">
-            <button class="btn" onclick="generateImage()">
+            <button class="btn" id="generateBtn" onclick="generateImage()">
                 ✨ Genera Storia
             </button>
             <button class="btn btn-secondary" onclick="clearAll()">
@@ -663,8 +663,40 @@
             saved: "💾 Storia salvata nella cronologia!"
         };
 
-        // Funzioni principali
+        // FUNZIONE PRINCIPALE AGGIORNATA CON DEBUG
+        function generateImage() {
+            console.log("🎨 Genera Storia cliccato!"); // Debug
+            
+            const prompt = document.getElementById('promptInput').value.trim();
+            console.log("📝 Prompt:", prompt); // Debug
+            
+            if (prompt === '') {
+                showStatus(messages.empty, 'error');
+                return;
+            }
+
+            showStatus(messages.generating);
+            console.log("✨ Generazione iniziata..."); // Debug
+            
+            // VERSIONE TEST - Usa immagini placeholder
+            setTimeout(() => {
+                console.log("🖼️ Simulazione completata"); // Debug
+                
+                // Genera URL immagine placeholder diversa ogni volta
+                const imageUrl = `https://picsum.photos/512/512?random=${Date.now()}`;
+                console.log("📎 URL immagine:", imageUrl); // Debug
+                
+                displayImage(imageUrl);
+                showStatus(messages.success, 'success');
+                addToHistory(prompt, imageUrl);
+                
+                console.log("✅ Processo completato"); // Debug
+            }, 2000); // Ridotto a 2 secondi per test
+        }
+
+        // Funzioni di supporto
         function addToPrompt(text) {
+            console.log("➕ Aggiunto preset:", text); // Debug
             const promptInput = document.getElementById('promptInput');
             const currentText = promptInput.value.trim();
             
@@ -678,10 +710,12 @@
         }
 
         function setPrompt(prompt) {
+            console.log("📝 Impostato prompt esempio:", prompt); // Debug
             document.getElementById('promptInput').value = prompt;
         }
 
         function showStatus(message, type = 'info') {
+            console.log("📢 Status:", message, type); // Debug
             const statusEl = document.getElementById('statusMessage');
             statusEl.textContent = message;
             statusEl.className = `status-message ${type}`;
@@ -694,27 +728,8 @@
             }
         }
 
-        function generateImage() {
-            const prompt = document.getElementById('promptInput').value.trim();
-            
-            if (prompt === '') {
-                showStatus(messages.empty, 'error');
-                return;
-            }
-
-            showStatus(messages.generating);
-            
-            // Simula generazione immagine (sostituisci con la tua API)
-            setTimeout(() => {
-                // Placeholder per dimostrazione
-                const imageUrl = `https://picsum.photos/512/512?random=${Date.now()}`;
-                displayImage(imageUrl);
-                showStatus(messages.success, 'success');
-                addToHistory(prompt, imageUrl);
-            }, 3000);
-        }
-
         function displayImage(imageUrl) {
+            console.log("🖼️ Mostrando immagine:", imageUrl); // Debug
             const resultsSection = document.getElementById('resultsSection');
             const generatedImage = document.getElementById('generatedImage');
             const downloadBtn = document.getElementById('downloadBtn');
@@ -725,6 +740,7 @@
         }
 
         function addToHistory(prompt, imageUrl) {
+            console.log("📋 Aggiunto alla cronologia:", prompt); // Debug
             const historySection = document.getElementById('historySection');
             const historyGrid = document.getElementById('historyGrid');
             
@@ -747,6 +763,7 @@
         }
 
         function clearAll() {
+            console.log("🗑️ Cancellazione tutto"); // Debug
             document.getElementById('promptInput').value = '';
             document.getElementById('statusMessage').style.display = 'none';
             document.getElementById('resultsSection').style.display = 'none';
@@ -754,6 +771,7 @@
         }
 
         function downloadImage() {
+            console.log("💾 Download immagine"); // Debug
             const image = document.getElementById('generatedImage');
             if (image.src) {
                 const link = document.createElement('a');
@@ -763,15 +781,31 @@
             }
         }
 
-        // Scorciatoia tastiera
-        document.getElementById('promptInput').addEventListener('keydown', function(e) {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                generateImage();
-            }
-        });
+        // FUNZIONE DI TEST
+        function testApp() {
+            console.log("🧪 Test dell'app...");
+            console.log("📝 Input:", document.getElementById('promptInput'));
+            console.log("📋 Status:", document.getElementById('statusMessage'));
+            console.log("🖼️ Results:", document.getElementById('resultsSection'));
+            console.log("⏰ History:", document.getElementById('historySection'));
+        }
 
-        // Inizializzazione
-        console.log("🎨 Artemisia Story - Laboratorio di Creatività Digitale inizializzato!");
-    </script>
-</body>
-</html>
+        // EVENT LISTENERS AGGIORNATI
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("🚀 DOM caricato completamente");
+            
+            // Test se gli elementi esistono
+            const promptInput = document.getElementById('promptInput');
+            const generateBtn = document.getElementById('generateBtn');
+            
+            console.log("📝 Prompt input trovato:", promptInput ? "✅" : "❌");
+            console.log("🔘 Bottone trovato:", generateBtn ? "✅" : "❌");
+            
+            // Aggiungi listener di backup al bottone
+            if (generateBtn) {
+                generateBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log("🔘 Bottone cliccato via event listener!");
+                    generateImage();
+                });
+            }
