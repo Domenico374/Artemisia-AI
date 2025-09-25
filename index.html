@@ -3,1179 +3,209 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Artemisia Story · Generatore AI di Immagini</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Artemisia Story – Generatore & Trasformatore AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-start: #0f172a; --bg-end: #1e1b4b; --card: #0b1020dd; --text: #e2e8f0; --muted: #94a3b8;
-      --brand: #6366f1; --brand-2: #8b5cf6; --accent: #f8c045; --ring: rgba(99,102,241,.35);
-      --ok: #34d399; --warn: #f59e0b; --err: #f87171; --surface: rgba(255,255,255,.06);
-      --border: rgba(255,255,255,.14); --chip: rgba(148,163,184,.12); --shadow: 0 18px 60px rgba(0,0,0,.35);
-    }
-    [data-theme="light"] {
-      --bg-start: #e8eef8; --bg-end: #dfe4ff; --card: #ffffffee; --text: #0f172a; --muted: #475569;
-      --surface: #f8fafc; --border: rgba(2,6,23,.12); --chip: rgba(2,6,23,.06); --shadow: 0 18px 50px rgba(2,6,23,.12);
-    }
-
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; }
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      color: var(--text);
-      background: 
-        radial-gradient(1000px 600px at -10% -10%, #0ea5e980, transparent 60%),
-        radial-gradient(800px 500px at 110% 10%, #a78bfa66, transparent 60%),
-        linear-gradient(135deg, var(--bg-start), var(--bg-end));
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    .header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
-    .brand { display: flex; align-items: center; gap: 14px; }
-    .logo { 
-      width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; 
-      box-shadow: var(--shadow); background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      font-size: 24px;
-    }
-    .title { font-size: 28px; font-weight: 800; letter-spacing: .2px; }
-    .subtitle { font-size: 14px; color: var(--muted); }
-    .actions { display: flex; align-items: center; gap: 8px; }
-    .icon-btn {
-      border: 1px solid var(--border); background: var(--surface); color: var(--text);
-      padding: 10px 12px; border-radius: 12px; cursor: pointer; transition: all .2s ease;
-      font-size: 16px;
-    }
-    .icon-btn:hover { transform: translateY(-1px); border-color: var(--accent); }
-
-    .grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 20px; }
-    @media (max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
-
-    .card {
-      background: var(--card); backdrop-filter: blur(16px); border: 1px solid var(--border);
-      border-radius: 20px; box-shadow: var(--shadow); padding: 24px;
-    }
-    
-    .section-title { display: flex; align-items: center; gap: 8px; font-weight: 700; margin-bottom: 12px; font-size: 16px; }
-    .section-title .emoji { font-size: 20px; }
-
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 16px; }
-    .chip {
-      position: relative; padding: 8px 12px; border: 1px solid var(--border); background: var(--chip);
-      border-radius: 999px; font-size: 12px; cursor: pointer; user-select: none;
-      transition: all .2s ease; font-weight: 500;
-    }
-    .chip.active { outline: 2px solid var(--ring); border-color: transparent; background: rgba(99,102,241,.25); }
-    .chip:hover { background: rgba(99,102,241,.15); border-color: var(--brand); transform: translateY(-1px); }
-    .chip.business { border-color: rgba(34,197,94,.28); background: rgba(34,197,94,.12); }
-    .chip.business.active { background: rgba(34,197,94,.22); outline-color: rgba(34,197,94,.45); }
-    .chip.creative { border-color: rgba(245,158,11,.28); background: rgba(245,158,11,.12); }
-    .chip.creative.active { background: rgba(245,158,11,.22); outline-color: rgba(245,158,11,.45); }
-    .chip.photo { border-color: rgba(59,130,246,.28); background: rgba(59,130,246,.12); }
-    .chip.photo.active { background: rgba(59,130,246,.22); outline-color: rgba(59,130,246,.45); }
-
-    .controls { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
-    .select, .slider {
-      display: flex; align-items: center; gap: 8px; border: 1px solid var(--border);
-      background: var(--surface); padding: 10px 12px; border-radius: 12px; font-size: 14px;
-    }
-    .select select, .select input { background: transparent; border: none; color: var(--text); font-size: 14px; }
-    .select select:focus, .select input:focus { outline: none; }
-    .slider input { accent-color: var(--brand); }
-    .slider span { font-size: 12px; color: var(--muted); min-width: 50px; font-weight: 600; }
-
-    .textarea { position: relative; }
-    textarea {
-      width: 100%; min-height: 120px; resize: vertical; border: 2px solid transparent;
-      border-radius: 16px; padding: 16px 18px; background: var(--surface); color: var(--text);
-      line-height: 1.55; font-size: 15px; font-family: inherit;
-    }
-    textarea:focus { outline: none; box-shadow: 0 0 0 4px var(--ring); border-color: var(--brand); }
-    textarea::placeholder { color: var(--muted); opacity: .85; }
-    .counter { position: absolute; right: 12px; bottom: 8px; font-size: 12px; color: var(--muted); font-weight: 600; }
-
-    .btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border);
-      cursor: pointer; transition: all .15s ease; background: var(--surface); color: var(--text);
-      text-decoration: none; font-weight: 600; font-size: 14px; font-family: inherit;
-    }
-    .btn:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
-    .btn.primary {
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      border-color: transparent; color: #fff; box-shadow: 0 10px 24px rgba(99,102,241,.45);
-    }
-    .btn.primary:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 16px 36px rgba(99,102,241,.55); }
-    .btn.outline:not(:disabled):hover { border-color: var(--accent); background: rgba(248,192,69,.12); transform: translateY(-1px); }
-
-    .status {
-      margin-top: 12px; padding: 12px 16px; border-radius: 12px; font-size: 14px; font-weight: 600;
-      display: none; align-items: center; gap: 10px;
-    }
-    .status.ok { background: rgba(52,211,153,.12); color: var(--ok); border: 1px solid rgba(52,211,153,.3); }
-    .status.err { background: rgba(248,113,113,.12); color: var(--err); border: 1px solid rgba(248,113,113,.3); }
-
-    .frame {
-      position: relative; background: linear-gradient(135deg, #0b1020, #1f2937);
-      border: 2px dashed var(--border); border-radius: 18px; display: grid; place-items: center;
-      overflow: hidden; transition: all .2s ease; cursor: pointer; min-height: 300px;
-    }
-    .frame.ratio-1-1 { aspect-ratio: 1/1; }
-    .frame.ratio-3-4 { aspect-ratio: 3/4; }
-    .frame.ratio-4-3 { aspect-ratio: 4/3; }
-    .frame.ratio-16-9 { aspect-ratio: 16/9; }
-    .frame.ratio-9-16 { aspect-ratio: 9/16; }
-    .frame.drag { border-color: var(--accent); box-shadow: 0 0 0 4px var(--ring); }
-    .frame img { max-width: 100%; max-height: 100%; display: none; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.4); }
-    .frame img.show { display: block; animation: fadeIn .4s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: scale(1); } }
-
-    .placeholder {
-      position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
-      justify-content: center; gap: 12px; color: #cbd5e1; opacity: .9; text-align: center; padding: 28px;
-    }
-    .spinner {
-      width: 54px; height: 54px; border-radius: 50%; border: 4px solid #ffffff20;
-      border-top-color: var(--brand); animation: spin 1s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .progress {
-      position: absolute; left: 0; bottom: 0; height: 4px; width: 0;
-      background: linear-gradient(90deg, var(--brand), var(--accent));
-      transition: width .3s ease; border-radius: 0 0 16px 16px;
-    }
-
-    .history { margin-top: 20px; }
-    .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
-    .card-thumb {
-      position: relative; background: var(--surface); border: 1px solid var(--border);
-      border-radius: 14px; overflow: hidden; transition: all .15s ease; cursor: pointer;
-    }
-    .card-thumb:hover { transform: translateY(-2px); border-color: var(--accent); }
-    .card-thumb img { display: block; width: 100%; height: 120px; object-fit: cover; transition: transform .3s ease; }
-    .card-thumb:hover img { transform: scale(1.05); }
-    .thumb-info { padding: 8px; font-size: 11px; color: var(--muted); }
-
-    .comparison-mode { display: none; margin: 20px 0; }
-    .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .compare-item { text-align: center; }
-    .compare-item img { width: 100%; border-radius: 12px; border: 2px solid var(--border); }
-    .compare-controls { margin-top: 8px; }
-
-    .rating-system { display: flex; align-items: center; gap: 8px; margin: 12px 0; font-size: 12px; }
-    .stars { display: flex; gap: 2px; }
-    .star { cursor: pointer; transition: all .15s ease; font-size: 18px; }
-    .star:hover { transform: scale(1.1); }
-    .star.active { color: var(--accent); }
-
-    .modal {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 100;
-      align-items: center; justify-content: center; backdrop-filter: blur(4px);
-    }
-    .modal-content {
-      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
-      padding: 24px; max-width: 500px; margin: 20px; max-height: 80vh; overflow-y: auto;
-    }
-    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-    .close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); }
-
-    .tips {
-      margin-top: 16px; padding: 18px; border-left: 3px solid var(--brand);
-      background: linear-gradient(0deg, transparent, rgba(99,102,241,.10)); border-radius: 12px;
-    }
-    .tips ul { margin: .5rem 0 0 1.2rem; line-height: 1.7; font-size: 14px; }
-
-    @media (max-width: 768px) {
-      .container { padding: 16px; }
-      .grid { gap: 16px; }
-      .card { padding: 18px; }
-      .btns { gap: 8px; }
-      .btn { padding: 10px 14px; font-size: 13px; }
-      .controls { gap: 8px; }
-    }
-
-    .loading-overlay {
-      position: absolute; inset: 0; background: rgba(0,0,0,.3); display: none; align-items: center;
-      justify-content: center; border-radius: 18px; backdrop-filter: blur(2px);
-    }
-    .loading-overlay.show { display: flex; }
-
-    .toast {
-      position: fixed; top: 20px; right: 20px; background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 12px 16px; box-shadow: var(--shadow); z-index: 1000;
-      transform: translateX(100%); transition: transform .3s ease; max-width: 300px;
-    }
-    .toast.show { transform: translateX(0); }
-    .toast.success { border-color: var(--ok); }
-    .toast.error { border-color: var(--err); }
+    /* Mantieni qui lo stesso CSS che ti ho già dato (chip, card, grid, frame, ecc.) */
   </style>
 </head>
 <body>
-  <div class="container">
-    <header class="header">
-      <div class="brand">
-        <div class="logo">🎨</div>
-        <div>
-          <div class="title">Artemisia Story</div>
-          <div class="subtitle">Generatore AI di Immagini</div>
-        </div>
-      </div>
-      <div class="actions">
-        <button class="icon-btn" id="themeBtn" title="Cambia Tema">🌓</button>
-        <button class="icon-btn" onclick="showHelp()" title="Aiuto">❓</button>
-      </div>
-    </header>
-
-    <main class="grid">
-      <!-- Pannello di Controllo -->
-      <section class="card">
-        <div class="section-title">
-          <span class="emoji">✨</span>
-          <span>Crea la tua Immagine</span>
-        </div>
-
-        <!-- Stili Artistici -->
-        <div class="section-title" style="margin-top: 16px;">
-          <span class="emoji">🎨</span>
-          <span>Stili Artistici</span>
-        </div>
-        <div class="chips">
-          <span class="chip" data-style="cartoon style, vibrant colors, clean lines" data-negative="realistic, photo">🎭 Cartoon</span>
-          <span class="chip" data-style="Studio Ghibli style, anime, soft colors, dreamy" data-negative="realistic, dark">🌸 Ghibli</span>
-          <span class="chip" data-style="renaissance painting, classical art, oil painting" data-negative="modern, cartoon">🖼️ Classico</span>
-          <span class="chip" data-style="watercolor painting, soft brushstrokes, artistic" data-negative="digital, sharp">🎨 Acquerello</span>
-        </div>
-
-        <!-- Categorie Business -->
-        <div class="section-title">
-          <span class="emoji">💼</span>
-          <span>Business & Marketing</span>
-        </div>
-        <div class="chips">
-          <span class="chip business" data-style="professional logo design, clean, minimal" data-negative="cluttered, busy">📊 Logo</span>
-          <span class="chip business" data-style="product photography, studio lighting, clean background" data-negative="messy, dark">📦 Prodotto</span>
-          <span class="chip business" data-style="social media post, modern design, eye-catching" data-negative="boring, text-heavy">📱 Social</span>
-        </div>
-
-        <!-- Creatività -->
-        <div class="section-title">
-          <span class="emoji">🌟</span>
-          <span>Arte & Fantasia</span>
-        </div>
-        <div class="chips">
-          <span class="chip creative" data-style="fantasy art, magical, ethereal, mystical" data-negative="realistic, mundane">🧙‍♀️ Fantasy</span>
-          <span class="chip creative" data-style="sci-fi, futuristic, cyberpunk, neon" data-negative="medieval, old">🚀 Sci-Fi</span>
-          <span class="chip creative" data-style="abstract art, geometric, colorful, modern" data-negative="realistic, figurative">🔮 Astratto</span>
-        </div>
-
-        <!-- Fotografia -->
-        <div class="section-title">
-          <span class="emoji">📸</span>
-          <span>Stile Fotografico</span>
-        </div>
-        <div class="chips">
-          <span class="chip photo" data-style="portrait photography, professional lighting, bokeh" data-negative="landscape, wide shot">👤 Ritratto</span>
-          <span class="chip photo" data-style="landscape photography, wide angle, natural lighting" data-negative="portrait, close-up">🏞️ Paesaggio</span>
-          <span class="chip photo" data-style="macro photography, close-up, detailed" data-negative="wide, distant">🔍 Macro</span>
-        </div>
-
-        <!-- Controlli -->
-        <div class="section-title" style="margin-top: 20px;">
-          <span class="emoji">⚙️</span>
-          <span>Impostazioni</span>
-        </div>
-        <div class="controls">
-          <div class="slider">
-            <label>Creatività:</label>
-            <input type="range" id="creativity" min="0" max="100" value="70" />
-            <span id="creativityValue">70</span>
-          </div>
-          <div class="slider">
-            <label>Qualità:</label>
-            <input type="range" id="quality" min="1" max="4" value="2" />
-            <span id="qualityValue">Standard</span>
-          </div>
-          <div class="select">
-            <label>Formato:</label>
-            <select id="ratio">
-              <option value="1-1">Quadrato 1:1</option>
-              <option value="3-4">Verticale 3:4</option>
-              <option value="4-3">Orizzontale 4:3</option>
-              <option value="16-9">Panorama 16:9</option>
-              <option value="9-16">Verticale 9:16</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Area Prompt -->
-        <div class="textarea">
-          <textarea id="prompt" placeholder="Descrivi la tua immagine... Ad esempio: Un gatto spaziale che vola tra le stelle con un mantello dorato"></textarea>
-          <div class="counter" id="counter">0/500</div>
-        </div>
-
-        <!-- Controlli Seed -->
-        <div class="controls">
-          <div class="select">
-            <label>Seed:</label>
-            <input type="number" id="seed" placeholder="Casuale" style="width: 100px;">
-            <button class="btn outline" onclick="lockSeed()">🔒 Blocca</button>
-            <button class="btn outline" onclick="randomSeed()">🎲 Casuale</button>
-          </div>
-        </div>
-
-        <!-- Pulsanti Principali -->
-        <div class="btns">
-          <button class="btn primary" onclick="generate()" id="generateBtn">🎨 Genera Immagine</button>
-          <button class="btn outline" onclick="surprise()">✨ Sorprendimi</button>
-          <button class="btn outline" onclick="generateBatch()">🔄 Batch (4x)</button>
-        </div>
-
-        <!-- Pulsanti Secondari -->
-        <div class="btns">
-          <button class="btn outline" onclick="download()" id="downloadBtn" disabled>💾 Scarica</button>
-          <button class="btn outline" onclick="upscale()" id="upscaleBtn" disabled>🔍 Ingrandisci</button>
-          <button class="btn outline" onclick="toggleComparison()" id="compareBtn" disabled>⚖️ Confronta</button>
-        </div>
-
-        <!-- Sistema di Valutazione -->
-        <div class="rating-system" id="ratingSystem" style="display: none;">
-          <span>Valuta il risultato:</span>
-          <div class="stars" id="starRating">
-            <span class="star" onclick="rateImage(1)">⭐</span>
-            <span class="star" onclick="rateImage(2)">⭐</span>
-            <span class="star" onclick="rateImage(3)">⭐</span>
-            <span class="star" onclick="rateImage(4)">⭐</span>
-            <span class="star" onclick="rateImage(5)">⭐</span>
-          </div>
-        </div>
-
-        <div id="status" class="status"></div>
-      </section>
-
-      <!-- Pannello Risultati -->
-      <section class="card">
-        <div class="section-title">
-          <span class="emoji">🖼️</span>
-          <span>Anteprima Risultato</span>
-        </div>
-
-        <div class="frame ratio-1-1" id="frame">
-          <img id="resultImg" alt="Risultato generazione" />
-          <div class="placeholder" id="placeholder">
-            <div class="spinner" id="spinner" style="display: none;"></div>
-            <div id="placeholderContent">
-              <div style="font-weight: 700; font-size: 18px; margin-bottom: 8px;">🎨 Pronto per creare</div>
-              <div class="small">Scrivi un prompt e clicca "Genera"</div>
-              <div class="small" style="margin-top: 12px;">💡 Oppure trascina un'immagine qui per modificarla</div>
-            </div>
-          </div>
-          <div class="loading-overlay" id="loadingOverlay">
-            <div class="spinner"></div>
-          </div>
-          <div class="progress" id="progress"></div>
-        </div>
-
-        <!-- Confronto A/B -->
-        <div class="comparison-mode" id="comparisonMode">
-          <div class="section-title">
-            <span class="emoji">⚖️</span>
-            <span>Confronto Risultati</span>
-          </div>
-          <div class="comparison-grid">
-            <div class="compare-item">
-              <img id="compareImg1" alt="Opzione A" style="border: 2px solid var(--border);" />
-              <div class="compare-controls">
-                <button class="btn outline" onclick="selectWinner(1)">✅ Scegli A</button>
-              </div>
-            </div>
-            <div class="compare-item">
-              <img id="compareImg2" alt="Opzione B" style="border: 2px solid var(--border);" />
-              <div class="compare-controls">
-                <button class="btn outline" onclick="selectWinner(2)">✅ Scegli B</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Cronologia -->
-        <div class="history">
-          <div class="section-title">
-            <span class="emoji">📚</span>
-            <span>Cronologia</span>
-          </div>
-          <div class="history-grid" id="historyGrid">
-            <div style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--muted);">
-              Nessuna immagine generata ancora
-            </div>
-          </div>
-        </div>
-
-        <!-- Suggerimenti -->
-        <div class="tips">
-          <strong>💡 Suggerimenti Utili</strong>
-          <ul>
-            <li><strong>Sii specifico:</strong> "Gatto rosso con occhi verdi" è meglio di "gatto"</li>
-            <li><strong>Usa gli stili:</strong> Seleziona i chip per applicare stili automatici</li>
-            <li><strong>Sperimenta:</strong> Prova il seed bloccato per variazioni consistenti</li>
-            <li><strong>Batch mode:</strong> Genera 4 varianti e confrontale</li>
-          </ul>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <!-- Modal Aiuto -->
-  <div id="helpModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>🚀 Guida Artemisia Story</h3>
-        <button class="close" onclick="closeHelp()">&times;</button>
-      </div>
+<div class="container">
+  <header class="header">
+    <div class="brand">
+      <div class="logo"><img src="logo-artemisia.png" alt="logo"></div>
       <div>
-        <h4>Come iniziare:</h4>
-        <ol>
-          <li><strong>Scrivi un prompt:</strong> Descrivi cosa vuoi vedere</li>
-          <li><strong>Scegli uno stile:</strong> Clicca sui chip colorati</li>
-          <li><strong>Regola le impostazioni:</strong> Creatività e qualità</li>
-          <li><strong>Clicca "Genera":</strong> E aspetta la magia!</li>
-        </ol>
-        
-        <h4>Funzioni Avanzate:</h4>
-        <ul>
-          <li><strong>Seed:</strong> Blocca un numero per risultati riproducibili</li>
-          <li><strong>Batch:</strong> Genera 4 varianti contemporaneamente</li>
-          <li><strong>Confronto:</strong> Metti a confronto due risultati</li>
-          <li><strong>Drag & Drop:</strong> Trascina immagini per modificarle</li>
-        </ul>
-        
-        <h4>Scorciatoie da Tastiera:</h4>
-        <ul>
-          <li><kbd>Ctrl + Enter</kbd> = Genera</li>
-          <li><kbd>Ctrl + S</kbd> = Scarica</li>
-          <li><kbd>Ctrl + R</kbd> = Sorprendimi</li>
-          <li><kbd>Esc</kbd> = Chiudi modal</li>
-        </ul>
+        <div class="title">Artemisia Story</div>
+        <div style="font-size:13px;color:var(--muted)">Generatore & Trasformatore AI</div>
       </div>
     </div>
-  </div>
+    <div>
+      <button class="btn" onclick="toggleTheme()">🌗</button>
+    </div>
+  </header>
 
-  <!-- Input file nascosto -->
-  <input id="fileInput" type="file" accept="image/*" style="display: none;" />
+  <main class="grid">
+    <!-- sinistra -->
+    <section class="card">
+      <div><strong>✨ Prompt</strong></div>
+      <div class="chips">
+        <span class="chip" data-style="cartoon, cel shading, bold outlines" data-negative="photo,3d,stadium">Cartoon</span>
+        <span class="chip" data-style="Studio Ghibli anime, soft pastel, hand-painted" data-negative="photo,stadium">Ghibli</span>
+        <span class="chip" data-style="biblical renaissance painting, chiaroscuro, golden light" data-negative="stadium,crowd">Biblico</span>
+      </div>
+      <div class="textarea">
+        <textarea id="prompt" placeholder="Descrivi la scena..."></textarea>
+        <div class="counter" id="counter">0/500</div>
+      </div>
 
-  <script>
-    // ===== CONFIGURAZIONE =====
-    const CONFIG = {
-      USE_MOCK: true, // Cambia a false per API reali
-      API_BASE: window.location.hostname === 'localhost' ? 'http://localhost:3000' : '',
-      ENDPOINTS: {
-        generate: '/api/generate',
-        upscale: '/api/upscale',
-        edit: '/api/edit'
-      },
-      MOCK_DELAY: 2000,
-      MAX_HISTORY: 20
-    };
+      <div class="controls">
+        Creatività <input type="range" id="creativity" min="0" max="100" value="70" oninput="updateCreativity()"> <span id="creativityValue">70</span><br>
+        Qualità <input type="range" id="quality" min="1" max="4" value="2" oninput="updateQuality()"> <span id="qualityValue">Standard</span>
+      </div>
 
-    // ===== STATO GLOBALE =====
-    const state = {
-      lastImageUrl: null,
-      lastPrompt: '',
-      lockedSeed: null,
-      currentRating: 0,
-      isGenerating: false,
-      batchResults: [],
-      history: JSON.parse(localStorage.getItem('artemisia-history') || '[]')
-    };
+      <div class="controls">
+        Seed <input type="number" id="seed" placeholder="casuale" style="width:100px">
+        <button class="btn" onclick="lockSeed()">🔒 Blocca</button>
+        <button class="btn" onclick="regenSimilar()">♻️ Simile</button>
+      </div>
 
-    // ===== IMMAGINI MOCK =====
-    const MOCK_IMAGES = [
-      'https://picsum.photos/seed/art1/512/512',
-      'https://picsum.photos/seed/art2/512/512', 
-      'https://picsum.photos/seed/art3/512/512',
-      'https://picsum.photos/seed/art4/512/512',
-      'https://picsum.photos/seed/fantasy1/512/512',
-      'https://picsum.photos/seed/fantasy2/512/512',
-      'https://picsum.photos/seed/nature1/512/512',
-      'https://picsum.photos/seed/nature2/512/512'
-    ];
+      <div class="btns">
+        <button class="btn primary" onclick="generate()" id="generateBtn">🎨 Genera</button>
+        <button class="btn" onclick="upscale()">🔍 Upscale</button>
+        <button class="btn" onclick="exportMultiple()">📤 Export</button>
+      </div>
 
-    const SURPRISE_PROMPTS = [
-      "Un drago maestoso che vola tra nuvole dorate al tramonto",
-      "Una città futuristica con grattacieli luminosi e auto volanti",
-      "Un bosco incantato popolato da creature magiche e luci fatate",
-      "Un castello medievale su una scogliera durante una tempesta",
-      "Un astronauta che esplora un pianeta alieno pieno di cristalli",
-      "Una nave pirata che naviga in mari tempestosi sotto la luna",
-      "Un giardino zen con cascate cristalline e fiori di ciliegio",
-      "Un laboratorio di alchimia con pozioni colorate e libri antichi",
-      "Una biblioteca magica con libri volanti e scale infinite",
-      "Un mercato orientale pieno di spezie, tessuti e profumi esotici",
-      "Un leone cyber-punk con occhi luminosi in una metropoli notturna",
-      "Una ballerina che danza tra galassie e stelle cadenti",
-      "Un faro solitario su un'isola misteriosa avvolto dalla nebbia",
-      "Un robot gentile che coltiva fiori in un giardino del futuro",
-      "Una fenice che rinasce dalle ceneri con piume di fuoco dorato"
-    ];
+      <div class="status" id="status"></div>
+    </section>
 
-    // ===== FUNZIONI UTILITY =====
-    function showToast(message, type = 'success', duration = 3000) {
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      toast.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span>${type === 'success' ? '✅' : '❌'}</span>
-          <span>${message}</span>
-        </div>
-      `;
-      
-      document.body.appendChild(toast);
-      setTimeout(() => toast.classList.add('show'), 100);
-      
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => document.body.removeChild(toast), 300);
-      }, duration);
-    }
+    <!-- destra -->
+    <section class="card">
+      <div><strong>🖼️ Anteprima</strong></div>
+      <div class="frame"><img id="resultImg"><div id="placeholder">Nessuna immagine</div></div>
 
-    function showStatus(message, isError = false) {
-      const status = document.getElementById('status');
-      status.style.display = 'flex';
-      status.className = `status ${isError ? 'err' : 'ok'}`;
-      status.innerHTML = message;
-      
-      if (!isError) {
-        setTimeout(() => {
-          status.style.display = 'none';
-        }, 4000);
-      }
-    }
+      <div id="ratingSystem" style="margin-top:10px;display:none">
+        Valuta:
+        <span class="star" onclick="rateImage(1)">⭐</span>
+        <span class="star" onclick="rateImage(2)">⭐</span>
+        <span class="star" onclick="rateImage(3)">⭐</span>
+        <span class="star" onclick="rateImage(4)">⭐</span>
+        <span class="star" onclick="rateImage(5)">⭐</span>
+      </div>
 
-    function updateCounter() {
-      const prompt = document.getElementById('prompt');
-      const counter = document.getElementById('counter');
-      const length = prompt.value.length;
-      
-      counter.textContent = `${length}/500`;
-      counter.style.color = length > 400 ? 'var(--warn)' : length > 500 ? 'var(--err)' : 'var(--muted)';
-    }
+      <div style="margin-top:20px"><strong>🕘 Cronologia</strong></div>
+      <div class="history-grid" id="historyGrid"></div>
+    </section>
+  </main>
+</div>
 
-    function updateCreativity() {
-      const slider = document.getElementById('creativity');
-      const display = document.getElementById('creativityValue');
-      display.textContent = slider.value;
-    }
+<script>
+const BASE = "";
+const GEN_URL = `${BASE}/api/generate`;
+const EDIT_URL = `${BASE}/api/edit`;
+const UPSCALE_URL = `${BASE}/api/upscale`;
 
-    function updateQuality() {
-      const slider = document.getElementById('quality');
-      const display = document.getElementById('qualityValue');
-      const qualities = ['', 'Base', 'Standard', 'Alta', 'Ultra'];
-      display.textContent = qualities[slider.value];
-    }
+let lastImageUrl=null, lockedSeed=null, history=[];
 
-    function updateRatio() {
-      const ratio = document.getElementById('ratio').value;
-      const frame = document.getElementById('frame');
-      frame.className = frame.className.replace(/ratio-[\w-]+/g, '');
-      frame.classList.add(`ratio-${ratio}`);
-    }
+// Prompt builder
+function buildPrompt(){
+  const base=document.getElementById('prompt').value.trim();
+  const chips=[...document.querySelectorAll('.chip.active')];
+  const styles=chips.map(c=>c.dataset.style).join('; ');
+  return styles?`${base}. Style: ${styles}`:base;
+}
+function buildNegative(){
+  const base="text watermark,logo,blurry";
+  const chips=[...document.querySelectorAll('.chip.active')];
+  const neg=chips.map(c=>c.dataset.negative).join(',');
+  return `${base},${neg}`;
+}
 
-    function getMockImage() {
-      return MOCK_IMAGES[Math.floor(Math.random() * MOCK_IMAGES.length)];
-    }
+// Chip toggle
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>c.classList.toggle('active'));
 
-    // ===== GESTIONE PROMPT =====
-    function buildPrompt() {
-      const basePrompt = document.getElementById('prompt').value.trim();
-      const activeChips = document.querySelectorAll('.chip.active');
-      
-      let styles = [];
-      let negatives = [];
-      
-      activeChips.forEach(chip => {
-        if (chip.dataset.style) styles.push(chip.dataset.style);
-        if (chip.dataset.negative) negatives.push(chip.dataset.negative);
-      });
-      
-      let fullPrompt = basePrompt;
-      if (styles.length > 0) {
-        fullPrompt += (basePrompt ? ', ' : '') + styles.join(', ');
-      }
-      
-      return {
-        prompt: fullPrompt,
-        negative: negatives.join(', '),
-        style_count: styles.length
-      };
-    }
+// Counter
+document.getElementById('prompt').addEventListener('input',()=>{
+  const len=prompt.value.length;
+  document.getElementById('counter').textContent=`${len}/500`;
+});
 
-    // ===== GENERAZIONE IMMAGINI =====
-    async function generate() {
-      const promptText = document.getElementById('prompt').value.trim();
-      if (!promptText) {
-        showToast('Inserisci un prompt prima di generare!', 'error');
-        return;
-      }
+// Status
+function showStatus(msg,err=false){
+  const st=document.getElementById('status');
+  st.style.display='block'; st.textContent=msg;
+  st.className=`status ${err?'err':'ok'}`;
+}
 
-      if (state.isGenerating) return;
+// Seed
+function lockSeed(){lockedSeed=document.getElementById('seed').value||Math.floor(Math.random()*999999);showStatus("🔒 Seed:"+lockedSeed);}
+function regenSimilar(){if(!lockedSeed){showStatus("Blocca prima un seed",true);return;}lockedSeed=parseInt(lockedSeed)+Math.floor(Math.random()*10+1);document.getElementById('seed').value=lockedSeed;showStatus("♻️ Seed:"+lockedSeed);}
 
-      setGeneratingState(true);
-      
-      try {
-        const { prompt, negative } = buildPrompt();
-        const creativity = document.getElementById('creativity').value;
-        const quality = document.getElementById('quality').value;
-        const ratio = document.getElementById('ratio').value;
-        
-        showStatus('🎨 Generazione in corso... Attendere prego');
-        startProgress();
-        
-        let imageUrl;
-        
-        if (CONFIG.USE_MOCK) {
-          // Simulazione realistica
-          await simulateGeneration();
-          imageUrl = getMockImage();
-          showToast('Immagine generata con successo!');
-        } else {
-          // API reale
-          const response = await fetch(CONFIG.API_BASE + CONFIG.ENDPOINTS.generate, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              prompt,
-              negative_prompt: negative,
-              creativity: parseInt(creativity),
-              quality: parseInt(quality),
-              aspect_ratio: ratio,
-              seed: state.lockedSeed
-            })
-          });
-          
-          if (!response.ok) {
-            throw new Error(`Server Error ${response.status}`);
-          }
-          
-          const result = await response.json();
-          if (result.success && result.image_url) {
-            imageUrl = result.image_url;
-            showToast('Immagine generata con successo!');
-          } else {
-            throw new Error(result.error || 'Errore sconosciuto dal server');
-          }
-        }
-        
-        displayResult(imageUrl, promptText);
-        addToHistory(imageUrl, promptText);
-        
-      } catch (error) {
-        console.error('Generation error:', error);
-        showToast(`Errore: ${error.message}`, 'error', 5000);
-        showStatus(`❌ ${error.message}`, true);
-      } finally {
-        setGeneratingState(false);
-        stopProgress();
-      }
-    }
+// Generate (real call)
+async function generate(){
+  const payload={
+    prompt:buildPrompt(),
+    negative_prompt:buildNegative(),
+    seed:lockedSeed||undefined,
+    creativity:+document.getElementById('creativity').value,
+    quality:+document.getElementById('quality').value,
+    variants:1
+  };
+  showStatus("✨ Generazione...");
 
-    async function simulateGeneration() {
-      // Simula un processo di generazione realistico
-      const steps = [
-        { progress: 10, message: 'Elaborazione prompt...' },
-        { progress: 30, message: 'Inizializzazione modello AI...' },
-        { progress: 50, message: 'Generazione in corso...' },
-        { progress: 75, message: 'Raffinamento dettagli...' },
-        { progress: 90, message: 'Finalizzazione...' }
-      ];
-      
-      for (const step of steps) {
-        await new Promise(resolve => setTimeout(resolve, CONFIG.MOCK_DELAY / steps.length));
-        updateProgress(step.progress);
-        showStatus(`🎨 ${step.message}`);
-      }
-    }
-
-    function setGeneratingState(generating) {
-      state.isGenerating = generating;
-      const btn = document.getElementById('generateBtn');
-      const spinner = document.getElementById('spinner');
-      const overlay = document.getElementById('loadingOverlay');
-      
-      btn.disabled = generating;
-      if (generating) {
-        btn.innerHTML = '⏳ Generazione...';
-        spinner.style.display = 'block';
-        overlay.classList.add('show');
-        document.getElementById('placeholderContent').style.display = 'none';
-      } else {
-        btn.innerHTML = '🎨 Genera Immagine';
-        spinner.style.display = 'none';
-        overlay.classList.remove('show');
-      }
-    }
-
-    function displayResult(imageUrl, prompt) {
-      const img = document.getElementById('resultImg');
-      const placeholder = document.getElementById('placeholder');
-      
-      img.onload = () => {
-        img.classList.add('show');
-        placeholder.style.display = 'none';
-        enableResultButtons(true);
-        showRating(true);
-      };
-      
-      img.src = imageUrl;
-      img.style.display = 'block';
-      
-      state.lastImageUrl = imageUrl;
-      state.lastPrompt = prompt;
-    }
-
-    function enableResultButtons(enabled) {
-      document.getElementById('downloadBtn').disabled = !enabled;
-      document.getElementById('upscaleBtn').disabled = !enabled;
-      
-      if (state.batchResults.length > 1) {
-        document.getElementById('compareBtn').disabled = false;
-      }
-    }
-
-    function showRating(show) {
-      document.getElementById('ratingSystem').style.display = show ? 'flex' : 'none';
-      if (show) {
-        // Reset stelle
-        document.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
-        state.currentRating = 0;
-      }
-    }
-
-    // ===== GESTIONE PROGRESS BAR =====
-    function startProgress() {
-      const progress = document.getElementById('progress');
-      progress.style.width = '5%';
-    }
-
-    function updateProgress(percent) {
-      const progress = document.getElementById('progress');
-      progress.style.width = `${Math.min(percent, 95)}%`;
-    }
-
-    function stopProgress() {
-      const progress = document.getElementById('progress');
-      progress.style.width = '100%';
-      setTimeout(() => {
-        progress.style.width = '0%';
-      }, 500);
-    }
-
-    // ===== FUNZIONI BATCH =====
-    async function generateBatch() {
-      const promptText = document.getElementById('prompt').value.trim();
-      if (!promptText) {
-        showToast('Inserisci un prompt per la generazione batch!', 'error');
-        return;
-      }
-
-      if (state.isGenerating) return;
-
-      showToast('Avvio generazione batch di 4 immagini...');
-      state.batchResults = [];
-      
-      for (let i = 0; i < 4; i++) {
-        showStatus(`🔄 Generazione ${i + 1}/4...`);
-        await generate();
-        
-        if (state.lastImageUrl) {
-          state.batchResults.push({
-            url: state.lastImageUrl,
-            prompt: promptText + ` (variante ${i + 1})`
-          });
-        }
-        
-        // Pausa tra le generazioni
-        if (i < 3) {
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-      }
-      
-      if (state.batchResults.length > 1) {
-        document.getElementById('compareBtn').disabled = false;
-        showToast(`✅ Batch completato! ${state.batchResults.length} immagini generate`);
-      }
-    }
-
-    // ===== SISTEMA CONFRONTO =====
-    function toggleComparison() {
-      const comparisonMode = document.getElementById('comparisonMode');
-      const btn = document.getElementById('compareBtn');
-      const isVisible = comparisonMode.style.display === 'block';
-      
-      if (isVisible) {
-        comparisonMode.style.display = 'none';
-        btn.textContent = '⚖️ Confronta';
-      } else {
-        if (state.batchResults.length >= 2) {
-          const img1 = document.getElementById('compareImg1');
-          const img2 = document.getElementById('compareImg2');
-          
-          img1.src = state.batchResults[0].url;
-          img2.src = state.batchResults[1].url;
-          
-          comparisonMode.style.display = 'block';
-          btn.textContent = '❌ Chiudi Confronto';
-        } else {
-          showToast('Genera almeno 2 immagini per il confronto', 'error');
-        }
-      }
-    }
-
-    function selectWinner(choice) {
-      const winner = state.batchResults[choice - 1];
-      displayResult(winner.url, winner.prompt);
-      showToast(`Hai scelto l'immagine ${choice === 1 ? 'A' : 'B'}!`);
-      toggleComparison();
-    }
-
-    // ===== GESTIONE CRONOLOGIA =====
-    function addToHistory(imageUrl, prompt) {
-      const historyItem = {
-        id: Date.now(),
-        url: imageUrl,
-        prompt: prompt,
-        timestamp: new Date().toISOString(),
-        rating: 0
-      };
-      
-      state.history.unshift(historyItem);
-      
-      // Mantieni solo le ultime 20
-      if (state.history.length > CONFIG.MAX_HISTORY) {
-        state.history = state.history.slice(0, CONFIG.MAX_HISTORY);
-      }
-      
-      saveHistory();
-      updateHistoryDisplay();
-    }
-
-    function saveHistory() {
-      localStorage.setItem('artemisia-history', JSON.stringify(state.history));
-    }
-
-    function updateHistoryDisplay() {
-      const grid = document.getElementById('historyGrid');
-      
-      if (state.history.length === 0) {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--muted);">Nessuna immagine generata ancora</div>';
-        return;
-      }
-      
-      grid.innerHTML = state.history.map((item, index) => `
-        <div class="card-thumb" onclick="loadFromHistory(${index})" title="${item.prompt}">
-          <img src="${item.url}" alt="Generazione ${index + 1}" loading="lazy" />
-          <div class="thumb-info">
-            <div style="font-weight: 500; margin-bottom: 4px;">${item.prompt.substring(0, 20)}${item.prompt.length > 20 ? '...' : ''}</div>
-            <div style="font-size: 10px; opacity: 0.7;">${new Date(item.timestamp).toLocaleString('it-IT')}</div>
-            ${item.rating > 0 ? `<div style="color: var(--accent); margin-top: 2px;">${'⭐'.repeat(item.rating)}</div>` : ''}
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function loadFromHistory(index) {
-      const item = state.history[index];
-      displayResult(item.url, item.prompt);
-      document.getElementById('prompt').value = item.prompt;
-      updateCounter();
-      showToast('Immagine caricata dalla cronologia');
-    }
-
-    function clearHistory() {
-      if (confirm('Vuoi davvero cancellare tutta la cronologia?')) {
-        state.history = [];
-        saveHistory();
-        updateHistoryDisplay();
-        showToast('Cronologia cancellata');
-      }
-    }
-
-    // ===== GESTIONE SEED =====
-    function lockSeed() {
-      const seedInput = document.getElementById('seed');
-      if (seedInput.value) {
-        state.lockedSeed = parseInt(seedInput.value);
-        showToast(`Seed bloccato: ${state.lockedSeed}`);
-      } else {
-        const newSeed = Math.floor(Math.random() * 1000000);
-        seedInput.value = newSeed;
-        state.lockedSeed = newSeed;
-        showToast(`Seed generato e bloccato: ${newSeed}`);
-      }
-    }
-
-    function randomSeed() {
-      const newSeed = Math.floor(Math.random() * 1000000);
-      document.getElementById('seed').value = newSeed;
-      state.lockedSeed = null;
-      showToast(`Nuovo seed casuale: ${newSeed}`);
-    }
-
-    // ===== FUNZIONE SORPRESA =====
-    function surprise() {
-      const randomPrompt = SURPRISE_PROMPTS[Math.floor(Math.random() * SURPRISE_PROMPTS.length)];
-      document.getElementById('prompt').value = randomPrompt;
-      updateCounter();
-      
-      // Attiva un chip casuale
-      document.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
-      const chips = document.querySelectorAll('.chip');
-      const randomChip = chips[Math.floor(Math.random() * chips.length)];
-      randomChip.classList.add('active');
-      
-      // Parametri casuali
-      document.getElementById('creativity').value = 60 + Math.random() * 30;
-      updateCreativity();
-      
-      showToast('✨ Prompt magico generato! Ora clicca "Genera"');
-    }
-
-    // ===== DOWNLOAD E UPSCALE =====
-    function download() {
-      if (!state.lastImageUrl) {
-        showToast('Nessuna immagine da scaricare!', 'error');
-        return;
-      }
-      
-      const link = document.createElement('a');
-      link.href = state.lastImageUrl;
-      link.download = `artemisia_${Date.now()}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      showToast('📥 Download avviato!');
-    }
-
-    async function upscale() {
-      if (!state.lastImageUrl) {
-        showToast('Nessuna immagine da ingrandire!', 'error');
-        return;
-      }
-      
-      showStatus('🔍 Ingrandimento in corso...');
-      
-      try {
-        if (CONFIG.USE_MOCK) {
-          await new Promise(resolve => setTimeout(resolve, 3000));
-          showToast('Immagine ingrandita con successo!');
-        } else {
-          const response = await fetch(CONFIG.API_BASE + CONFIG.ENDPOINTS.upscale, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              image_url: state.lastImageUrl,
-              scale_factor: 2
-            })
-          });
-          
-          const result = await response.json();
-          if (result.success) {
-            displayResult(result.image_url, state.lastPrompt + ' (ingrandita)');
-            showToast('Immagine ingrandita con successo!');
-          } else {
-            throw new Error(result.error);
-          }
-        }
-      } catch (error) {
-        showToast(`Errore durante l'ingrandimento: ${error.message}`, 'error');
-      }
-    }
-
-    // ===== SISTEMA RATING =====
-    function rateImage(rating) {
-      state.currentRating = rating;
-      
-      const stars = document.querySelectorAll('.star');
-      stars.forEach((star, index) => {
-        star.classList.toggle('active', index < rating);
-      });
-      
-      // Salva rating nella cronologia
-      if (state.history.length > 0) {
-        state.history[0].rating = rating;
-        saveHistory();
-        updateHistoryDisplay();
-      }
-      
-      showToast(`Valutazione: ${rating} stelle ⭐`);
-    }
-
-    // ===== DRAG & DROP =====
-    function setupDragDrop() {
-      const frame = document.getElementById('frame');
-      const fileInput = document.getElementById('fileInput');
-      
-      frame.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        frame.classList.add('drag');
-      });
-      
-      frame.addEventListener('dragleave', (e) => {
-        e.preventDefault();
-        frame.classList.remove('drag');
-      });
-      
-      frame.addEventListener('drop', (e) => {
-        e.preventDefault();
-        frame.classList.remove('drag');
-        
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-          handleFileUpload(files[0]);
-        }
-      });
-      
-      frame.addEventListener('click', () => {
-        if (!state.isGenerating) {
-          fileInput.click();
-        }
-      });
-      
-      fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-          handleFileUpload(e.target.files[0]);
-        }
-      });
-    }
-
-    function handleFileUpload(file) {
-      if (!file.type.startsWith('image/')) {
-        showToast('Seleziona un file immagine valido!', 'error');
-        return;
-      }
-      
-      if (file.size > 10 * 1024 * 1024) { // 10MB limit
-        showToast('File troppo grande! Max 10MB', 'error');
-        return;
-      }
-      
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        displayResult(e.target.result, 'Immagine caricata per editing');
-        showToast('📁 Immagine caricata! Ora puoi modificarla con un prompt');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    // ===== GESTIONE TEMA =====
-    function setupTheme() {
-      const root = document.documentElement;
-      const savedTheme = localStorage.getItem('artemisia-theme') || 'dark';
-      root.setAttribute('data-theme', savedTheme);
-      
-      document.getElementById('themeBtn').addEventListener('click', () => {
-        const currentTheme = root.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        root.setAttribute('data-theme', newTheme);
-        localStorage.setItem('artemisia-theme', newTheme);
-        showToast(`Tema ${newTheme === 'light' ? 'chiaro' : 'scuro'} attivato`);
-      });
-    }
-
-    // ===== CHIP MANAGEMENT =====
-    function setupChips() {
-      document.querySelectorAll('.chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          chip.classList.toggle('active');
-          const activeCount = document.querySelectorAll('.chip.active').length;
-          if (activeCount > 0) {
-            showToast(`${activeCount} stile${activeCount > 1 ? 'i' : ''} attivo${activeCount > 1 ? 'i' : ''}`);
-          }
-        });
-      });
-    }
-
-    // ===== MODAL HELP =====
-    function showHelp() {
-      document.getElementById('helpModal').style.display = 'flex';
-    }
-
-    function closeHelp() {
-      document.getElementById('helpModal').style.display = 'none';
-    }
-
-    // ===== SCORCIATOIE TASTIERA =====
-    function setupKeyboardShortcuts() {
-      document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey || e.metaKey) {
-          switch(e.code) {
-            case 'Enter':
-              e.preventDefault();
-              if (!state.isGenerating) generate();
-              break;
-            case 'KeyS':
-              e.preventDefault();
-              download();
-              break;
-            case 'KeyR':
-              e.preventDefault();
-              surprise();
-              break;
-          }
-        }
-        
-        if (e.code === 'Escape') {
-          closeHelp();
-        }
-      });
-    }
-
-    // ===== INIZIALIZZAZIONE =====
-    document.addEventListener('DOMContentLoaded', () => {
-      // Setup componenti
-      setupTheme();
-      setupDragDrop();
-      setupChips();
-      setupKeyboardShortcuts();
-      
-      // Event listeners
-      document.getElementById('prompt').addEventListener('input', updateCounter);
-      document.getElementById('creativity').addEventListener('input', updateCreativity);
-      document.getElementById('quality').addEventListener('input', updateQuality);
-      document.getElementById('ratio').addEventListener('change', updateRatio);
-      
-      // Chiudi modal cliccando fuori
-      document.getElementById('helpModal').addEventListener('click', (e) => {
-        if (e.target.id === 'helpModal') closeHelp();
-      });
-      
-      // Inizializza display
-      updateCounter();
-      updateCreativity();
-      updateQuality();
-      updateRatio();
-      updateHistoryDisplay();
-      
-      // Messaggio di benvenuto
-      console.log('🎨 Artemisia Story caricato e pronto!');
-      showToast('🚀 Artemisia Story è pronto! Inizia a creare', 'success', 4000);
-      
-      // Auto-focus sul prompt
-      setTimeout(() => {
-        document.getElementById('prompt').focus();
-      }, 500);
+  try {
+    const res=await fetch(GEN_URL,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
     });
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error||"Errore server");
 
-    // Esporta funzioni globali per debug
-    window.artemisia = {
-      generate,
-      surprise,
-      clearHistory,
-      state,
-      CONFIG
-    };
-  </script>
+    lastImageUrl=data.image_url;
+    document.getElementById('resultImg').src=lastImageUrl;
+    document.getElementById('resultImg').style.display='block';
+    document.getElementById('placeholder').style.display='none';
+    addHistory(lastImageUrl,payload.prompt);
+    document.getElementById('ratingSystem').style.display='block';
+    showStatus("✅ Immagine generata");
+  } catch(e){
+    showStatus("❌ "+e.message,true);
+  }
+}
+
+// Upscale (real call)
+async function upscale(){
+  if(!lastImageUrl){showStatus("Nessuna immagine",true);return;}
+  showStatus("🔍 Upscale...");
+  try {
+    const res=await fetch(UPSCALE_URL,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({image_url:lastImageUrl,scale:2})
+    });
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error||"Errore upscale");
+    lastImageUrl=data.image_url;
+    document.getElementById('resultImg').src=lastImageUrl;
+    showStatus("✅ Upscale completato");
+  } catch(e){showStatus("❌ "+e.message,true);}
+}
+
+// History
+function addHistory(src,caption){history.unshift({src,caption,rating:0});renderHistory();}
+function renderHistory(){
+  const g=document.getElementById('historyGrid');
+  g.innerHTML=history.map((h,i)=>`
+    <div class="card-thumb">
+      <img src="${h.src}">
+      <div class="thumb-actions">
+        <button onclick="reusePrompt(${i})">♻️</button>
+      </div>
+    </div>`).join('');
+}
+function reusePrompt(i){document.getElementById('prompt').value=history[i].caption;showStatus("Prompt riusato");}
+
+// Rating
+function rateImage(r){
+  document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('active',i<r));
+  if(history[0])history[0].rating=r;
+  showStatus("⭐ "+r+"/5");
+}
+
+// Export
+function exportMultiple(){if(!lastImageUrl){showStatus("Nessuna immagine",true);return;}
+  ["png","jpg","webp"].forEach(fmt=>downloadAsFormat(lastImageUrl,fmt));
+}
+function downloadAsFormat(url,fmt){
+  const a=document.createElement('a');
+  a.href=url; a.download="artemisia."+fmt; a.click();
+}
+
+// Helpers
+function updateCreativity(){document.getElementById('creativityValue').textContent=document.getElementById('creativity').value;}
+function updateQuality(){const v=document.getElementById('quality').value;const lbl=['Bassa','Standard','Alta','Ultra'];document.getElementById('qualityValue').textContent=lbl[v-1];}
+function toggleTheme(){const root=document.documentElement;root.setAttribute('data-theme',root.getAttribute('data-theme')==='light'?'dark':'light');}
+
+// Shortcut
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){generate();}});
+</script>
 </body>
 </html>
