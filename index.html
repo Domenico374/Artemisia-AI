@@ -3,54 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Artemisia Story Generatore & Trasformatore di immagini AI</title>
+  <title>Artemisia Story · Generatore & Trasformatore di immagini AI</title>
   <link rel="icon" href="logo-artemisia.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-start: #0f172a; --bg-end: #1e1b4b; --card: #0b1020cc; --text: #e2e8f0; --muted: #94a3b8;
-      --brand: #8b5cf6; --brand-2: #eab308; --accent: #eab308; --ring: rgba(96,165,250,.35);
-      --ok: #34d399; --warn: #f59e0b; --err: #f87171; --surface: rgba(255,255,255,.06);
-      --border: rgba(255,255,255,.14); --chip: rgba(148,163,184,.16); --shadow: 0 20px 60px rgba(0,0,0,.35);
+    :root{
+      --bg-start:#0f172a; --bg-end:#1e1b4b; --card:#0b1020cc; --text:#e2e8f0; --muted:#94a3b8;
+      --brand:#6366f1; --brand-2:#8b5cf6; --accent:#f8c045; --ring:rgba(99,102,241,.35);
+      --ok:#34d399; --warn:#f59e0b; --err:#f87171; --surface:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.14); --chip:rgba(148,163,184,.12); --shadow:0 18px 60px rgba(0,0,0,.35);
     }
     [data-theme="light"]{
-      --bg-start:#e2e8f0; --bg-end:#c7d2fe; --card:#ffffffee; --text:#0f172a; --muted:#475569; --surface:#f8fafc;
-      --border: rgba(2,6,23,.12); --shadow: 0 20px 60px rgba(2,6,23,.12); --chip: rgba(2,6,23,.06);
+      --bg-start:#e8eef8; --bg-end:#dfe4ff; --card:#ffffffee; --text:#0f172a; --muted:#475569;
+      --surface:#f8fafc; --border:rgba(2,6,23,.12); --chip:rgba(2,6,23,.06); --shadow:0 18px 50px rgba(2,6,23,.12);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);
-      background: radial-gradient(1000px 600px at -10% -10%, #0ea5e980, transparent 60%),
-                  radial-gradient(800px 500px at 110% 10%, #a78bfa66, transparent 60%),
-                  linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      background:
+        radial-gradient(1000px 600px at -10% -10%, #0ea5e980, transparent 60%),
+        radial-gradient(800px 500px at 110% 10%, #a78bfa66, transparent 60%),
+        linear-gradient(135deg, var(--bg-start), var(--bg-end));
       overflow-x:hidden;
     }
     .container{max-width:1200px;margin:0 auto;padding:24px}
     .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
     .brand{display:flex;align-items:center;gap:14px}
-    .logo{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;box-shadow:var(--shadow)}
+    .logo{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;box-shadow:var(--shadow);background:var(--surface)}
     .logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:12px}
-    .title-wrap .title{font-size:28px;font-weight:800;letter-spacing:.2px}
-    .title-wrap .subtitle{font-size:14px;color:var(--muted)}
+    .title{font-size:28px;font-weight:800;letter-spacing:.2px}
+    .subtitle{font-size:14px;color:var(--muted)}
     .actions{display:flex;align-items:center;gap:8px}
     .icon-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer;transition:all .2s ease}
     .icon-btn:hover{transform:translateY(-1px);border-color:var(--accent)}
     .card{background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
     .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}
-    @media(max-width:1024px){.grid{grid-template-columns:1fr;}}
+    @media (max-width:1024px){.grid{grid-template-columns:1fr}}
     .section-title{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:10px}
     .section-title .emoji{font-size:20px}
     .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
-    .chip{padding:8px 12px;border:1px solid var(--border);background:var(--chip);border-radius:999px;font-size:12px;cursor:pointer;user-select:none;transition:all .2s ease}
-    .chip.active{outline:2px solid var(--ring);border-color:transparent;background:rgba(139,92,246,.2)}
-    .chip:hover{background:rgba(139,92,246,.1);border-color:var(--brand)}
-    .chip.business{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.1)}
-    .chip.business.active{background:rgba(34,197,94,.2);outline-color:rgba(34,197,94,.5)}
-    .chip.creative{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.1)}
-    .chip.creative.active{background:rgba(245,158,11,.2);outline-color:rgba(245,158,11,.5)}
-    .chip.photo{border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.1)}
-    .chip.photo.active{background:rgba(59,130,246,.2);outline-color:rgba(59,130,246,.5)}
+    .chip{position:relative;padding:8px 12px;border:1px solid var(--border);background:var(--chip);border-radius:999px;font-size:12px;cursor:pointer;user-select:none;transition:all .2s ease}
+    .chip.active{outline:2px solid var(--ring);border-color:transparent;background:rgba(99,102,241,.20)}
+    .chip:hover{background:rgba(99,102,241,.12);border-color:var(--brand)}
+    .chip.business{border-color:rgba(34,197,94,.28);background:rgba(34,197,94,.10)}
+    .chip.business.active{background:rgba(34,197,94,.18);outline-color:rgba(34,197,94,.45)}
+    .chip.creative{border-color:rgba(245,158,11,.28);background:rgba(245,158,11,.10)}
+    .chip.creative.active{background:rgba(245,158,11,.18);outline-color:rgba(245,158,11,.45)}
+    .chip.photo{border-color:rgba(59,130,246,.28);background:rgba(59,130,246,.10)}
+    .chip.photo.active{background:rgba(59,130,246,.18);outline-color:rgba(59,130,246,.45)}
+    .tooltip{position:fixed;z-index:50;display:none;pointer-events:none;border:1px solid var(--border);background:var(--card);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+    .tooltip img{display:block;width:180px;height:120px;object-fit:cover}
+    .tooltip .hint{padding:8px 10px;font-size:12px;color:var(--muted);max-width:220px}
     .controls{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
     .select,.slider{display:flex;align-items:center;gap:8px;border:1px solid var(--border);background:var(--surface);padding:10px 12px;border-radius:12px}
     .select select{background:transparent;border:none;color:var(--text);font-size:14px}
@@ -60,48 +64,47 @@
     .textarea{position:relative}
     textarea{width:100%;min-height:140px;resize:vertical;border:2px solid transparent;border-radius:16px;padding:16px 18px;background:var(--surface);color:var(--text);line-height:1.6;font-size:15px}
     textarea:focus{outline:none;box-shadow:0 0 0 4px var(--ring);border-color:transparent}
-    textarea::placeholder{color:var(--muted);opacity:0.8}
+    textarea::placeholder{color:var(--muted);opacity:.85}
     .counter{position:absolute;right:12px;bottom:8px;font-size:12px;color:var(--muted)}
     .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-    .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:all .2s ease;background:var(--surface);color:var(--text);text-decoration:none;font-weight:600;font-size:14px}
-    .btn:disabled{opacity:.55;cursor:not-allowed;transform:none !important}
-    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));border-color:transparent;color:#fff;box-shadow:0 10px 24px rgba(139,92,246,.4)}
-    .btn.primary:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 15px 35px rgba(139,92,246,.5)}
-    .btn.outline:not(:disabled):hover{border-color:var(--accent);background:rgba(139,92,246,.1)}
-    .status{margin-top:12px;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:500;display:none;align-items:center;gap:10px}
-    .status.ok{background:rgba(52,211,153,.1);color:var(--ok);border:1px solid rgba(52,211,153,.3)}
-    .status.err{background:rgba(248,113,113,.1);color:var(--err);border:1px solid rgba(248,113,113,.3)}
-    .frame{position:relative;background:linear-gradient(135deg,#0b1020,#1f2937);border:2px solid var(--border);border-radius:18px;display:grid;place-items:center;overflow:hidden;transition:all .3s ease}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:14px;border:1px solid var(--border);cursor:pointer;transition:transform .12s ease, box-shadow .2s ease;background:var(--surface);color:var(--text);text-decoration:none;font-weight:700;font-size:14px}
+    .btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));border-color:transparent;color:#fff;box-shadow:0 10px 24px rgba(99,102,241,.45)}
+    .btn.primary:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(99,102,241,.55)}
+    .btn.outline:not(:disabled):hover{border-color:var(--accent);background:rgba(248,192,69,.10)}
+    .status{margin-top:12px;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:600;display:none;align-items:center;gap:10px}
+    .status.ok{background:rgba(52,211,153,.10);color:var(--ok);border:1px solid rgba(52,211,153,.30)}
+    .status.err{background:rgba(248,113,113,.10);color:var(--err);border:1px solid rgba(248,113,113,.30)}
+    .frame{position:relative;background:linear-gradient(135deg,#0b1020,#1f2937);border:2px dashed var(--border);border-radius:18px;display:grid;place-items:center;overflow:hidden;transition:border-color .2s ease, box-shadow .2s ease}
     .frame.ratio-1-1{aspect-ratio:1/1}
     .frame.ratio-3-4{aspect-ratio:3/4}
     .frame.ratio-4-3{aspect-ratio:4/3}
     .frame.ratio-16-9{aspect-ratio:16/9}
     .frame.ratio-9-16{aspect-ratio:9/16}
+    .frame.drag{border-color:var(--accent);box-shadow:0 0 0 4px var(--ring)}
     .frame img{max-width:100%;max-height:100%;display:none;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
-    .frame img.show{display:block;animation:fadeIn .4s ease-out}
-    @keyframes fadeIn{from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)}}
+    .frame img.show{display:block;animation:fadeIn .35s ease-out}
+    @keyframes fadeIn{from{opacity:0;transform:scale(.98)} to{opacity:1;transform:scale(1)}}
     .placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#cbd5e1;opacity:.9;text-align:center;padding:28px}
     .spinner{width:54px;height:54px;border-radius:50%;border:4px solid #ffffff20;border-top-color:var(--brand);animation:spin 1s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .progress{position:absolute;left:0;bottom:0;height:4px;width:0;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .3s ease;border-radius:0 0 16px 16px}
     .history{margin-top:18px}
     .history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-    .card-thumb{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .2s ease}
+    .card-thumb{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .15s ease, border-color .2s ease}
     .card-thumb:hover{transform:translateY(-2px);border-color:var(--accent)}
-    .card-thumb img{display:block;width:100%;height:140px;object-fit:cover;transition:all .3s ease}
+    .card-thumb img{display:block;width:100%;height:140px;object-fit:cover;transition:transform .3s ease}
     .card-thumb:hover img{transform:scale(1.05)}
     .thumb-actions{display:flex;gap:6px;position:absolute;right:8px;bottom:8px;opacity:0;transition:opacity .2s ease}
     .card-thumb:hover .thumb-actions{opacity:1}
     .small{font-size:12px;color:var(--muted)}
-    .tips{margin-top:20px;padding:18px;border-left:3px solid var(--brand);background:linear-gradient(0deg,transparent,rgba(139,92,246,.08));border-radius:12px}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    .file-chip{display:none;align-items:center;gap:8px;padding:8px 12px;margin:10px 0;background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);border-radius:10px;color:var(--accent);font-size:12px}
+    .tips{margin-top:20px;padding:18px;border-left:3px solid var(--brand);background:linear-gradient(0deg,transparent,rgba(99,102,241,.10));border-radius:12px}
+    .file-chip{display:none;align-items:center;gap:8px;padding:8px 12px;margin:10px 0;background:rgba(248,192,69,.10);border:1px solid rgba(248,192,69,.35);border-radius:10px;color:var(--accent);font-size:12px}
     .file-chip.show{display:flex}
-    .preset-section{margin-top:16px}
     .batch-controls{display:flex;align-items:center;gap:10px;margin:10px 0;padding:12px;background:var(--surface);border-radius:12px;border:1px solid var(--border)}
     .rating-system{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:12px}
     .stars{display:flex;gap:4px}
-    .star{cursor:pointer;transition:transform .2s ease;font-size:16px}
+    .star{cursor:pointer;transition:transform .15s ease;font-size:16px}
     .star:hover{transform:scale(1.2)}
     .star.active{color:var(--accent)}
     .comparison-mode{display:none;margin:20px 0}
@@ -109,8 +112,13 @@
     .compare-item{text-align:center}
     .compare-item img{width:100%;border-radius:12px;border:2px solid var(--border)}
     .compare-controls{margin-top:8px}
-    .export-options{display:flex;gap:8px;margin-top:8px}
-    .advanced-params{margin-top:16px}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    /* Pannello Collezioni */
+    .collections{margin-top:18px}
+    .collection-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .collection-list{display:flex;flex-wrap:wrap;gap:8px}
+    .collection-chip{padding:6px 10px;border:1px solid var(--border);background:var(--surface);border-radius:999px;font-size:12px;cursor:pointer}
+    .collection-chip.active{background:rgba(248,192,69,.12);border-color:var(--accent)}
   </style>
 </head>
 <body>
@@ -118,82 +126,78 @@
     <header class="header">
       <div class="brand">
         <div class="logo"><img src="logo-artemisia.png" alt="Artemisia AI" /></div>
-        <div class="title-wrap">
+        <div>
           <div class="title">Artemisia-story</div>
           <div class="subtitle">Generatore & Trasformatore di immagini AI</div>
         </div>
       </div>
       <div class="actions">
-        <button class="icon-btn" onclick="toggleTheme()">🌗</button>
-        <button class="icon-btn" onclick="showHelp()">❔</button>
+        <button class="icon-btn" id="themeBtn" title="Tema">🌗</button>
+        <button class="icon-btn" onclick="showHelp()" title="Guida">❔</button>
       </div>
     </header>
 
     <main class="grid">
+      <!-- Colonna sinistra -->
       <section class="card">
         <div class="section-title"><span class="emoji">✨</span><span>Scrivi il tuo prompt</span></div>
 
+        <!-- Preset con tooltip preview -->
         <div class="chips" id="styleChips">
-          <span class="chip" onclick="toggleChip(this, 'in stile cartoon moderno')">Cartoon</span>
-          <span class="chip" onclick="toggleChip(this, 'fotorealistico, illuminazione cinematografica')">Fotorealistico</span>
-          <span class="chip" onclick="toggleChip(this, 'in stile acquerello morbido')">Acquerello</span>
-          <span class="chip" onclick="toggleChip(this, 'in stile Studio Ghibli')">Ghibli</span>
-          <span class="chip" onclick="toggleChip(this, 'in stile pittorico biblico')">Biblico</span>
-          <span class="chip" onclick="toggleChip(this, 'vintage anni 90, grana leggera')">Vintage '90</span>
+          <span class="chip" data-text="in stile cartoon moderno" data-preview="https://picsum.photos/seed/cartoon/180/120" data-hint="Colori vivaci, contorni morbidi" onclick="toggleChip(this)">Cartoon</span>
+          <span class="chip" data-text="fotorealistico, illuminazione cinematografica" data-preview="https://picsum.photos/seed/photo/180/120" data-hint="Illuminazione realistica, dettagli alti" onclick="toggleChip(this)">Fotorealistico</span>
+          <span class="chip" data-text="in stile acquerello morbido" data-preview="https://picsum.photos/seed/watercolor/180/120" data-hint="Texture carta, pennellate leggere" onclick="toggleChip(this)">Acquerello</span>
+          <span class="chip" data-text="in stile Studio Ghibli" data-preview="https://picsum.photos/seed/ghibli/180/120" data-hint="Toni pastello, atmosfera sognante" onclick="toggleChip(this)">Ghibli</span>
+          <span class="chip" data-text="in stile pittorico biblico" data-preview="https://picsum.photos/seed/biblico/180/120" data-hint="Composizioni sacre, luce drammatica" onclick="toggleChip(this)">Biblico</span>
+          <span class="chip" data-text="vintage anni 90, grana leggera" data-preview="https://picsum.photos/seed/vintage90/180/120" data-hint="Palette retrò, grana soft" onclick="toggleChip(this)">Vintage '90</span>
         </div>
 
-        <div class="preset-section">
-          <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">🎯</span><span>Business & Marketing</span></div>
-          <div class="chips">
-            <span class="chip business" onclick="toggleChip(this, 'logo aziendale minimalista, design pulito, sfondo bianco, tipografia moderna')">Logo Business</span>
-            <span class="chip business" onclick="toggleChip(this, 'fotografia commerciale, prodotto su sfondo neutro, illuminazione da studio professionale')">Prodotto</span>
-            <span class="chip business" onclick="toggleChip(this, 'design per social media, colori vivaci, layout accattivante, formato quadrato')">Social Post</span>
-            <span class="chip business" onclick="toggleChip(this, 'brochure aziendale, layout professionale, colori corporate, tipografia elegante')">Brochure</span>
-          </div>
-
-          <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">🎨</span><span>Arte & Creatività</span></div>
-          <div class="chips">
-            <span class="chip creative" onclick="toggleChip(this, 'concept art fantasy, dettagli epici, atmosfera drammatica, colori cinematografici')">Fantasy Art</span>
-            <span class="chip creative" onclick="toggleChip(this, 'illustrazione per bambini, stile cartoon dolce, colori pastello, forme arrotondate')">Per Bambini</span>
-            <span class="chip creative" onclick="toggleChip(this, 'arte astratta moderna, forme geometriche, gradazioni di colore, composizione dinamica')">Arte Astratta</span>
-            <span class="chip creative" onclick="toggleChip(this, 'copertina libro, design editoriale, tipografia accattivante, atmosfera misteriosa')">Copertina Libro</span>
-            <span class="chip creative" onclick="toggleChip(this, 'character design anime, stile manga, colori vivaci, dettagli espressivi')">Character Anime</span>
-          </div>
-
-          <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">📸</span><span>Fotografia</span></div>
-          <div class="chips">
-            <span class="chip photo" onclick="toggleChip(this, 'ritratto professionale, 85mm, illuminazione soft, bokeh naturale, alta risoluzione')">Ritratto Pro</span>
-            <span class="chip photo" onclick="toggleChip(this, 'paesaggio naturale, golden hour, dettagli fotorealistici, colori saturi, composizione panoramica')">Paesaggio</span>
-            <span class="chip photo" onclick="toggleChip(this, 'architettura moderna, linee pulite, prospettiva geometrica, illuminazione naturale')">Architettura</span>
-            <span class="chip photo" onclick="toggleChip(this, 'food photography, macro dettagli, illuminazione appetitosa, styling professionale')">Food</span>
-            <span class="chip photo" onclick="toggleChip(this, 'street photography urbana, momento candido, contrasti drammatici, atmosfera autentica')">Street</span>
-          </div>
+        <!-- (Sezioni Business/Arte/Fotografia rimangono identiche al messaggio precedente per brevità) -->
+        <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">🎯</span><span>Business & Marketing</span></div>
+        <div class="chips">
+          <span class="chip business" data-text="logo aziendale minimalista, design pulito, sfondo bianco, tipografia moderna" onclick="toggleChip(this)">Logo Business</span>
+          <span class="chip business" data-text="fotografia commerciale, prodotto su sfondo neutro, illuminazione da studio professionale" onclick="toggleChip(this)">Prodotto</span>
+          <span class="chip business" data-text="design per social media, colori vivaci, layout accattivante, formato quadrato" onclick="toggleChip(this)">Social Post</span>
+          <span class="chip business" data-text="brochure aziendale, layout professionale, colori corporate, tipografia elegante" onclick="toggleChip(this)">Brochure</span>
         </div>
 
-        <div class="advanced-params">
-          <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">⚙️</span><span>Parametri Avanzati</span></div>
-          <div class="controls">
-            <div class="slider">
-              <label>Creatività:</label>
-              <input type="range" id="creativity" min="0" max="100" value="70" oninput="updateCreativity()" />
-              <span id="creativityValue">70</span>
-            </div>
-            <div class="slider">
-              <label>Qualità:</label>
-              <input type="range" id="quality" min="1" max="4" value="2" oninput="updateQuality()" />
-              <span id="qualityValue">Standard</span>
-            </div>
-            <div class="select">
-              <select id="variants">
-                <option value="1">1 Variante</option>
-                <option value="2">2 Varianti</option>
-                <option value="4">4 Varianti</option>
-              </select>
-            </div>
-          </div>
+        <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">🎨</span><span>Arte & Creatività</span></div>
+        <div class="chips">
+          <span class="chip creative" data-text="concept art fantasy, dettagli epici, atmosfera drammatica, colori cinematografici" onclick="toggleChip(this)">Fantasy Art</span>
+          <span class="chip creative" data-text="illustrazione per bambini, stile cartoon dolce, colori pastello, forme arrotondate" onclick="toggleChip(this)">Per Bambini</span>
+          <span class="chip creative" data-text="arte astratta moderna, forme geometriche, gradazioni di colore, composizione dinamica" onclick="toggleChip(this)">Arte Astratta</span>
+          <span class="chip creative" data-text="copertina libro, design editoriale, tipografia accattivante, atmosfera misteriosa" onclick="toggleChip(this)">Copertina Libro</span>
+          <span class="chip creative" data-text="character design anime, stile manga, colori vivaci, dettagli espressivi" onclick="toggleChip(this)">Character Anime</span>
         </div>
 
+        <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">📸</span><span>Fotografia</span></div>
+        <div class="chips">
+          <span class="chip photo" data-text="ritratto professionale, 85mm, illuminazione soft, bokeh naturale, alta risoluzione" onclick="toggleChip(this)">Ritratto Pro</span>
+          <span class="chip photo" data-text="paesaggio naturale, golden hour, dettagli fotorealistici, colori saturi, composizione panoramica" onclick="toggleChip(this)">Paesaggio</span>
+          <span class="chip photo" data-text="architettura moderna, linee pulite, prospettiva geometrica, illuminazione naturale" onclick="toggleChip(this)">Architettura</span>
+          <span class="chip photo" data-text="food photography, macro dettagli, illuminazione appetitosa, styling professionale" onclick="toggleChip(this)">Food</span>
+          <span class="chip photo" data-text="street photography urbana, momento candido, contrasti drammatici, atmosfera autentica" onclick="toggleChip(this)">Street</span>
+        </div>
+
+        <div class="section-title" style="margin-top:18px;margin-bottom:8px"><span class="emoji">⚙️</span><span>Parametri avanzati</span></div>
         <div class="controls">
+          <div class="slider">
+            <label>Creatività:</label>
+            <input type="range" id="creativity" min="0" max="100" value="70" oninput="updateCreativity()" />
+            <span id="creativityValue">70</span>
+          </div>
+          <div class="slider">
+            <label>Qualità:</label>
+            <input type="range" id="quality" min="1" max="4" value="2" oninput="updateQuality()" />
+            <span id="qualityValue">Standard</span>
+          </div>
+          <div class="select">
+            <select id="variants">
+              <option value="1">1 Variante</option>
+              <option value="2">2 Varianti</option>
+              <option value="4">4 Varianti</option>
+            </select>
+          </div>
           <div class="select">
             <select id="ratio" onchange="updateRatio()">
               <option value="1-1">1:1 (Quadrato)</option>
@@ -206,18 +210,18 @@
         </div>
 
         <div class="textarea">
-          <textarea id="prompt" placeholder="Es.: Trasforma in stile cartoon moderno, colori brillanti e contorni morbidi..." oninput="updateCounter()"></textarea>
+          <textarea id="prompt" placeholder="Es.: Paesaggio acquerello con castello medievale al tramonto, palette calda, luce dorata, contorni morbidi..." oninput="updateCounter()"></textarea>
           <div class="counter" id="counter">0/500</div>
         </div>
 
-        <div class="file-chip" id="fileChip" style="display:none;">
+        <div class="file-chip" id="fileChip">
           <span>📎</span>
           <span id="fileName">Nessun file</span>
           <button onclick="clearFile()" style="background:none;border:none;color:inherit;cursor:pointer;padding:0;margin-left:auto">✕</button>
         </div>
 
         <div class="batch-controls">
-          <span style="font-size:14px;font-weight:600">Workflow Avanzato:</span>
+          <span style="font-size:14px;font-weight:700">Workflow Avanzato:</span>
           <div class="select">
             <select id="batchSize">
               <option value="1">Genera 1</option>
@@ -234,6 +238,16 @@
           <button class="btn outline" onclick="surprise()">🎲 Ispirami</button>
           <button class="btn outline" onclick="download()" id="downloadBtn" disabled>📥 Scarica PNG</button>
           <button class="btn outline" onclick="exportMultiple()" id="exportBtn" disabled>📤 Export Multi</button>
+          <button class="btn outline" onclick="openCollectionsModal()" id="saveToCollectionBtn" disabled>📁 Salva in Collezione</button>
+        </div>
+
+        <!-- Pannello Collezioni -->
+        <div class="collections">
+          <div class="collection-header">
+            <div class="section-title" style="margin:0"><span class="emoji">📚</span><span>Collezioni</span></div>
+            <button class="icon-btn" onclick="openCollectionsModal()" title="Gestisci collezioni">➕</button>
+          </div>
+          <div id="collectionsList" class="collection-list"></div>
         </div>
 
         <div class="rating-system" id="ratingSystem" style="display:none;">
@@ -250,15 +264,16 @@
         <div id="status" class="status"></div>
       </section>
 
+      <!-- Colonna destra -->
       <section class="card">
         <div class="section-title"><span class="emoji">🖼️</span><span>Anteprima</span></div>
-        <div class="frame ratio-1-1" id="frame">
+        <div class="frame ratio-1-1" id="frame" title="Clicca o trascina qui una immagine">
           <img id="resultImg" alt="Risultato" />
           <div class="placeholder" id="placeholder">
             <div class="spinner" id="spinner" style="display:none"></div>
             <div class="ph-content">
-              <div style="font-weight:700;opacity:.9;font-size:18px">Nessuna immagine ancora</div>
-              <div class="small">Scrivi un prompt e premi "Genera"</div>
+              <div style="font-weight:800;opacity:.95;font-size:18px">Nessuna immagine ancora</div>
+              <div class="small">Scrivi un prompt e premi “Genera” oppure trascina qui un file</div>
             </div>
           </div>
           <div class="progress" id="progress"></div>
@@ -268,13 +283,13 @@
           <div class="section-title"><span class="emoji">⚖️</span><span>Confronto Risultati</span></div>
           <div class="comparison-grid">
             <div class="compare-item">
-              <img id="compareImg1" />
+              <img id="compareImg1" alt="A" />
               <div class="compare-controls">
                 <button class="btn outline" onclick="selectWinner(1)">Preferisci A</button>
               </div>
             </div>
             <div class="compare-item">
-              <img id="compareImg2" />
+              <img id="compareImg2" alt="B" />
               <div class="compare-controls">
                 <button class="btn outline" onclick="selectWinner(2)">Preferisci B</button>
               </div>
@@ -292,436 +307,275 @@
         <div class="tips">
           <strong>💡 Suggerimenti rapidi</strong>
           <ul style="margin:.5rem 0 0 1.2rem; line-height:1.7; font-size:14px">
-            <li>Usa i preset specifici per risultati ottimizzati</li>
-            <li>Sperimenta con i parametri di creatività e qualità</li>
-            <li>Il batch generate crea variazioni multiple automaticamente</li>
-            <li>Usa il confronto per scegliere tra risultati simili</li>
-            <li>Per il testo nelle immagini: usa caratteri minuscoli</li>
+            <li>Usa i preset con anteprima per scegliere lo stile giusto</li>
+            <li>Sperimenta con Creatività e Qualità</li>
+            <li>Il Batch Generate crea più varianti automaticamente</li>
+            <li>Confronta i risultati e scegli il preferito</li>
+            <li>Per testo in immagine: frasi brevi e minuscole</li>
           </ul>
         </div>
       </section>
     </main>
 
+    <!-- Input file nascosto -->
     <input id="fileInput" type="file" accept="image/*" onchange="handleFile(this)" style="display:none" />
+    <!-- Tooltip preset -->
+    <div id="tooltip" class="tooltip" aria-hidden="true">
+      <img alt="preview"><div class="hint"></div>
+    </div>
+    <!-- Modal Collezioni -->
+    <dialog id="collectionsModal" style="border:none;border-radius:16px;padding:0;max-width:560px;width:92%">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 16px 12px;color:var(--text)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div class="section-title" style="margin:0"><span class="emoji">📁</span><span>Gestisci Collezioni</span></div>
+          <button class="icon-btn" onclick="closeCollectionsModal()">✕</button>
+        </div>
+        <div style="display:flex;gap:8px;margin:8px 0 12px">
+          <input id="newCollectionName" placeholder="Nuova collezione..." style="flex:1;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text)"/>
+          <button class="btn" onclick="createCollection()">Crea</button>
+        </div>
+        <div id="collectionsModalList" style="max-height:50vh;overflow:auto;display:grid;gap:10px"></div>
+        <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="btn primary" onclick="closeCollectionsModal()">Fatto</button></div>
+      </div>
+    </dialog>
   </div>
 
   <script>
-    // Variabili globali
-    let lastFile = null;
-    let lastImageUrl = null;
-    let comparisonImages = [];
-    let currentRating = 0;
-    let batchInProgress = false;
-    const history = [];
-    
-    // API endpoints
-    const BASE = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.protocol === "file:" ? "http://localhost:3000" : "";
+    // ========= Stato & Endpoints =========
+    let lastFile=null, lastImageUrl=null, comparisonImages=[];
+    let currentRating=0, batchInProgress=false;
+    const history=[];
+    const BASE = (location.hostname==='localhost' || location.hostname==='127.0.0.1' || location.protocol==='file:') ? 'http://localhost:3000' : '';
     const GEN_URL = `${BASE}/api/generate`;
     const EDIT_URL = `${BASE}/api/edit`;
 
-    // Esempi aggiornati per ispirami
-    const examples = [
-      'Un castello magico su una collina, nuvole colorate al tramonto, in stile acquerello con luce dorata',
-      'Ritratto fotorealistico di una donna, illuminazione cinematografica soft, 85mm, bokeh naturale',
-      'Villaggio fantasy tra le nuvole, cielo stellato, in stile Studio Ghibli con colori pastello',
-      'Logo aziendale minimalista per startup tech, design pulito, sfondo bianco, tipografia moderna',
-      'Character design anime di una guerriera, stile manga, colori vivaci, dettagli espressivi',
-      'Food photography di pasta italiana, macro dettagli, illuminazione appetitosa, styling professionale',
-      'Paesaggio naturale montano, golden hour, dettagli fotorealistici, colori saturi',
-      'Concept art fantasy di una città volante, dettagli epici, atmosfera drammatica',
-      'Copertina libro fantasy, design editoriale, tipografia accattivante, atmosfera misteriosa'
-    ];
+    // ========= Tema persistente =========
+    const root=document.documentElement;
+    const savedTheme=localStorage.getItem('artemisia-theme');
+    if(savedTheme) root.setAttribute('data-theme', savedTheme);
+    document.getElementById('themeBtn').onclick=()=>{
+      const t=root.getAttribute('data-theme')==='light'?'dark':'light';
+      root.setAttribute('data-theme',t); localStorage.setItem('artemisia-theme',t);
+    };
 
-    // Utility functions
-    function showStatus(message, isError = false) {
-      const status = document.getElementById('status');
-      status.style.display = 'flex';
-      status.className = `status ${isError ? 'err' : 'ok'}`;
-      status.innerHTML = message;
-    }
-
-    function hideStatus() {
-      document.getElementById('status').style.display = 'none';
-    }
-
-    function updateCounter() {
-      const prompt = document.getElementById('prompt');
-      const counter = document.getElementById('counter');
-      const len = prompt.value.length;
-      counter.textContent = `${len}/500`;
-      counter.style.color = len > 500 ? 'var(--err)' : 'var(--muted)';
-    }
-
-    function updateCreativity() {
-      const value = document.getElementById('creativity').value;
-      document.getElementById('creativityValue').textContent = value;
-    }
-
-    function updateQuality() {
-      const value = document.getElementById('quality').value;
-      const labels = ['Bassa', 'Standard', 'Alta', 'Ultra'];
-      document.getElementById('qualityValue').textContent = labels[value-1];
-    }
-
-    function toggleTheme() {
-      const root = document.documentElement;
-      const isDark = root.getAttribute('data-theme') !== 'light';
-      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    }
-
-    function showHelp() {
-      alert('Artemisia AI - Guida:\n\n• Scrivi un prompt dettagliato\n• Usa i chip per aggiungere stili\n• Prova i preset specifici per risultati ottimizzati\n• Regola creatività e qualità nei parametri avanzati\n• Usa batch generate per variazioni multiple\n• Confronta risultati per scegliere il migliore\n• Carica una foto per trasformarla\n• La cronologia salva le generazioni');
-    }
-
-    function toggleChip(chip, text) {
-      const prompt = document.getElementById('prompt');
-      chip.classList.toggle('active');
-      
-      if (chip.classList.contains('active')) {
-        if (prompt.value && !/[,.;:]\s?$/.test(prompt.value)) {
-          prompt.value += ', ';
-        }
-        prompt.value += text;
-      } else {
-        prompt.value = prompt.value.replace(text, '').replace(/\s*,\s*,\s*/g, ', ').replace(/^,\s*|,\s*$/g, '').trim();
-      }
-      updateCounter();
-    }
-
-    function updateRatio() {
-      const ratio = document.getElementById('ratio').value;
-      const frame = document.getElementById('frame');
-      frame.className = `frame ratio-${ratio}`;
-    }
-
-    function surprise() {
-      const prompt = document.getElementById('prompt');
-      const randomExample = examples[Math.floor(Math.random() * examples.length)];
-      prompt.value = randomExample;
-      updateCounter();
-      
-      // Reset chips
-      document.querySelectorAll('.chip.active').forEach(chip => chip.classList.remove('active'));
-    }
-
-    function handleFile(input) {
-      const file = input.files[0];
-      if (!file) return;
-      
-      lastFile = file;
-      document.getElementById('fileName').textContent = file.name;
-      document.getElementById('fileChip').classList.add('show');
-      showStatus(`📎 File "${file.name}" caricato. Scrivi come trasformarlo.`);
-    }
-
-    function clearFile() {
-      lastFile = null;
-      document.getElementById('fileInput').value = '';
-      document.getElementById('fileChip').classList.remove('show');
-      document.getElementById('fileName').textContent = '';
-      hideStatus();
-    }
-
-    // Batch generation
-    async function generateBatch() {
-      const batchSize = parseInt(document.getElementById('batchSize').value);
-      const prompt = document.getElementById('prompt').value.trim();
-      
-      if (!prompt || prompt.length < 3) {
-        showStatus('❌ Inserisci un prompt più dettagliato', true);
-        return;
-      }
-
-      batchInProgress = true;
-      comparisonImages = [];
-      
-      for (let i = 0; i < batchSize; i++) {
-        showStatus(`🔄 Generando ${i+1}/${batchSize}...`);
-        await generate();
-        if (lastImageUrl) {
-          comparisonImages.push(lastImageUrl);
-        }
-        if (i < batchSize - 1) {
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-      }
-      
-      batchInProgress = false;
-      if (comparisonImages.length > 1) {
-        document.getElementById('compareBtn').disabled = false;
-        showStatus(`✅ Batch completato! ${comparisonImages.length} immagini generate`);
-      }
-    }
-
-    // Conversione immagine sicura
-    function fileToDataURL(file) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-          try {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const maxSize = 1024;
-            let { width, height } = img;
-            
-            if (width > maxSize || height > maxSize) {
-              const ratio = Math.min(maxSize / width, maxSize / height);
-              width *= ratio;
-              height *= ratio;
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL('image/png', 0.9));
-          } catch (error) {
-            reject(new Error('Errore conversione: ' + error.message));
-          }
-        };
-        img.onerror = () => reject(new Error('Caricamento immagine fallito'));
-        img.src = URL.createObjectURL(file);
+    // ========= Tooltip preset =========
+    const tooltip=document.getElementById('tooltip');
+    document.querySelectorAll('.chip').forEach(chip=>{
+      chip.addEventListener('mouseenter',(e)=>{ const s=chip.dataset.preview; if(!s) return;
+        tooltip.querySelector('img').src=s; tooltip.querySelector('.hint').textContent=chip.dataset.hint||chip.textContent;
+        tooltip.style.display='block'; positionTooltip(e);
       });
-    }
-
-    // Funzione principale di generazione
-    async function generate() {
-      console.log('🎨 Avvio generazione...');
-      
-      const promptEl = document.getElementById('prompt');
-      const prompt = promptEl.value.trim();
-      
-      if (!prompt || prompt.length < 3) {
-        showStatus('❌ Inserisci un prompt più dettagliato', true);
-        return;
-      }
-
-      const generateBtn = document.getElementById('generateBtn');
-      const spinner = document.getElementById('spinner');
-      const placeholder = document.getElementById('placeholder');
-      const img = document.getElementById('resultImg');
-      const progress = document.getElementById('progress');
-
-      generateBtn.disabled = true;
-      hideStatus();
-      placeholder.style.display = 'flex';
-      spinner.style.display = 'block';
-      img.style.display = 'none';
-      progress.style.width = '0%';
-
-      let progressInterval = setInterval(() => {
-        const current = parseInt(progress.style.width) || 0;
-        progress.style.width = Math.min(95, current + Math.random() * 10) + '%';
-      }, 200);
-
-      try {
-        console.log('✨ Generazione da testo...');
-        showStatus('✨ Generando immagine...');
-        
-        // Aggiungi parametri avanzati
-        const creativity = document.getElementById('creativity').value;
-        const quality = document.getElementById('quality').value;
-        const variants = document.getElementById('variants').value;
-        
-        const response = await fetch(GEN_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            prompt, 
-            creativity: parseInt(creativity),
-            quality: parseInt(quality),
-            variants: parseInt(variants)
-          })
-        });
-
-        clearInterval(progressInterval);
-        progress.style.width = '100%';
-
-        const text = await response.text();
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch {
-          data = { error: 'Risposta server non valida', raw: text };
-        }
-
-        if (!response.ok) {
-          throw new Error(data.error || `Errore ${response.status}`);
-        }
-
-        const imageUrl = data.image_url;
-        if (!imageUrl) {
-          throw new Error('Nessun URL immagine ricevuto');
-        }
-
-        // Mostra risultato
-        spinner.style.display = 'none';
-        placeholder.style.display = 'none';
-        img.src = imageUrl;
-        img.style.display = 'block';
-        img.classList.add('show');
-        
-        lastImageUrl = imageUrl;
-        document.getElementById('downloadBtn').disabled = false;
-        document.getElementById('exportBtn').disabled = false;
-        document.getElementById('ratingSystem').style.display = 'flex';
-        
-        // Cronologia
-        history.unshift({ src: imageUrl, caption: prompt, date: new Date(), rating: 0 });
-        if (history.length > 6) history.pop();
-        renderHistory();
-        
-        if (!batchInProgress) {
-          showStatus('✅ Immagine generata con successo!');
-        }
-
-      } catch (error) {
-        console.error('❌ Errore:', error);
-        clearInterval(progressInterval);
-        spinner.style.display = 'none';
-        showStatus(`❌ ${error.message}`, true);
-        placeholder.style.display = 'flex';
-      } finally {
-        generateBtn.disabled = false;
-        setTimeout(() => progress.style.width = '0%', 1000);
-      }
-    }
-
-    // Rating system
-    function rateImage(rating) {
-      currentRating = rating;
-      const stars = document.querySelectorAll('.star');
-      stars.forEach((star, index) => {
-        star.classList.toggle('active', index < rating);
-      });
-      
-      // Salva rating nella cronologia
-      if (history.length > 0) {
-        history[0].rating = rating;
-      }
-      
-      showStatus(`⭐ Valutazione salvata: ${rating}/5`);
-      setTimeout(hideStatus, 2000);
-    }
-
-    // Comparison functions
-    function toggleComparison() {
-      const comparisonMode = document.getElementById('comparisonMode');
-      const isVisible = comparisonMode.style.display !== 'none';
-      
-      if (isVisible) {
-        comparisonMode.style.display = 'none';
-        document.getElementById('compareBtn').textContent = 'Confronta';
-      } else {
-        if (comparisonImages.length >= 2) {
-          document.getElementById('compareImg1').src = comparisonImages[comparisonImages.length - 2];
-          document.getElementById('compareImg2').src = comparisonImages[comparisonImages.length - 1];
-          comparisonMode.style.display = 'block';
-          document.getElementById('compareBtn').textContent = 'Chiudi Confronto';
-        } else {
-          showStatus('❌ Serve almeno 2 immagini per confrontare', true);
-        }
-      }
-    }
-
-    function selectWinner(choice) {
-      const winnerUrl = choice === 1 ? comparisonImages[comparisonImages.length - 2] : comparisonImages[comparisonImages.length - 1];
-      showStatus(`🏆 Hai scelto l'immagine ${choice === 1 ? 'A' : 'B'}`);
-      
-      // Mostra l'immagine vincente nel frame principale
-      document.getElementById('resultImg').src = winnerUrl;
-      lastImageUrl = winnerUrl;
-      
-      setTimeout(() => {
-        toggleComparison();
-      }, 1500);
-    }
-
-    // Export functions
-    function exportMultiple() {
-      if (!lastImageUrl) return;
-      
-      const formats = ['png', 'jpg', 'webp'];
-      formats.forEach(format => {
-        downloadAsFormat(lastImageUrl, format);
-      });
-      showStatus('📤 Export multiplo avviato');
-    }
-
-    function downloadAsFormat(url, format) {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = new Image();
-      
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        
-        const link = document.createElement('a');
-        link.download = `artemisia-ai.${format}`;
-        link.href = canvas.toDataURL(`image/${format}`);
-        link.click();
-      };
-      
-      img.src = url;
-    }
-
-    function renderHistory() {
-      const grid = document.getElementById('historyGrid');
-      if (history.length === 0) {
-        grid.innerHTML = '<div class="small" style="grid-column:1/-1;text-align:center;padding:20px">Nessuna generazione ancora</div>';
-        return;
-      }
-      
-      grid.innerHTML = history.map((h, i) => `
-        <div class="card-thumb">
-          <img src="${h.src}" alt="Generazione ${i + 1}">
-          <div class="thumb-actions">
-            <button class="icon-btn" onclick="downloadFromSrc('${h.src}')" title="Scarica">⬇️</button>
-            <button class="icon-btn" onclick="reusePrompt(${i})" title="Riusa">♻️</button>
-            ${h.rating ? `<span title="Rating: ${h.rating}/5" style="color:var(--accent)">${'⭐'.repeat(h.rating)}</span>` : ''}
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function reusePrompt(index) {
-      if (history[index]) {
-        document.getElementById('prompt').value = history[index].caption.replace(/^Trasformazione: /, '');
-        updateCounter();
-        document.querySelectorAll('.chip.active').forEach(chip => chip.classList.remove('active'));
-        showStatus('📝 Prompt riutilizzato');
-      }
-    }
-
-    function download() {
-      if (lastImageUrl) downloadFromSrc(lastImageUrl);
-    }
-
-    function downloadFromSrc(src) {
-      try {
-        const a = document.createElement('a');
-        a.href = src;
-        a.download = 'artemisia-ai.png';
-        a.click();
-        showStatus('📥 Download avviato');
-      } catch {
-        window.open(src, '_blank');
-        showStatus('🔗 Aperto in nuova scheda');
-      }
-    }
-
-    // Scorciatoia tastiera
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-        e.preventDefault();
-        generate();
-      }
+      chip.addEventListener('mousemove',positionTooltip);
+      chip.addEventListener('mouseleave',()=>tooltip.style.display='none');
     });
+    function positionTooltip(e){ tooltip.style.left=(e.clientX+14)+'px'; tooltip.style.top=(e.clientY+14)+'px'; }
 
-    // Init
-    console.log('🎨 Artemisia AI caricata');
-    updateCounter();
+    // ========= UI helpers =========
+    function showStatus(msg,err=false){ const s=document.getElementById('status'); s.style.display='flex'; s.className=`status ${err?'err':'ok'}`; s.innerHTML=msg; }
+    function hideStatus(){ document.getElementById('status').style.display='none'; }
+    function updateCounter(){ const p=document.getElementById('prompt'); const c=document.getElementById('counter'); const n=p.value.length; c.textContent=`${n}/500`; c.style.color=n>500?'var(--err)':'var(--muted)'; }
+    function updateCreativity(){ document.getElementById('creativityValue').textContent=document.getElementById('creativity').value; }
+    function updateQuality(){ const L=['Bassa','Standard','Alta','Ultra']; document.getElementById('qualityValue').textContent=L[+document.getElementById('quality').value-1]; }
+    function updateRatio(){ const r=document.getElementById('ratio').value; document.getElementById('frame').className=`frame ratio-${r}`; }
+    function showHelp(){ alert('Guida rapida:\\n• Scrivi un prompt dettagliato\\n• Usa preset con anteprima\\n• Regola creatività/qualità\\n• Trascina file sull’Anteprima per editarlo\\n• Usa Batch/Confronto\\n• Salva i risultati nelle Collezioni'); }
+
+    // ========= Chips =========
+    function toggleChip(el){ const t=el.dataset.text||el.textContent; const p=document.getElementById('prompt'); el.classList.toggle('active');
+      if(el.classList.contains('active')){ if(p.value && !/[,.;:]\\s?$/.test(p.value)) p.value+=', '; p.value+=t; }
+      else{ p.value=p.value.replace(t,'').replace(/\\s*,\\s*,\\s*/g,', ').replace(/^,\\s*|,\\s*$/g,'').trim(); }
+      updateCounter();
+    }
+
+    // ========= Drag & Drop =========
+    const frame=document.getElementById('frame');
+    frame.addEventListener('click',()=>document.getElementById('fileInput').click());
+    ['dragenter','dragover'].forEach(ev=>frame.addEventListener(ev,e=>{e.preventDefault();frame.classList.add('drag');}));
+    ['dragleave','drop'].forEach(ev=>frame.addEventListener(ev,e=>{e.preventDefault();frame.classList.remove('drag');}));
+    frame.addEventListener('drop',(e)=>{ const f=e.dataTransfer.files?.[0]; if(f&&f.type.startsWith('image/')){ const dt=new DataTransfer(); dt.items.add(f); const input=document.getElementById('fileInput'); input.files=dt.files; handleFile(input);} else showStatus('❌ Trascina un file immagine valido',true); });
+
+    // ========= File handling + fix RGBA =========
+    function handleFile(input){
+      const file=input.files[0]; if(!file) return;
+      lastFile=file; document.getElementById('fileChip').classList.add('show'); document.getElementById('fileName').textContent=file.name;
+      showStatus(`📎 File “${file.name}” caricato. Scrivi come trasformarlo.`);
+      document.getElementById('saveToCollectionBtn').disabled = !lastImageUrl;
+    }
+    function clearFile(){ lastFile=null; document.getElementById('fileInput').value=''; document.getElementById('fileChip').classList.remove('show'); document.getElementById('fileName').textContent=''; hideStatus(); }
+
+    async function ensurePNG_RGBA(file){
+      // Converte qualsiasi immagine in PNG con canale alpha via canvas (per evitare 400 Invalid input image RGB)
+      const bmp = await createImageBitmap(file);
+      const canvas = new OffscreenCanvas(bmp.width, bmp.height);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(bmp,0,0);
+      const blob = await canvas.convertToBlob({ type:'image/png' }); // PNG è RGBA-safe
+      return new File([blob], (file.name.split('.')[0]||'image') + '.png', { type:'image/png' });
+    }
+
+    // ========= Batch =========
+    async function generateBatch(){
+      const n=+document.getElementById('batchSize').value; const prompt=document.getElementById('prompt').value.trim();
+      if(!prompt||prompt.length<3){ showStatus('❌ Inserisci un prompt più dettagliato',true); return; }
+      batchInProgress=true; comparisonImages=[];
+      for(let i=0;i<n;i++){ showStatus(`🔄 Generando ${i+1}/${n}...`); await generate(); if(lastImageUrl) comparisonImages.push(lastImageUrl); if(i<n-1) await new Promise(r=>setTimeout(r,800)); }
+      batchInProgress=false; if(comparisonImages.length>1){ document.getElementById('compareBtn').disabled=false; showStatus(`✅ Batch completato: ${comparisonImages.length} immagini`); }
+    }
+
+    // ========= Generazione / Edit =========
+    async function generate(){
+      const pEl=document.getElementById('prompt'); const prompt=pEl.value.trim();
+      if(!prompt||prompt.length<3){ showStatus('❌ Inserisci un prompt più dettagliato',true); return; }
+
+      const btn=document.getElementById('generateBtn'), spinner=document.getElementById('spinner'),
+            ph=document.getElementById('placeholder'), img=document.getElementById('resultImg'),
+            bar=document.getElementById('progress');
+
+      btn.disabled=true; hideStatus(); ph.style.display='flex'; spinner.style.display='block'; img.style.display='none'; bar.style.width='0%';
+      const prog=setInterval(()=>{ const cur=parseInt(bar.style.width)||0; bar.style.width=Math.min(95,cur+Math.random()*10)+'%'; },220);
+
+      try{
+        const creativity=+document.getElementById('creativity').value;
+        const quality=+document.getElementById('quality').value;
+        const variants=+document.getElementById('variants').value;
+
+        let res;
+        if(lastFile){
+          // Pre-conversione a PNG RGBA
+          const safeFile = await ensurePNG_RGBA(lastFile);
+          const fd=new FormData();
+          fd.append('image', safeFile);
+          fd.append('prompt', prompt);
+          fd.append('creativity', creativity);
+          fd.append('quality', quality);
+          res = await fetch(EDIT_URL, { method:'POST', body: fd });
+        } else {
+          res = await fetch(GEN_URL, {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({ prompt, creativity, quality, variants })
+          });
+        }
+
+        clearInterval(prog); bar.style.width='100%';
+        const text=await res.text(); let data; try{ data=JSON.parse(text); }catch{ data={ error:'Risposta server non valida', raw:text }; }
+        if(!res.ok){
+          // messaggi specifici
+          if(res.status===400 && /Invalid input image/i.test(data.error||text)){
+            throw new Error('Formato immagine non accettato dal server. Ho provato a convertirla in PNG con canale alpha. Riprova oppure usa un PNG/JPG standard.');
+          }
+          throw new Error(data.error || `Errore ${res.status}`);
+        }
+
+        const url=data.image_url; if(!url) throw new Error('Nessun URL immagine ricevuto');
+        spinner.style.display='none'; ph.style.display='none';
+        img.src=url; img.style.display='block'; img.classList.add('show');
+        lastImageUrl=url;
+        document.getElementById('downloadBtn').disabled=false;
+        document.getElementById('exportBtn').disabled=false;
+        document.getElementById('ratingSystem').style.display='flex';
+        document.getElementById('saveToCollectionBtn').disabled=false;
+
+        history.unshift({ src:url, caption:prompt, date:new Date(), rating:0 });
+        if(history.length>12) history.pop();
+        renderHistory();
+
+        if(!batchInProgress) showStatus('✅ Immagine generata con successo!');
+      }catch(err){
+        clearInterval(prog); spinner.style.display='none'; ph.style.display='flex';
+        showStatus('❌ ' + err.message, true);
+      }finally{
+        btn.disabled=false; setTimeout(()=>bar.style.width='0%',900);
+      }
+    }
+
+    // ========= Rating =========
+    function rateImage(r){ currentRating=r; document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('active',i<r)); if(history.length>0) history[0].rating=r; showStatus(`⭐ Valutazione salvata: ${r}/5`); setTimeout(hideStatus,1500); }
+
+    // ========= Confronto =========
+    function toggleComparison(){ const box=document.getElementById('comparisonMode'); const vis=box.style.display!=='none';
+      if(vis){ box.style.display='none'; document.getElementById('compareBtn').textContent='Confronta'; }
+      else if(comparisonImages.length>=2){ document.getElementById('compareImg1').src=comparisonImages.at(-2); document.getElementById('compareImg2').src=comparisonImages.at(-1); box.style.display='block'; document.getElementById('compareBtn').textContent='Chiudi Confronto'; }
+      else showStatus('❌ Serve almeno 2 immagini per confrontare',true);
+    }
+    function selectWinner(w){ const url=w===1?comparisonImages.at(-2):comparisonImages.at(-1); showStatus(`🏆 Scelta l’immagine ${w===1?'A':'B'}`); document.getElementById('resultImg').src=url; lastImageUrl=url; setTimeout(()=>toggleComparison(),1200); }
+
+    // ========= Download / Export =========
+    function exportMultiple(){ if(!lastImageUrl) return; ['png','jpg','webp'].forEach(f=>downloadAsFormat(lastImageUrl,f)); showStatus('📤 Export multiplo avviato'); }
+    function download(){ if(lastImageUrl) downloadFromSrc(lastImageUrl); }
+    function downloadFromSrc(src){ try{ const a=document.createElement('a'); a.href=src; a.download='artemisia-ai.png'; a.click(); showStatus('📥 Download avviato'); }catch{ window.open(src,'_blank'); showStatus('🔗 Aperto in nuova scheda'); } }
+    function downloadAsFormat(url,format){ const c=document.createElement('canvas'),ctx=c.getContext('2d'),img=new Image(); img.crossOrigin='anonymous'; img.onload=()=>{ c.width=img.width; c.height=img.height; ctx.drawImage(img,0,0); const a=document.createElement('a'); a.download=`artemisia-ai.${format}`; a.href=c.toDataURL(`image/${format}`); a.click(); }; img.src=url; }
+
+    // ========= Cronologia =========
+    function renderHistory(){ const grid=document.getElementById('historyGrid'); if(history.length===0){ grid.innerHTML='<div class="small" style="grid-column:1/-1;text-align:center;padding:20px">Nessuna generazione ancora</div>'; return;}
+      grid.innerHTML=history.map((h,i)=>`
+        <div class="card-thumb" onclick="setMain('${h.src.replace(/'/g,"\\'")}')">
+          <img src="${h.src}" alt="Generazione ${i+1}">
+          <div class="thumb-actions">
+            <button class="icon-btn" onclick="event.stopPropagation(); downloadFromSrc('${h.src.replace(/'/g,"\\'")}')" title="Scarica">⬇️</button>
+            <button class="icon-btn" onclick="event.stopPropagation(); reusePrompt(${i})" title="Riusa">♻️</button>
+            ${h.rating ? `<span title="Rating: ${h.rating}/5" style="color:var(--accent)"> ${'⭐'.repeat(h.rating)} </span>` : ''}
+          </div>
+        </div>`).join('');
+    }
+    function setMain(src){ document.getElementById('resultImg').src=src; lastImageUrl=src; document.getElementById('saveToCollectionBtn').disabled=false; }
+    function reusePrompt(i){ if(!history[i]) return; document.getElementById('prompt').value=history[i].caption; updateCounter(); document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active')); showStatus('📝 Prompt riutilizzato'); }
+
+    // ========= Collezioni (localStorage) =========
+    const LS_KEY='artemisia-collections';
+    function getCollections(){ try{ return JSON.parse(localStorage.getItem(LS_KEY))||{}; }catch{ return {}; } }
+    function setCollections(obj){ localStorage.setItem(LS_KEY, JSON.stringify(obj)); renderCollectionsChips(); }
+    function renderCollectionsChips(){
+      const wrap=document.getElementById('collectionsList'); const colls=getCollections(); const names=Object.keys(colls);
+      if(!names.length){ wrap.innerHTML='<span class="small">Crea una collezione per salvare i risultati</span>'; return; }
+      wrap.innerHTML=names.map(n=>`<button class="collection-chip" onclick="saveCurrentTo('${n}')">${n} (${colls[n].length})</button>`).join('');
+    }
+    function openCollectionsModal(){
+      const dlg=document.getElementById('collectionsModal'); const box=document.getElementById('collectionsModalList'); const colls=getCollections();
+      box.innerHTML = Object.entries(colls).map(([name,arr])=>`
+        <div class="card" style="padding:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <strong>${name}</strong>
+            <div style="display:flex;gap:6px">
+              <button class="icon-btn" onclick="renameCollection('${name}')">✎</button>
+              <button class="icon-btn" onclick="deleteCollection('${name}')">🗑️</button>
+              <button class="icon-btn" onclick="saveCurrentTo('${name}')">➕ Aggiungi immagine corrente</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px">
+            ${arr.slice(-8).map(u=>`<img src="${u}" style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">`).join('')}
+          </div>
+        </div>`).join('') || '<div class="small">Nessuna collezione. Creane una qui sopra.</div>';
+      dlg.showModal();
+    }
+    function closeCollectionsModal(){ document.getElementById('collectionsModal').close(); }
+    function createCollection(){
+      const name=(document.getElementById('newCollectionName').value||'').trim(); if(!name){ showStatus('❌ Inserisci un nome per la collezione',true); return; }
+      const c=getCollections(); if(c[name]){ showStatus('❌ Esiste già una collezione con questo nome',true); return; }
+      c[name]=[]; setCollections(c); document.getElementById('newCollectionName').value=''; openCollectionsModal(); showStatus('📁 Collezione creata');
+    }
+    function renameCollection(oldName){
+      const nn=prompt('Nuovo nome per la collezione', oldName); if(!nn) return;
+      const c=getCollections(); if(c[nn]){ showStatus('❌ Esiste già una collezione con questo nome',true); return; }
+      c[nn]=c[oldName]||[]; delete c[oldName]; setCollections(c); openCollectionsModal(); showStatus('✎ Collezione rinominata');
+    }
+    function deleteCollection(name){
+      if(!confirm(`Eliminare la collezione “${name}”?`)) return;
+      const c=getCollections(); delete c[name]; setCollections(c); openCollectionsModal(); showStatus('🗑️ Collezione eliminata');
+    }
+    function saveCurrentTo(name){
+      if(!lastImageUrl){ showStatus('❌ Nessuna immagine da salvare',true); return; }
+      const c=getCollections(); c[name]=c[name]||[]; if(!c[name].includes(lastImageUrl)) c[name].push(lastImageUrl); setCollections(c); showStatus(`✅ Salvata in “${name}”`);
+    }
+
+    // ========= Scorciatoia =========
+    document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){ e.preventDefault(); generate(); } });
+
+    // ========= Init =========
+    (function init(){
+      // tema già gestito
+      // nascondi chip file
+      document.getElementById('fileChip').style.display='none';
+      updateCounter(); renderCollectionsChips();
+    })();
   </script>
 </body>
 </html>
