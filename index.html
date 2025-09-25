@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Artemisia Story · Generatore & Trasformatore di immagini AI</title>
-  <link rel="icon" href="logo-artemisia.png" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -24,116 +24,171 @@
       background:
         radial-gradient(1000px 600px at -10% -10%, #0ea5e980, transparent 60%),
         radial-gradient(800px 500px at 110% 10%, #a78bfa66, transparent 60%),
-        linear-gradient(135deg,var(--bg-start),var(--bg-end));
+        linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      overflow-x:hidden;
     }
     .container{max-width:1200px;margin:0 auto;padding:24px}
-    .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden;background:var(--surface);display:grid;place-items:center;box-shadow:var(--shadow)}
-    .logo img{width:100%;height:100%;object-fit:contain}
-    .title{font-size:24px;font-weight:800}
-    .subtitle{font-size:13px;color:var(--muted)}
-    .icon-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer}
-    .card{background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:18px}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;box-shadow:var(--shadow);background:var(--surface);font-size:24px}
+    .title{font-size:28px;font-weight:800;letter-spacing:.2px}
+    .subtitle{font-size:14px;color:var(--muted)}
+    .actions{display:flex;align-items:center;gap:8px}
+    .icon-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer;transition:all .2s ease}
+    .icon-btn:hover{transform:translateY(-1px);border-color:var(--accent)}
+
     .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}
-    @media(max-width:1024px){.grid{grid-template-columns:1fr}}
-    .section-title{display:flex;align-items:center;gap:8px;font-weight:800;margin-bottom:10px}
-    .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
-    .chip{padding:8px 12px;border:1px solid var(--border);background:var(--chip);border-radius:999px;font-size:12px;cursor:pointer}
-    .chip.active{outline:2px solid var(--ring);background:rgba(99,102,241,.18)}
-    .tooltip{position:fixed;z-index:50;display:none;pointer-events:none;border:1px solid var(--border);background:var(--card);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
-    .tooltip img{display:block;width:180px;height:120px;object-fit:cover}
-    .tooltip .hint{padding:8px 10px;font-size:12px;color:var(--muted);max-width:220px}
-    .controls{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0;color:var(--muted)}
+    @media (max-width:1024px){.grid{grid-template-columns:1fr}}
+
+    .card{background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
+    .section-title{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:10px}
+    .section-title .emoji{font-size:20px}
+
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+    .chip{position:relative;padding:8px 12px;border:1px solid var(--border);background:var(--chip);border-radius:999px;font-size:12px;cursor:pointer;user-select:none;transition:all .2s ease}
+    .chip.active{outline:2px solid var(--ring);border-color:transparent;background:rgba(99,102,241,.20)}
+    .chip:hover{background:rgba(99,102,241,.12);border-color:var(--brand)}
+    .chip.business{border-color:rgba(34,197,94,.28);background:rgba(34,197,94,.10)}
+    .chip.business.active{background:rgba(34,197,94,.18);outline-color:rgba(34,197,94,.45)}
+    .chip.creative{border-color:rgba(245,158,11,.28);background:rgba(245,158,11,.10)}
+    .chip.creative.active{background:rgba(245,158,11,.18);outline-color:rgba(245,158,11,.45)}
+    .chip.photo{border-color:rgba(59,130,246,.28);background:rgba(59,130,246,.10)}
+    .chip.photo.active{background:rgba(59,130,246,.18);outline-color:rgba(59,130,246,.45)}
+
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
     .select,.slider{display:flex;align-items:center;gap:8px;border:1px solid var(--border);background:var(--surface);padding:10px 12px;border-radius:12px}
+    .select select, .select input{background:transparent;border:none;color:var(--text);font-size:14px}
+    .select select:focus, .select input:focus{outline:none}
     .slider input{accent-color:var(--brand)}
+    .slider span{font-size:12px;color:var(--muted);min-width:50px}
+
     .textarea{position:relative}
-    textarea{width:100%;min-height:140px;resize:vertical;border:2px solid transparent;border-radius:14px;padding:14px 16px;background:var(--surface);color:var(--text);line-height:1.6}
-    textarea:focus{outline:none;box-shadow:0 0 0 4px var(--ring)}
-    textarea::placeholder{color:var(--muted)}
+    textarea{width:100%;min-height:120px;resize:vertical;border:2px solid transparent;border-radius:16px;padding:16px 18px;background:var(--surface);color:var(--text);line-height:1.55;font-size:15px}
+    textarea:focus{outline:none;box-shadow:0 0 0 4px var(--ring);border-color:transparent}
+    textarea::placeholder{color:var(--muted);opacity:.85}
     .counter{position:absolute;right:12px;bottom:8px;font-size:12px;color:var(--muted)}
-    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;border:1px solid var(--border);cursor:pointer;background:var(--surface);color:var(--text);font-weight:700}
-    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));border:none;color:#fff}
-    .status{margin-top:12px;padding:12px 16px;border-radius:12px;font-weight:600;display:none}
-    .status.ok{background:rgba(52,211,153,.1);color:var(--ok);border:1px solid rgba(52,211,153,.3)}
-    .status.err{background:rgba(248,113,113,.1);color:var(--err);border:1px solid rgba(248,113,113,.3)}
-    .frame{position:relative;background:linear-gradient(135deg,#0b1020,#1f2937);border:2px solid var(--border);border-radius:16px;display:grid;place-items:center;overflow:hidden}
+
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:14px;border:1px solid var(--border);cursor:pointer;transition:transform .12s ease, box-shadow .2s ease;background:var(--surface);color:var(--text);text-decoration:none;font-weight:700;font-size:14px}
+    .btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
+    .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));border-color:transparent;color:#fff;box-shadow:0 10px 24px rgba(99,102,241,.45)}
+    .btn.primary:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(99,102,241,.55)}
+    .btn.outline:not(:disabled):hover{border-color:var(--accent);background:rgba(248,192,69,.10)}
+
+    .status{margin-top:12px;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:600;display:none;align-items:center;gap:10px}
+    .status.ok{background:rgba(52,211,153,.10);color:var(--ok);border:1px solid rgba(52,211,153,.30)}
+    .status.err{background:rgba(248,113,113,.10);color:var(--err);border:1px solid rgba(248,113,113,.30)}
+
+    .frame{position:relative;background:linear-gradient(135deg,#0b1020,#1f2937);border:2px dashed var(--border);border-radius:18px;display:grid;place-items:center;overflow:hidden;transition:border-color .2s ease, box-shadow .2s ease}
     .frame.ratio-1-1{aspect-ratio:1/1}
     .frame.ratio-3-4{aspect-ratio:3/4}
     .frame.ratio-4-3{aspect-ratio:4/3}
     .frame.ratio-16-9{aspect-ratio:16/9}
     .frame.ratio-9-16{aspect-ratio:9/16}
-    .frame.drag{box-shadow:0 0 0 4px var(--ring)}
+    .frame.drag{border-color:var(--accent);box-shadow:0 0 0 4px var(--ring)}
     .frame img{max-width:100%;max-height:100%;display:none;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
-    .placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#cbd5e1}
-    .spinner{width:52px;height:52px;border-radius:50%;border:4px solid #ffffff25;border-top-color:var(--brand);animation:spin 1s linear infinite}
+    .frame img.show{display:block;animation:fadeIn .35s ease-out}
+    @keyframes fadeIn{from{opacity:0;transform:scale(.98)} to{opacity:1;transform:scale(1)}}
+    .placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#cbd5e1;opacity:.9;text-align:center;padding:28px}
+    .spinner{width:54px;height:54px;border-radius:50%;border:4px solid #ffffff20;border-top-color:var(--brand);animation:spin 1s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-    .progress{position:absolute;left:0;bottom:0;height:4px;width:0;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .3s ease}
+    .progress{position:absolute;left:0;bottom:0;height:4px;width:0;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .3s ease;border-radius:0 0 16px 16px}
+
     .history{margin-top:18px}
     .history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
-    .card-thumb{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-    .card-thumb img{display:block;width:100%;height:140px;object-fit:cover}
-    .thumb-actions{display:flex;gap:6px;position:absolute;right:8px;bottom:8px}
-    .rating-system{display:flex;align-items:center;gap:6px;margin:8px 0;font-size:12px}
-    .star{cursor:pointer;font-size:18px}
-    .star.active{color:var(--accent)}
-    .comparison-mode{display:none;margin:18px 0}
+    .card-thumb{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .15s ease, border-color .2s ease;cursor:pointer}
+    .card-thumb:hover{transform:translateY(-2px);border-color:var(--accent)}
+    .card-thumb img{display:block;width:100%;height:140px;object-fit:cover;transition:transform .3s ease}
+    .card-thumb:hover img{transform:scale(1.05)}
+    .thumb-actions{display:flex;gap:6px;position:absolute;right:8px;bottom:8px;opacity:0;transition:opacity .2s ease}
+    .card-thumb:hover .thumb-actions{opacity:1}
+    .thumb-btn{padding:4px 6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:6px;font-size:10px;cursor:pointer}
+    .small{font-size:12px;color:var(--muted)}
+
+    .comparison-mode{display:none;margin:20px 0}
     .comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .compare-item{text-align:center}
     .compare-item img{width:100%;border-radius:12px;border:2px solid var(--border)}
-    .collections{margin-top:18px}
-    .collection-list{display:flex;gap:8px;flex-wrap:wrap}
-    .collection-chip{padding:6px 10px;border:1px solid var(--border);background:var(--surface);border-radius:999px;font-size:12px;cursor:pointer}
+    .compare-controls{margin-top:8px}
+
+    .rating-system{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:12px}
+    .stars{display:flex;gap:4px}
+    .star{cursor:pointer;transition:transform .15s ease;font-size:16px}
+    .star:hover{transform:scale(1.2)}
+    .star.active{color:var(--accent)}
+
+    .help-modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;z-index:100;padding:20px;overflow-y:auto}
+    .help-content{background:var(--card);border-radius:20px;max-width:600px;margin:auto;padding:30px;border:1px solid var(--border)}
+    .help-close{float:right;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
   </style>
 </head>
 <body>
   <div class="container">
     <header class="header">
       <div class="brand">
-        <div class="logo"><img src="logo-artemisia.png" alt="Artemisia AI" /></div>
+        <div class="logo">🎨</div>
         <div>
           <div class="title">Artemisia Story</div>
-          <div class="subtitle">Generatore & Trasformatore AI</div>
+          <div class="subtitle">Generatore & Trasformatore di immagini AI</div>
         </div>
       </div>
-      <div>
+      <div class="actions">
         <button class="icon-btn" id="themeBtn" title="Tema">🌗</button>
+        <button class="icon-btn" onclick="showHelp()" title="Guida">❔</button>
       </div>
     </header>
 
     <main class="grid">
       <!-- Colonna sinistra -->
       <section class="card">
-        <div class="section-title">✨ Prompt</div>
+        <div class="section-title"><span class="emoji">✨</span><span>Scrivi il tuo prompt</span></div>
 
-        <!-- Chip stile con negative -->
+        <!-- Preset con stile/negative -->
         <div class="chips" id="styleChips">
-          <span class="chip" data-style="modern 2D cartoon, clean cel shading, bold outlines, flat colors"
-                data-negative="realistic details, photo, 3D render, stadium, crowd, sports"
-                data-preview="/samples/preset-cartoon.jpg">Cartoon</span>
-          <span class="chip" data-style="whimsical anime film look, Studio Ghibli style, hand-painted backgrounds, soft pastel palette, gentle lighting"
-                data-negative="photo, hyperrealism, 3D render, harsh contrast, sci-fi tech, stadium"
-                data-preview="/samples/preset-ghibli.jpg">Ghibli</span>
-          <span class="chip" data-style="sacred renaissance painting, dramatic chiaroscuro, warm golden light, oil on canvas texture, classical composition"
-                data-negative="sports, stadium, crowd, modern clothes, signage"
-                data-preview="/samples/preset-biblico.jpg">Biblico</span>
-          <span class="chip" data-style="photorealistic, cinematic lighting"
-                data-negative="low-res, noisy, watercolor"
-                data-preview="/samples/preset-photo.jpg">Fotorealistico</span>
-          <span class="chip" data-style="soft watercolor wash, paper texture"
-                data-negative="harsh contrast, photo realism"
-                data-preview="/samples/preset-acq.jpg">Acquerello</span>
-          <span class="chip" data-style="90s retro aesthetic, light film grain"
-                data-negative="ultra modern neon"
-                data-preview="/samples/preset-90s.jpg">Vintage '90</span>
+          <span class="chip" data-key="cartoon"
+                data-style="modern 2D cartoon, clean cel shading, bold outlines, flat colors, playful composition"
+                data-negative="realistic photo, 3D render, stadium, crowd, sports">Cartoon</span>
+
+          <span class="chip" data-key="ghibli"
+                data-style="whimsical anime film look, Studio Ghibli style, hand-painted backgrounds, soft pastel palette, gentle lighting"
+                data-negative="photo, hyperrealism, 3D render, harsh contrast, sci-fi tech, stadium">Ghibli</span>
+
+          <span class="chip" data-key="biblico"
+                data-style="sacred renaissance painting, dramatic chiaroscuro, warm golden light, oil on canvas texture, classical composition"
+                data-negative="sports, stadium, crowd cheering, football, signage, modern clothes">Biblico</span>
         </div>
 
-        <div class="textarea">
-          <textarea id="prompt" placeholder="Es.: un angelo al tramonto su una collina, atmosfera serena…"></textarea>
-          <div class="counter" id="counter">0/500</div>
+        <!-- Business / Arte / Fotografia -->
+        <div class="section-title" style="margin-top:10px"><span class="emoji">🎯</span><span>Business & Marketing</span></div>
+        <div class="chips">
+          <span class="chip business" data-style="minimal corporate branding, clean layout, strong typographic hierarchy"
+                data-negative="busy background, clutter, gradients">Logo Business</span>
+          <span class="chip business" data-style="product hero shot, studio softbox lighting, seamless background"
+                data-negative="busy background, reflections, watermark">Prodotto</span>
+          <span class="chip business" data-style="social media graphic, vibrant colors, bold composition, high contrast"
+                data-negative="photo watermark, logo noise">Social Post</span>
+        </div>
+
+        <div class="section-title" style="margin-top:10px"><span class="emoji">🎨</span><span>Arte & Creatività</span></div>
+        <div class="chips">
+          <span class="chip creative" data-style="epic fantasy concept art, cinematic lighting, volumetric fog"
+                data-negative="sci-fi tech, modern signage">Fantasy Art</span>
+          <span class="chip creative" data-style="children book illustration, soft rounded shapes, pastel colors"
+                data-negative="harsh contrast, photo realism">Per Bambini</span>
+          <span class="chip creative" data-style="modern abstract art, geometric shapes, gradient fields, dynamic composition"
+                data-negative="figurative realism, text">Arte Astratta</span>
+        </div>
+
+        <div class="section-title" style="margin-top:10px"><span class="emoji">📸</span><span>Fotografia</span></div>
+        <div class="chips">
+          <span class="chip photo" data-style="portrait 85mm, soft cinematic lighting, natural bokeh, high resolution"
+                data-negative="overexposed, harsh shadows, watermark">Ritratto Pro</span>
+          <span class="chip photo" data-style="landscape golden hour, saturated colors, panoramic composition"
+                data-negative="haze, washed out, watermark">Paesaggio</span>
         </div>
 
         <!-- Parametri -->
+        <div class="section-title" style="margin-top:14px"><span class="emoji">⚙️</span><span>Parametri</span></div>
         <div class="controls">
           <div class="slider">
             <label>Creatività:</label>
@@ -154,44 +209,64 @@
           </div>
           <div class="select">
             <select id="ratio" onchange="updateRatio()">
-              <option value="1-1">1:1</option>
-              <option value="3-4">3:4</option>
-              <option value="9-16">9:16</option>
-              <option value="4-3">4:3</option>
-              <option value="16-9">16:9</option>
+              <option value="1-1">1:1 (Quadrato)</option>
+              <option value="3-4">3:4 (Ritratto)</option>
+              <option value="9-16">9:16 (Verticale)</option>
+              <option value="4-3">4:3 (Orizzontale)</option>
+              <option value="16-9">16:9 (Wide)</option>
             </select>
           </div>
         </div>
 
-        <!-- Seed -->
+        <!-- Prompt -->
+        <div class="textarea">
+          <textarea id="prompt" placeholder="Es.: Un angelo al tramonto su una collina, atmosfera serena, composizione armoniosa." oninput="updateCounter()"></textarea>
+          <div class="counter" id="counter">0/500</div>
+        </div>
+
+        <!-- Seed & azioni -->
         <div class="controls">
-          <div class="select">
-            <label>Seed</label>
-            <input type="number" id="seed" placeholder="casuale" style="width:120px">
-            <button class="btn" onclick="lockSeed()">🔒 Blocca</button>
-            <button class="btn" onclick="regenSimilar()">♻️ Simile</button>
+          <div class="select" style="gap:6px">
+            <label>Seed:</label>
+            <input type="number" id="seed" value="" placeholder="casuale" style="width:110px">
+            <button class="btn outline" onclick="lockSeed()">🔒 Blocca</button>
+            <button class="btn outline" onclick="regenSimilar()">♻️ Rigenera simile</button>
           </div>
         </div>
 
-        <!-- Batch + azioni -->
+        <!-- Batch & confronto -->
         <div class="controls">
           <div class="select">
-            <label>Batch</label>
             <select id="batchSize">
               <option value="1">Genera 1</option>
               <option value="2">Genera 2</option>
               <option value="4">Genera 4</option>
             </select>
           </div>
-          <button class="btn" onclick="generateBatch()">Batch Generate</button>
-          <button class="btn" onclick="toggleComparison()" id="compareBtn" disabled>Confronta</button>
+          <button class="btn outline" onclick="generateBatch()">Batch Generate</button>
+          <button class="btn outline" onclick="toggleComparison()" id="compareBtn" disabled>Confronta A/B</button>
         </div>
 
+        <!-- Pulsanti principali -->
         <div class="btns">
           <button class="btn primary" onclick="generate()" id="generateBtn">🎨 Genera</button>
-          <button class="btn" onclick="upscale()">🔍 Upscale 2×</button>
-          <button class="btn" onclick="exportMultiple()">📤 Export</button>
-          <button class="btn" onclick="openCollectionsModal()" id="saveToCollectionBtn" disabled>📁 Salva in Collezione</button>
+          <button class="btn outline" onclick="surprise()">🎲 Ispirami</button>
+          <button class="btn outline" onclick="downloadImage()" id="downloadBtn" disabled>📥 Scarica PNG</button>
+          <button class="btn outline" onclick="exportMultiple()" id="exportBtn" disabled>📤 Export Multi</button>
+          <button class="btn outline" onclick="upscale2x()" id="up2xBtn" disabled>🔍 Upscale 2×</button>
+          <button class="btn outline" onclick="upscale4x()" id="up4xBtn" disabled>🔎 Upscale 4×</button>
+        </div>
+
+        <!-- Rating -->
+        <div class="rating-system" id="ratingSystem" style="display:none;">
+          <span>Valuta risultato:</span>
+          <div class="stars" id="starRating">
+            <span class="star" onclick="rateImage(1)">⭐</span>
+            <span class="star" onclick="rateImage(2)">⭐</span>
+            <span class="star" onclick="rateImage(3)">⭐</span>
+            <span class="star" onclick="rateImage(4)">⭐</span>
+            <span class="star" onclick="rateImage(5)">⭐</span>
+          </div>
         </div>
 
         <div id="status" class="status"></div>
@@ -199,325 +274,707 @@
 
       <!-- Colonna destra -->
       <section class="card">
-        <div class="section-title">🖼️ Anteprima</div>
-        <div class="frame ratio-1-1" id="frame" title="Clicca o trascina qui una immagine">
+        <div class="section-title"><span class="emoji">🖼️</span><span>Anteprima</span></div>
+        <div class="frame ratio-1-1" id="frame" title="Trascina qui un'immagine (opzionale)" onclick="document.getElementById('fileInput').click()">
           <img id="resultImg" alt="Risultato" />
           <div class="placeholder" id="placeholder">
-            <div class="spinner" id="spinner" style="display:none;margin-bottom:10px"></div>
-            <div>Nessuna immagine</div>
+            <div class="spinner" id="spinner" style="display:none"></div>
+            <div class="ph-content" id="phContent">
+              <div style="font-weight:800;opacity:.95;font-size:18px">Nessuna immagine ancora</div>
+              <div class="small">Scrivi un prompt e premi "Genera"</div>
+            </div>
           </div>
           <div class="progress" id="progress"></div>
         </div>
 
-        <!-- Confronto -->
+        <!-- Confronto A/B -->
         <div class="comparison-mode" id="comparisonMode">
-          <div class="section-title">⚖️ Confronto risultati</div>
+          <div class="section-title"><span class="emoji">⚖️</span><span>Confronto Risultati</span></div>
           <div class="comparison-grid">
             <div class="compare-item">
               <img id="compareImg1" alt="A" />
-              <div class="btns"><button class="btn" onclick="selectWinner(1)">Preferisci A</button></div>
+              <div class="compare-controls">
+                <button class="btn outline" onclick="selectWinner(1)">Preferisci A</button>
+              </div>
             </div>
             <div class="compare-item">
               <img id="compareImg2" alt="B" />
-              <div class="btns"><button class="btn" onclick="selectWinner(2)">Preferisci B</button></div>
+              <div class="compare-controls">
+                <button class="btn outline" onclick="selectWinner(2)">Preferisci B</button>
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- Rating -->
-        <div class="rating-system" id="ratingSystem" style="display:none;">
-          <span>Valuta:</span>
-          <span class="star" onclick="rateImage(1)">⭐</span>
-          <span class="star" onclick="rateImage(2)">⭐</span>
-          <span class="star" onclick="rateImage(3)">⭐</span>
-          <span class="star" onclick="rateImage(4)">⭐</span>
-          <span class="star" onclick="rateImage(5)">⭐</span>
         </div>
 
         <!-- Cronologia -->
         <div class="history">
-          <div class="section-title">🕘 Cronologia</div>
+          <div class="section-title"><span class="emoji">🕘</span><span>Cronologia</span></div>
           <div class="history-grid" id="historyGrid">
-            <div class="subtitle" style="grid-column:1/-1;text-align:center;padding:16px">Nessuna generazione ancora</div>
+            <div class="small" style="grid-column:1/-1;text-align:center;padding:20px">Nessuna generazione ancora</div>
           </div>
         </div>
 
-        <!-- Collezioni -->
-        <div class="collections">
-          <div class="section-title" style="margin-bottom:6px">📚 Collezioni</div>
-          <div id="collectionsList" class="collection-list"></div>
+        <div class="tips" style="margin-top:16px;padding:18px;border-left:3px solid var(--brand);background:linear-gradient(0deg,transparent,rgba(99,102,241,.10));border-radius:12px">
+          <strong>💡 Suggerimenti rapidi</strong>
+          <ul style="margin:.5rem 0 0 1.2rem; line-height:1.7; font-size:14px">
+            <li>Usa i preset con **style/negative** per risultati coerenti</li>
+            <li>Blocca un **seed** per esplorazioni consistenti</li>
+            <li>Batch + Confronto A/B per scegliere il migliore</li>
+            <li>Export in **PNG/JPG/WebP** in un click</li>
+          </ul>
         </div>
       </section>
     </main>
+  </div>
 
-    <!-- hidden file input -->
-    <input id="fileInput" type="file" accept="image/*" onchange="handleFile(this)" style="display:none" />
-    <!-- tooltip -->
-    <div id="tooltip" class="tooltip"><img alt="preview"><div class="hint"></div></div>
-    <!-- Modal Collezioni -->
-    <dialog id="collectionsModal" style="border:none;border-radius:16px;padding:0;max-width:560px;width:92%">
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;color:var(--text)">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <div class="section-title" style="margin:0">📁 Gestisci Collezioni</div>
-          <button class="icon-btn" onclick="closeCollectionsModal()">✕</button>
-        </div>
-        <div style="display:flex;gap:8px;margin:8px 0 12px">
-          <input id="newCollectionName" placeholder="Nuova collezione..." style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text)"/>
-          <button class="btn" onclick="createCollection()">Crea</button>
-        </div>
-        <div id="collectionsModalList" style="max-height:50vh;overflow:auto;display:grid;gap:10px"></div>
-        <div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="btn primary" onclick="closeCollectionsModal()">Fatto</button></div>
-      </div>
-    </dialog>
+  <!-- File input nascosto -->
+  <input id="fileInput" type="file" accept="image/*" onchange="handleFile(this)" style="display:none" />
+
+  <!-- Modal guida -->
+  <div id="helpModal" class="help-modal">
+    <div class="help-content">
+      <button class="help-close" onclick="hideHelp()">&times;</button>
+      <h2>🎨 Guida Artemisia Story</h2>
+      <h3>Come usare:</h3>
+      <ol>
+        <li><strong>Seleziona preset:</strong> Clicca sui chip per attivare stili predefiniti</li>
+        <li><strong>Scrivi prompt:</strong> Descrivi l'immagine che vuoi generare</li>
+        <li><strong>Imposta parametri:</strong> Creatività, qualità, formato</li>
+        <li><strong>Genera:</strong> Clicca "Genera" e attendi il risultato</li>
+      </ol>
+      <h3>Funzioni avanzate:</h3>
+      <ul>
+        <li><strong>Seed:</strong> Blocca per risultati coerenti</li>
+        <li><strong>Batch:</strong> Genera più varianti insieme</li>
+        <li><strong>A/B Test:</strong> Confronta due risultati</li>
+        <li><strong>Upscale:</strong> Migliora la risoluzione</li>
+      </ul>
+    </div>
   </div>
 
   <script>
-    // ======= Stato & endpoint =======
-    let lastFile=null,lastImageUrl=null,comparisonImages=[];
-    let currentRating=0,batchInProgress=false;
-    const history=[];
-    const BASE="";
-    const GEN_URL=`${BASE}/api/generate`;
-    const EDIT_URL=`${BASE}/api/edit`;
-    const UPSCALE_URL=`${BASE}/api/upscale`;
+    // ===== Config =====
+    const USE_MOCK = true;
+    const BASE = '';
+    const GEN_URL = `${BASE}/api/generate`;
+    const EDIT_URL = `${BASE}/api/edit`;
+    const UPSCALE_URL = `${BASE}/api/upscale`;
 
-    // ======= Tema persistente =======
-    const root=document.documentElement;
-    document.getElementById('themeBtn').onclick=()=>{
-      const t=root.getAttribute('data-theme')==='light'?'dark':'light';
-      root.setAttribute('data-theme',t);
-      localStorage.setItem('artemisia-theme',t);
+    // ===== Stato =====
+    let lastImageUrl = null;
+    let lastFile = null;
+    let lockedSeed = null;
+    let batchInProgress = false;
+    let comparisonImages = [];
+    let currentRating = 0;
+    const history = JSON.parse(localStorage.getItem('artemisia-history') || '[]');
+
+    // ===== Tema =====
+    const root = document.documentElement;
+    const savedTheme = localStorage.getItem('artemisia-theme');
+    if (savedTheme) root.setAttribute('data-theme', savedTheme);
+    
+    document.getElementById('themeBtn').onclick = () => {
+      const theme = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      root.setAttribute('data-theme', theme);
+      localStorage.setItem('artemisia-theme', theme);
     };
-    const savedTheme=localStorage.getItem('artemisia-theme'); if(savedTheme) root.setAttribute('data-theme',savedTheme);
 
-    // ======= Tooltip preview (statiche o CDN) =======
-    const tooltip=document.getElementById('tooltip');
-    document.querySelectorAll('.chip').forEach(chip=>{
-      chip.addEventListener('mouseenter',(e)=>{
-        const src=chip.dataset.preview; if(!src) return;
-        tooltip.querySelector('img').src=src;
-        tooltip.querySelector('.hint').textContent=chip.textContent;
-        tooltip.style.display='block'; positionTooltip(e);
+    // ===== Chip Management =====
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.classList.toggle('active');
       });
-      chip.addEventListener('mousemove',positionTooltip);
-      chip.addEventListener('mouseleave',()=>tooltip.style.display='none');
-      chip.addEventListener('click',()=>chip.classList.toggle('active'));
     });
-    function positionTooltip(e){ tooltip.style.left=(e.clientX+14)+'px'; tooltip.style.top=(e.clientY+14)+'px'; }
 
-    // ======= UI helpers =======
-    function showStatus(msg,err=false){const s=document.getElementById('status');s.style.display='block';s.textContent=msg;s.className=`status ${err?'err':'ok'}`;}
-    function hideStatus(){document.getElementById('status').style.display='none';}
-    const promptEl=document.getElementById('prompt');
-    promptEl.addEventListener('input',()=>{document.getElementById('counter').textContent=`${promptEl.value.length}/500`;});
-    function updateCreativity(){document.getElementById('creativityValue').textContent=document.getElementById('creativity').value;}
-    function updateQuality(){const v=+document.getElementById('quality').value;document.getElementById('qualityValue').textContent=['Bassa','Standard','Alta','Ultra'][v-1];}
-    function updateRatio(){const r=document.getElementById('ratio').value;document.getElementById('frame').className=`frame ratio-${r}`;}
-
-    // ======= Prompt builder =======
-    function buildPrompt(){
-      const base=promptEl.value.trim();
-      const chips=[...document.querySelectorAll('.chip.active')];
-      const styles=chips.map(c=>c.dataset.style).filter(Boolean).join('; ');
-      return styles?`${base}. Style: ${styles}`:base;
-    }
-    function buildNegative(){
-      const NEG_BASE="text watermark, logo, signature, blurry, low-res, jpeg artifacts, extra fingers, mutated hands";
-      const chips=[...document.querySelectorAll('.chip.active')];
-      const neg=chips.map(c=>c.dataset.negative).filter(Boolean).join(', ');
-      return neg?`${NEG_BASE}, ${neg}`:NEG_BASE;
+    // ===== Helper Functions =====
+    function showStatus(msg, isError = false) {
+      const status = document.getElementById('status');
+      status.style.display = 'flex';
+      status.className = `status ${isError ? 'err' : 'ok'}`;
+      status.innerHTML = msg;
     }
 
-    // ======= Drag & Drop per edit =======
-    const frame=document.getElementById('frame');
-    frame.addEventListener('click',()=>document.getElementById('fileInput').click());
-    ['dragenter','dragover'].forEach(ev=>frame.addEventListener(ev,e=>{e.preventDefault();frame.classList.add('drag');}));
-    ['dragleave','drop'].forEach(ev=>frame.addEventListener(ev,e=>{e.preventDefault();frame.classList.remove('drag');}));
-    frame.addEventListener('drop',(e)=>{const f=e.dataTransfer.files?.[0];if(f&&f.type.startsWith('image/')){const dt=new DataTransfer();dt.items.add(f);const input=document.getElementById('fileInput');input.files=dt.files;handleFile(input);}else showStatus('❌ Trascina un file immagine valido',true);});
-
-    function handleFile(input){
-      const file=input.files[0]; if(!file) return;
-      lastFile=file; showStatus(`📎 File “${file.name}” caricato. Scrivi come trasformarlo.`);
-      document.getElementById('saveToCollectionBtn').disabled=!lastImageUrl;
+    function hideStatus() {
+      document.getElementById('status').style.display = 'none';
     }
 
-    function clearFile(){lastFile=null;document.getElementById('fileInput').value='';hideStatus();}
-
-    // Converti qualsiasi immagine in PNG (RGBA) per evitare errori backend
-    async function ensurePNG_RGBA(file){
-      return await new Promise((resolve,reject)=>{
-        const img=new Image();
-        img.onload=()=>{
-          try{
-            const canvas=document.createElement('canvas');
-            canvas.width=img.width; canvas.height=img.height;
-            const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0);
-            canvas.toBlob(b=>resolve(new File([b],'upload.png',{type:'image/png'})),'image/png',0.95);
-          }catch(err){reject(err);}
-        };
-        img.onerror=()=>reject(new Error('Caricamento immagine fallito'));
-        img.src=URL.createObjectURL(file);
-      });
+    function updateCounter() {
+      const prompt = document.getElementById('prompt');
+      const counter = document.getElementById('counter');
+      const length = prompt.value.length;
+      counter.textContent = `${length}/500`;
+      counter.style.color = length > 500 ? 'var(--err)' : 'var(--muted)';
     }
 
-    // ======= Batch =======
-    async function generateBatch(){
-      const n=+document.getElementById('batchSize').value;
-      const basePrompt=promptEl.value.trim();
-      if(!basePrompt||basePrompt.length<3){showStatus('❌ Inserisci un prompt più dettagliato',true);return;}
-      batchInProgress=true; comparisonImages=[];
-      for(let i=0;i<n;i++){showStatus(`🔄 Generando ${i+1}/${n}...`); await generate(); if(lastImageUrl) comparisonImages.push(lastImageUrl); if(i<n-1) await new Promise(r=>setTimeout(r,700));}
-      batchInProgress=false; if(comparisonImages.length>1){document.getElementById('compareBtn').disabled=false; showStatus(`✅ Batch completato: ${comparisonImages.length} immagini`);}
+    function updateCreativity() {
+      const creativity = document.getElementById('creativity');
+      const value = document.getElementById('creativityValue');
+      value.textContent = creativity.value;
     }
 
-    // ======= Seed =======
-    function lockSeed(){const val=document.getElementById('seed').value; const s=val?parseInt(val,10):Math.floor(Math.random()*1e6); document.getElementById('seed').value=s; showStatus(`🔒 Seed bloccato: ${s}`);}
-    function regenSimilar(){let s=parseInt(document.getElementById('seed').value||'0',10); if(!s){showStatus('Blocca prima un seed',true);return;} s=s+Math.floor(Math.random()*10+1); document.getElementById('seed').value=s; showStatus(`♻️ Variazione seed: ${s}`);}
+    function updateQuality() {
+      const quality = document.getElementById('quality');
+      const value = document.getElementById('qualityValue');
+      const labels = ['Basso', 'Standard', 'Alto', 'Ultra'];
+      value.textContent = labels[quality.value - 1];
+    }
 
-    // ======= Generazione =======
-    async function generate(){
-      const base=promptEl.value.trim();
-      if(!base||base.length<3){showStatus('❌ Inserisci un prompt più dettagliato',true);return;}
+    function updateRatio() {
+      const ratio = document.getElementById('ratio').value;
+      const frame = document.getElementById('frame');
+      frame.className = frame.className.replace(/ratio-\S+/, `ratio-${ratio}`);
+    }
 
-      const btn=document.getElementById('generateBtn'), spinner=document.getElementById('spinner'),
-            ph=document.getElementById('placeholder'), img=document.getElementById('resultImg'),
-            bar=document.getElementById('progress');
+    // ===== File Handling =====
+    function handleFile(input) {
+      const file = input.files[0];
+      if (!file) return;
 
-      btn.disabled=true; hideStatus(); ph.style.display='flex'; spinner.style.display='block'; img.style.display='none'; bar.style.width='0%';
-      const prog=setInterval(()=>{const cur=parseInt(bar.style.width)||0; bar.style.width=Math.min(95,cur+Math.random()*10)+'%';},220);
+      if (!file.type.startsWith('image/')) {
+        showStatus('⚠️ Seleziona solo file immagine', true);
+        return;
+      }
 
-      try{
-        const payload={
-          prompt:buildPrompt(),
-          negative_prompt:buildNegative(),
-          seed: document.getElementById('seed').value || undefined,
-          creativity:+document.getElementById('creativity').value,
-          quality:+document.getElementById('quality').value,
-          variants:+document.getElementById('variants').value,
-          ratio: document.getElementById('ratio').value
-        };
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        lastFile = e.target.result;
+        const img = document.getElementById('resultImg');
+        img.src = e.target.result;
+        img.classList.add('show');
+        document.getElementById('placeholder').style.display = 'none';
+        enableButtons();
+        showStatus('✅ Immagine caricata con successo');
+      };
+      reader.readAsDataURL(file);
+    }
 
-        let res,data;
-        if(lastFile){
-          const safeFile=await ensurePNG_RGBA(lastFile);
-          const fd=new FormData();
-          fd.append('image',safeFile);
-          Object.entries(payload).forEach(([k,v])=>{if(v!==undefined) fd.append(k,v);});
-          res=await fetch(EDIT_URL,{method:'POST',body:fd});
-          data=await res.json();
-        }else{
-          res=await fetch(GEN_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-          data=await res.json();
+    // ===== Drag & Drop =====
+    const frame = document.getElementById('frame');
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      frame.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+      frame.addEventListener(eventName, () => frame.classList.add('drag'), false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      frame.addEventListener(eventName, () => frame.classList.remove('drag'), false);
+    });
+
+    frame.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        const input = document.getElementById('fileInput');
+        input.files = files;
+        handleFile(input);
+      }
+    });
+
+    // ===== Generate Functions =====
+    async function generate() {
+      const prompt = document.getElementById('prompt').value.trim();
+      if (!prompt) {
+        showStatus('⚠️ Inserisci un prompt prima di generare', true);
+        return;
+      }
+
+      if (prompt.length > 500) {
+        showStatus('⚠️ Il prompt è troppo lungo (max 500 caratteri)', true);
+        return;
+      }
+
+      const generateBtn = document.getElementById('generateBtn');
+      const originalText = generateBtn.innerHTML;
+      
+      try {
+        generateBtn.disabled = true;
+        generateBtn.innerHTML = '⏳ Generando...';
+        
+        showLoading();
+        hideStatus();
+
+        const payload = await buildPayload(prompt);
+        
+        if (USE_MOCK) {
+          await mockGenerate(payload);
+        } else {
+          await realGenerate(payload);
         }
 
-        clearInterval(prog); bar.style.width='100%';
-        if(!res.ok) throw new Error(data.error || `Errore ${res.status}`);
-
-        const url=data.image_url; if(!url) throw new Error('Nessun URL immagine ricevuto');
-        spinner.style.display='none'; ph.style.display='none';
-        img.src=url; img.style.display='block';
-        lastImageUrl=url;
-
-        document.getElementById('ratingSystem').style.display='flex';
-        document.getElementById('saveToCollectionBtn').disabled=false;
-
-        history.unshift({src:url,caption:payload.prompt,date:new Date(),rating:0});
-        if(history.length>12) history.pop(); renderHistory();
-
-        if(!batchInProgress) showStatus('✅ Immagine generata');
-      }catch(err){
-        clearInterval(prog); spinner.style.display='none'; ph.style.display='flex';
-        showStatus('❌ '+err.message,true);
-      }finally{
-        btn.disabled=false; setTimeout(()=>bar.style.width='0%',900);
+      } catch (error) {
+        console.error('Generation error:', error);
+        showStatus('❌ Errore durante la generazione: ' + error.message, true);
+        hideLoading();
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = originalText;
       }
     }
 
-    // ======= Upscale =======
-    async function upscale(){
-      if(!lastImageUrl){showStatus('Nessuna immagine',true);return;}
-      showStatus('🔍 Upscale 2× in corso…');
-      try{
-        const res=await fetch(UPSCALE_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image_url:lastImageUrl,scale:2})});
-        const data=await res.json();
-        if(!res.ok) throw new Error(data.error||'Errore upscale');
-        lastImageUrl=data.image_url; document.getElementById('resultImg').src=lastImageUrl;
-        showStatus('✅ Upscale completato');
-      }catch(e){showStatus('❌ '+e.message,true);}
+    async function buildPayload(prompt) {
+      // Raccogli stili attivi
+      const activeChips = document.querySelectorAll('.chip.active');
+      let stylePrompts = [];
+      let negativePrompts = [];
+
+      activeChips.forEach(chip => {
+        if (chip.dataset.style) stylePrompts.push(chip.dataset.style);
+        if (chip.dataset.negative) negativePrompts.push(chip.dataset.negative);
+      });
+
+      // Costruisci prompt finale
+      let finalPrompt = prompt;
+      if (stylePrompts.length > 0) {
+        finalPrompt += ', ' + stylePrompts.join(', ');
+      }
+
+      return {
+        prompt: finalPrompt,
+        negative_prompt: negativePrompts.join(', '),
+        creativity: parseInt(document.getElementById('creativity').value),
+        quality: parseInt(document.getElementById('quality').value),
+        variants: parseInt(document.getElementById('variants').value),
+        ratio: document.getElementById('ratio').value,
+        seed: document.getElementById('seed').value || null,
+        image: lastFile || null
+      };
     }
 
-    // ======= Rating =======
-    function rateImage(r){document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('active',i<r)); if(history[0]) history[0].rating=r; showStatus(`⭐ ${r}/5`);}
-
-    // ======= Confronto =======
-    function toggleComparison(){
-      const box=document.getElementById('comparisonMode'); const vis=box.style.display!=='none';
-      if(vis){ box.style.display='none'; document.getElementById('compareBtn').textContent='Confronta'; }
-      else if(comparisonImages.length>=2){ document.getElementById('compareImg1').src=comparisonImages.at(-2); document.getElementById('compareImg2').src=comparisonImages.at(-1); box.style.display='block'; document.getElementById('compareBtn').textContent='Chiudi Confronto'; }
-      else showStatus('❌ Serve almeno 2 immagini per confrontare',true);
+    async function mockGenerate(payload) {
+      // Simula progresso
+      await simulateProgress();
+      
+      // Genera immagine mock
+      const mockImage = generateMockImage(payload.ratio);
+      displayResult(mockImage, payload);
+      
+      // Genera seed se non specificato
+      const seed = payload.seed || Math.floor(Math.random() * 999999999);
+      document.getElementById('seed').value = seed;
+      
+      showStatus('✅ Immagine generata con successo!');
+      addToHistory(mockImage, payload.prompt, seed);
     }
-    function selectWinner(w){ const url=w===1?comparisonImages.at(-2):comparisonImages.at(-1); document.getElementById('resultImg').src=url; lastImageUrl=url; showStatus('🏆 Scelta effettuata'); setTimeout(()=>toggleComparison(),900); }
 
-    // ======= Export =======
-    function exportMultiple(){ if(!lastImageUrl){showStatus('Nessuna immagine',true);return;} ['png','jpg','webp'].forEach(f=>downloadAsFormat(lastImageUrl,f)); showStatus('📤 Export multiplo avviato'); }
-    function downloadAsFormat(url,format){ const c=document.createElement('canvas'),ctx=c.getContext('2d'),img=new Image(); img.crossOrigin='anonymous'; img.onload=()=>{ c.width=img.width; c.height=img.height; ctx.drawImage(img,0,0); const a=document.createElement('a'); a.download=`artemisia-ai.${format}`; a.href=c.toDataURL(`image/${format}`); a.click(); }; img.src=url; }
+    async function realGenerate(payload) {
+      const response = await fetch(GEN_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
 
-    // ======= Cronologia =======
-    function renderHistory(){
-      const grid=document.getElementById('historyGrid');
-      if(history.length===0){ grid.innerHTML='<div class="subtitle" style="grid-column:1/-1;text-align:center;padding:16px">Nessuna generazione ancora</div>'; return; }
-      grid.innerHTML=history.map((h,i)=>`
-        <div class="card-thumb" onclick="setMain('${h.src.replace(/'/g,"\\'")}')">
-          <img src="${h.src}" alt="Gen ${i+1}">
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const result = await response.json();
+      if (result.error) {
+        throw new Error(result.error);
+      }
+
+      displayResult(result.image_url, payload);
+      showStatus('✅ Immagine generata con successo!');
+      addToHistory(result.image_url, payload.prompt, result.seed);
+    }
+
+    function generateMockImage(ratio) {
+      const ratioMap = {
+        '1-1': '512x512',
+        '3-4': '384x512', 
+        '9-16': '288x512',
+        '4-3': '512x384',
+        '16-9': '512x288'
+      };
+      
+      const size = ratioMap[ratio] || '512x512';
+      const seed = Math.floor(Math.random() * 1000);
+      return `https://picsum.photos/seed/${seed}/${size}`;
+    }
+
+    function displayResult(imageUrl, payload) {
+      lastImageUrl = imageUrl;
+      const img = document.getElementById('resultImg');
+      img.src = imageUrl;
+      img.classList.add('show');
+      
+      hideLoading();
+      enableButtons();
+      showRatingSystem();
+    }
+
+    function showLoading() {
+      document.getElementById('placeholder').style.display = 'none';
+      document.getElementById('spinner').style.display = 'block';
+      document.getElementById('phContent').style.display = 'none';
+    }
+
+    function hideLoading() {
+      document.getElementById('spinner').style.display = 'none';
+      document.getElementById('placeholder').style.display = 'none';
+    }
+
+    function enableButtons() {
+      document.getElementById('downloadBtn').disabled = false;
+      document.getElementById('up2xBtn').disabled = false;
+      document.getElementById('up4xBtn').disabled = false;
+      document.getElementById('exportBtn').disabled = false;
+    }
+
+    async function simulateProgress() {
+      const progress = document.getElementById('progress');
+      let width = 0;
+      
+      return new Promise(resolve => {
+        const interval = setInterval(() => {
+          width += Math.random() * 15;
+          if (width >= 100) {
+            width = 100;
+            clearInterval(interval);
+            setTimeout(() => {
+              progress.style.width = '0%';
+              resolve();
+            }, 300);
+          }
+          progress.style.width = width + '%';
+        }, 200);
+      });
+    }
+
+    // ===== Batch Generation =====
+    async function generateBatch() {
+      const batchSize = parseInt(document.getElementById('batchSize').value);
+      const prompt = document.getElementById('prompt').value.trim();
+      
+      if (!prompt) {
+        showStatus('⚠️ Inserisci un prompt per la generazione batch', true);
+        return;
+      }
+
+      if (batchInProgress) return;
+      batchInProgress = true;
+
+      try {
+        showStatus(`🔄 Generazione batch di ${batchSize} immagini...`);
+        const results = [];
+        
+        for (let i = 0; i < batchSize; i++) {
+          showStatus(`🔄 Generando immagine ${i + 1}/${batchSize}...`);
+          const payload = await buildPayload(prompt);
+          
+          if (USE_MOCK) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            const mockImage = generateMockImage(payload.ratio);
+            results.push({ url: mockImage, seed: Math.floor(Math.random() * 999999999) });
+          } else {
+            // Implementazione reale qui
+          }
+        }
+
+        // Mostra primo risultato
+        if (results.length > 0) {
+          displayResult(results[0].url, {});
+          results.forEach(result => {
+            addToHistory(result.url, prompt, result.seed);
+          });
+        }
+
+        // Abilita confronto se ci sono almeno 2 risultati
+        if (results.length >= 2) {
+          comparisonImages = results.slice(0, 2);
+          document.getElementById('compareBtn').disabled = false;
+        }
+
+        showStatus(`✅ Generazione batch completata: ${results.length} immagini`);
+        
+      } catch (error) {
+        showStatus('❌ Errore nella generazione batch: ' + error.message, true);
+      } finally {
+        batchInProgress = false;
+      }
+    }
+
+    // ===== Comparison Mode =====
+    function toggleComparison() {
+      const comparisonMode = document.getElementById('comparisonMode');
+      const isVisible = comparisonMode.style.display !== 'none';
+      
+      if (!isVisible && comparisonImages.length >= 2) {
+        document.getElementById('compareImg1').src = comparisonImages[0].url;
+        document.getElementById('compareImg2').src = comparisonImages[1].url;
+        comparisonMode.style.display = 'block';
+        document.getElementById('compareBtn').textContent = 'Chiudi Confronto';
+      } else {
+        comparisonMode.style.display = 'none';
+        document.getElementById('compareBtn').textContent = 'Confronta A/B';
+      }
+    }
+
+    function selectWinner(choice) {
+      const winner = comparisonImages[choice - 1];
+      displayResult(winner.url, {});
+      showStatus(`✅ Hai scelto l'immagine ${choice === 1 ? 'A' : 'B'}`);
+      toggleComparison();
+    }
+
+    // ===== Utility Functions =====
+    function surprise() {
+      const prompts = [
+        "Un drago dorato che vola sopra un castello medievale al tramonto",
+        "Una foresta incantata con creature magiche e luci fatate",
+        "Un astronauta che cammina su un pianeta alieno colorato",
+        "Una città futuristica con grattacieli di cristallo",
+        "Un giardino zen con cascata e fiori di ciliegio",
+        "Una nave pirata che naviga in un mare tempestoso",
+        "Un villaggio delle fate costruito in un albero gigante",
+        "Un robot gentile che gioca con i bambini in un parco",
+        "Una biblioteca magica con libri che volano",
+        "Un mercato orientale pieno di spezie e colori"
+      ];
+      
+      const randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+      document.getElementById('prompt').value = randomPrompt;
+      updateCounter();
+      
+      // Attiva un preset casuale
+      const chips = document.querySelectorAll('.chip');
+      chips.forEach(chip => chip.classList.remove('active'));
+      const randomChip = chips[Math.floor(Math.random() * chips.length)];
+      randomChip.classList.add('active');
+      
+      showStatus('🎲 Prompt ispirazionale generato!');
+    }
+
+    function lockSeed() {
+      const seed = document.getElementById('seed').value;
+      if (seed) {
+        lockedSeed = seed;
+        showStatus(`🔒 Seed ${seed} bloccato per generazioni future`);
+      } else {
+        const newSeed = Math.floor(Math.random() * 999999999);
+        document.getElementById('seed').value = newSeed;
+        lockedSeed = newSeed;
+        showStatus(`🔒 Nuovo seed ${newSeed} generato e bloccato`);
+      }
+    }
+
+    function regenSimilar() {
+      if (lockedSeed) {
+        document.getElementById('seed').value = lockedSeed;
+        generate();
+      } else {
+        showStatus('⚠️ Nessun seed bloccato. Usa "Blocca Seed" prima', true);
+      }
+    }
+
+    // ===== Download & Export =====
+    function downloadImage() {
+      if (!lastImageUrl) {
+        showStatus('⚠️ Nessuna immagine da scaricare', true);
+        return;
+      }
+
+      const link = document.createElement('a');
+      link.href = lastImageUrl;
+      link.download = `artemisia-${Date.now()}.png`;
+      link.click();
+      
+      showStatus('📥 Download avviato');
+    }
+
+    function exportMultiple() {
+      if (history.length === 0) {
+        showStatus('⚠️ Nessuna immagine nella cronologia', true);
+        return;
+      }
+
+      showStatus('📤 Preparazione export multiplo...');
+      
+      // In una implementazione reale, creereste un ZIP
+      history.slice(-5).forEach((item, index) => {
+        const link = document.createElement('a');
+        link.href = item.url;
+        link.download = `artemisia-batch-${index + 1}.png`;
+        setTimeout(() => link.click(), index * 500);
+      });
+      
+      showStatus('📤 Export multiplo avviato');
+    }
+
+    // ===== Upscaling =====
+    async function upscale2x() {
+      await upscaleImage(2);
+    }
+
+    async function upscale4x() {
+      await upscaleImage(4);
+    }
+
+    async function upscaleImage(factor) {
+      if (!lastImageUrl) {
+        showStatus('⚠️ Nessuna immagine da ingrandire', true);
+        return;
+      }
+
+      try {
+        showStatus(`🔍 Upscaling ${factor}x in corso...`);
+        
+        if (USE_MOCK) {
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          showStatus(`✅ Upscaling ${factor}x completato`);
+        } else {
+          const response = await fetch(UPSCALE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              image_url: lastImageUrl,
+              factor: factor
+            })
+          });
+
+          const result = await response.json();
+          if (result.error) throw new Error(result.error);
+          
+          displayResult(result.upscaled_url, {});
+          showStatus(`✅ Upscaling ${factor}x completato`);
+        }
+      } catch (error) {
+        showStatus(`❌ Errore upscaling: ${error.message}`, true);
+      }
+    }
+
+    // ===== Rating System =====
+    function showRatingSystem() {
+      document.getElementById('ratingSystem').style.display = 'flex';
+      updateStars(0);
+    }
+
+    function rateImage(rating) {
+      currentRating = rating;
+      updateStars(rating);
+      showStatus(`⭐ Immagine valutata: ${rating}/5 stelle`);
+      
+      // Salva rating nella cronologia
+      if (history.length > 0) {
+        history[history.length - 1].rating = rating;
+        saveHistory();
+      }
+    }
+
+    function updateStars(rating) {
+      const stars = document.querySelectorAll('.star');
+      stars.forEach((star, index) => {
+        star.classList.toggle('active', index < rating);
+      });
+    }
+
+    // ===== History Management =====
+    function addToHistory(url, prompt, seed) {
+      const item = {
+        url,
+        prompt,
+        seed,
+        timestamp: Date.now(),
+        rating: 0
+      };
+      
+      history.unshift(item);
+      if (history.length > 20) history.pop(); // Mantieni solo le ultime 20
+      
+      saveHistory();
+      renderHistory();
+    }
+
+    function saveHistory() {
+      localStorage.setItem('artemisia-history', JSON.stringify(history));
+    }
+
+    function renderHistory() {
+      const grid = document.getElementById('historyGrid');
+      
+      if (history.length === 0) {
+        grid.innerHTML = '<div class="small" style="grid-column:1/-1;text-align:center;padding:20px">Nessuna generazione ancora</div>';
+        return;
+      }
+
+      grid.innerHTML = history.map((item, index) => `
+        <div class="card-thumb" onclick="loadFromHistory(${index})">
+          <img src="${item.url}" alt="Cronologia ${index + 1}" />
           <div class="thumb-actions">
-            <button class="icon-btn" onclick="event.stopPropagation(); downloadFromSrc('${h.src.replace(/'/g,"\\'")}')">⬇️</button>
-            <button class="icon-btn" onclick="event.stopPropagation(); reusePrompt(${i})">♻️</button>
-            ${h.rating?`<span title="Rating: ${h.rating}/5" style="color:var(--accent);font-weight:700">⭐${h.rating}</span>`:''}
+            <button class="thumb-btn" onclick="event.stopPropagation(); downloadHistoryItem(${index})">📥</button>
+            <button class="thumb-btn" onclick="event.stopPropagation(); removeFromHistory(${index})">🗑️</button>
           </div>
         </div>
       `).join('');
     }
-    function setMain(src){ document.getElementById('resultImg').src=src; lastImageUrl=src; document.getElementById('saveToCollectionBtn').disabled=false; }
-    function reusePrompt(i){ if(!history[i]) return; promptEl.value=history[i].caption; document.getElementById('counter').textContent=`${history[i].caption.length}/500`; showStatus('📝 Prompt riutilizzato'); }
-    function downloadFromSrc(src){ const a=document.createElement('a'); a.href=src; a.download='artemisia-ai.png'; a.click(); }
 
-    // ======= Collezioni (localStorage) =======
-    const LS_KEY='artemisia-collections';
-    function getCollections(){ try{return JSON.parse(localStorage.getItem(LS_KEY))||{};}catch{return{};} }
-    function setCollections(obj){ localStorage.setItem(LS_KEY,JSON.stringify(obj)); renderCollectionsChips(); }
-    function renderCollectionsChips(){
-      const wrap=document.getElementById('collectionsList'); const colls=getCollections(); const names=Object.keys(colls);
-      wrap.innerHTML = names.length ? names.map(n=>`<button class="collection-chip" onclick="saveCurrentTo('${n}')">${n} (${colls[n].length})</button>`).join('') : '<span class="subtitle">Crea una collezione dal pulsante qui sotto</span>';
+    function loadFromHistory(index) {
+      const item = history[index];
+      document.getElementById('prompt').value = item.prompt;
+      document.getElementById('seed').value = item.seed;
+      displayResult(item.url, {});
+      updateStars(item.rating || 0);
+      updateCounter();
+      showStatus('📋 Caricato dalla cronologia');
     }
-    function openCollectionsModal(){
-      const dlg=document.getElementById('collectionsModal'); const box=document.getElementById('collectionsModalList'); const colls=getCollections();
-      box.innerHTML = Object.entries(colls).map(([name,arr])=>`
-        <div class="card" style="padding:12px">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-            <strong>${name}</strong>
-            <div style="display:flex;gap:6px">
-              <button class="icon-btn" onclick="renameCollection('${name}')">✎</button>
-              <button class="icon-btn" onclick="deleteCollection('${name}')">🗑️</button>
-              <button class="icon-btn" onclick="saveCurrentTo('${name}')">➕ Aggiungi corrente</button>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:6px">
-            ${arr.slice(-8).map(u=>`<img src="${u}" style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">`).join('')}
-          </div>
-        </div>`).join('') || '<div class="subtitle">Nessuna collezione. Creane una qui sopra.</div>';
-      dlg.showModal();
+
+    function downloadHistoryItem(index) {
+      const item = history[index];
+      const link = document.createElement('a');
+      link.href = item.url;
+      link.download = `artemisia-history-${index + 1}.png`;
+      link.click();
     }
-    function closeCollectionsModal(){ document.getElementById('collectionsModal').close(); }
-    function createCollection(){ const name=(document.getElementById('newCollectionName').value||'').trim(); if(!name){ showStatus('❌ Inserisci un nome',true); return; } const c=getCollections(); if(c[name]){ showStatus('❌ Esiste già',true); return; } c[name]=[]; setCollections(c); document.getElementById('newCollectionName').value=''; openCollectionsModal(); showStatus('📁 Collezione creata'); }
-    function renameCollection(oldName){ const nn=prompt('Nuovo nome',oldName); if(!nn) return; const c=getCollections(); if(c[nn]){ showStatus('❌ Esiste già',true); return; } c[nn]=c[oldName]||[]; delete c[oldName]; setCollections(c); openCollectionsModal(); showStatus('✎ Rinominata'); }
-    function deleteCollection(name){ if(!confirm(`Eliminare “${name}”?`)) return; const c=getCollections(); delete c[name]; setCollections(c); openCollectionsModal(); showStatus('🗑️ Eliminata'); }
-    function saveCurrentTo(name){ if(!lastImageUrl){ showStatus('❌ Nessuna immagine',true); return; } const c=getCollections(); c[name]=c[name]||[]; if(!c[name].includes(lastImageUrl)) c[name].push(lastImageUrl); setCollections(c); showStatus(`✅ Salvata in “${name}”`); }
 
-    // ======= Shortcut =======
-    document.addEventListener('keydown',e=>{ if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){ e.preventDefault(); generate(); } });
+    function removeFromHistory(index) {
+      if (confirm('Rimuovere questa immagine dalla cronologia?')) {
+        history.splice(index, 1);
+        saveHistory();
+        renderHistory();
+        showStatus('🗑️ Rimosso dalla cronologia');
+      }
+    }
 
-    // ======= Init =======
-    (function init(){ document.getElementById('counter').textContent='0/500'; renderCollectionsChips(); })();
+    // ===== Help Modal =====
+    function showHelp() {
+      document.getElementById('helpModal').style.display = 'block';
+    }
+
+    function hideHelp() {
+      document.getElementById('helpModal').style.display = 'none';
+    }
+
+    // ===== Initialization =====
+    function init() {
+      updateCounter();
+      updateCreativity();
+      updateQuality();
+      updateRatio();
+      renderHistory();
+      
+      // Carica ultimo tema
+      const theme = localStorage.getItem('artemisia-theme') || 'dark';
+      root.setAttribute('data-theme', theme);
+    }
+
+    // Avvia l'app
+    document.addEventListener('DOMContentLoaded', init);
+
+    // Chiudi modal con ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        hideHelp();
+        if (document.getElementById('comparisonMode').style.display !== 'none') {
+          toggleComparison();
+        }
+      }
+    });
   </script>
 </body>
 </html>
