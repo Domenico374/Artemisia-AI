@@ -265,11 +265,33 @@
     function updateQuality(){const v=+document.getElementById('quality').value;document.getElementById('qualityValue').textContent=['Bassa','Standard','Alta','Ultra'][v-1];}
     function updateRatio(){const r=document.getElementById('ratio').value;document.getElementById('frame').className=`frame ratio-${r}`;}
 
-    // Prompt/Negative builder dai chip
+    // ============ CHIP -> TEXTAREA (aggiungi/rimuovi testo) ============
+    function handleChipToggle(chip) {
+      const promptEl = document.getElementById('prompt');
+      const style = (chip.dataset.style || '').trim();
+
+      chip.classList.toggle('active');
+
+      if (!style) { updateCounter(); return; }
+
+      if (chip.classList.contains('active')) {
+        const needsComma = promptEl.value && !/[,.;:]\s?$/.test(promptEl.value);
+        promptEl.value += (needsComma ? ', ' : '') + style;
+      } else {
+        promptEl.value = promptEl.value
+          .replace(style, '')
+          .replace(/\s*,\s*,\s*/g, ', ')
+          .replace(/^,\s*|\s*,\s*$/g, '')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
+      }
+      updateCounter();
+    }
+
+    // Prompt/Negative builder
     function buildPromptFromUI(){
-      const base=document.getElementById('prompt').value.trim();
-      const styles=[...document.querySelectorAll('.chip.active')].map(c=>c.dataset.style).filter(Boolean);
-      return styles.length?`${base}, ${styles.join(', ')}`:base;
+      // ora la fonte di verità è SOLO il textarea (evita duplicati)
+      return document.getElementById('prompt').value.trim();
     }
     function buildNegativeFromUI(){
       const NEG_BASE=['low quality','blurry','jpeg artifacts','text watermark','logo','extra fingers','mutated hands','nsfw'];
@@ -318,7 +340,7 @@
         try{ data = JSON.parse(text); }catch{ throw new Error('Risposta server non valida'); }
         if(!res.ok) throw new Error(data.error || `Errore ${res.status}`);
 
-        const imageUrl = data.image_url; // <-- adegua se il tuo backend usa un altro campo
+        const imageUrl = data.image_url; // adegua se il backend usa un altro campo
         if(!imageUrl) throw new Error('Nessun URL immagine ricevuto');
 
         displayImage(imageUrl);
@@ -361,7 +383,7 @@
       if(!prompt || prompt.length<3){showStatus('⚠️ Inserisci un prompt per il batch','error');return;}
       comparisonImages=[];
       for(let i=0;i<n;i++){ await handleGenerate(); if(currentImage) comparisonImages.push(currentImage); await new Promise(r=>setTimeout(r,500)); }
-      if(comparisonImages.length>=2) document.getElementById('compareBtn').disabled=false;
+      if(comparisonImages.length>=2) document.getElementById('compareBtn').disabled=true, document.getElementById('compareBtn').disabled=false;
       showStatus(`✅ Batch completato: ${comparisonImages.length} immagini`,'success');
     }
     function toggleComparison(){
@@ -417,7 +439,7 @@
       if(file.size>10*1024*1024){showStatus('⚠️ File troppo grande (max 10MB)','error');return;}
       uploadedFile=file; document.getElementById('fileName').textContent=file.name; document.getElementById('fileChip').classList.add('show'); showStatus(`📎 File “${file.name}” caricato`,'success');
     }
-    function clearFile(){uploadedFile=null; document.getElementById('fileInput').value=''; document.getElementById('fileChip').classList.remove('show'); showStatus('🗑️ File rimosso','success');}
+    function clearFile(){uploadedFile=null; document.getElementById('fileInput').value=''; document.getElementById='fileChip'; document.getElementById('fileChip').classList.remove('show'); showStatus('🗑️ File rimosso','success');}
     function setupDnD(){
       const frame=document.getElementById('frame');
       ['dragenter','dragover','dragleave','drop'].forEach(ev=>frame.addEventListener(ev,e=>{e.preventDefault();e.stopPropagation();}));
@@ -465,15 +487,21 @@
       document.getElementById('helpBtn').addEventListener('click',help);
       document.getElementById('fileInput').addEventListener('change',e=>{if(e.target.files[0]) handleFile(e.target.files[0]);});
       document.getElementById('clearFileBtn').addEventListener('click',clearFile);
-      document.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>ch.classList.toggle('active')));
+      // CHIP binding: usa handleChipToggle (non solo toggle classe)
+      document.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>handleChipToggle(ch)));
+      // rating
       document.querySelectorAll('.star').forEach(st=>st.addEventListener('click',()=>rate(parseInt(st.dataset.rating,10))));
+      // sliders
       document.getElementById('prompt').addEventListener('input',updateCounter);
       document.getElementById('creativity').addEventListener('input',updateCreativity);
       document.getElementById('quality').addEventListener('input',updateQuality);
       document.getElementById('ratio').addEventListener('change',updateRatio);
 
       // scorciatoie
-      document.addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();handleGenerate();} if(e.key==='Escape'){const b=document.getElementById('comparisonMode'); if(b.style.display!=='none') toggleComparison();}});
+      document.addEventListener('keydown',e=>{
+        if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();handleGenerate();}
+        if(e.key==='Escape'){const b=document.getElementById('comparisonMode'); if(b.style.display!=='none') toggleComparison();}
+      });
     }
     if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);} else {init();}
   </script>
