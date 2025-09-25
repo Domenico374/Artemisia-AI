@@ -234,7 +234,6 @@
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
-      position: relative;
     }
     
     .chip:hover {
@@ -458,6 +457,7 @@
       overflow: hidden;
       transition: all 0.3s ease;
       min-height: 200px;
+      cursor: pointer;
     }
     
     .frame.ratio-1-1 { aspect-ratio: 1/1; }
@@ -568,11 +568,6 @@
       background: var(--surface);
     }
     
-    .card-thumb img.loading {
-      opacity: 0.5;
-      filter: blur(2px);
-    }
-    
     .card-thumb:hover img {
       transform: scale(1.05);
     }
@@ -604,15 +599,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-    }
-    
-    .error-boundary {
-      padding: var(--space-6);
-      text-align: center;
-      color: var(--error);
-      border: 2px dashed var(--error);
-      border-radius: var(--space-4);
-      margin: var(--space-4) 0;
     }
     
     .comparison-mode {
@@ -668,6 +654,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
     }
     
     .star:hover {
@@ -693,6 +682,16 @@
     
     .file-chip.show {
       display: flex;
+    }
+    
+    .file-chip button {
+      background: none;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      padding: 0;
+      margin-left: auto;
+      font-size: var(--text-base);
     }
     
     .batch-controls {
@@ -721,31 +720,6 @@
       font-size: var(--text-sm);
     }
     
-    /* Loading states */
-    .skeleton {
-      background: linear-gradient(90deg, var(--surface) 25%, var(--surface-hover) 50%, var(--surface) 75%);
-      background-size: 200% 100%;
-      animation: loading 1.5s infinite;
-    }
-    
-    @keyframes loading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-    
-    /* Accessibility */
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
-      white-space: nowrap;
-      border: 0;
-    }
-    
     /* Focus indicators */
     *:focus-visible {
       outline: 2px solid var(--brand);
@@ -767,93 +741,93 @@
   <div class="container">
     <header class="header">
       <div class="brand">
-        <div class="logo" role="img" aria-label="Artemisia AI Logo">🎨</div>
+        <div class="logo">🎨</div>
         <div class="title-wrap">
           <h1 class="title">Artemisia Story</h1>
           <p class="subtitle">Generatore & Trasformatore di immagini AI</p>
         </div>
       </div>
       <div class="actions">
-        <button class="icon-btn" id="themeBtn" title="Cambia tema" aria-label="Cambia tema">🌗</button>
-        <button class="icon-btn" id="helpBtn" title="Mostra guida" aria-label="Mostra guida">❔</button>
+        <button class="icon-btn" id="themeBtn" title="Cambia tema">🌗</button>
+        <button class="icon-btn" id="helpBtn" title="Mostra guida">❔</button>
       </div>
     </header>
 
     <main class="grid">
-      <section class="card" role="region" aria-label="Controlli generazione">
+      <section class="card">
         <div class="section-title">
-          <span class="emoji" aria-hidden="true">✨</span>
+          <span class="emoji">✨</span>
           <span>Scrivi il tuo prompt</span>
         </div>
 
-        <div class="chips" role="group" aria-label="Stili predefiniti">
-          <button class="chip" data-style="in stile cartoon moderno" role="button" aria-pressed="false">Cartoon</button>
-          <button class="chip" data-style="fotorealistico, illuminazione cinematografica" role="button" aria-pressed="false">Fotorealistico</button>
-          <button class="chip" data-style="in stile acquerello morbido" role="button" aria-pressed="false">Acquerello</button>
-          <button class="chip" data-style="in stile Studio Ghibli" role="button" aria-pressed="false">Ghibli</button>
-          <button class="chip" data-style="in stile pittorico biblico" role="button" aria-pressed="false">Biblico</button>
-          <button class="chip" data-style="vintage anni 90, grana leggera" role="button" aria-pressed="false">Vintage '90</button>
+        <div class="chips" id="styleChips">
+          <button class="chip" data-style="in stile cartoon moderno">Cartoon</button>
+          <button class="chip" data-style="fotorealistico, illuminazione cinematografica">Fotorealistico</button>
+          <button class="chip" data-style="in stile acquerello morbido">Acquerello</button>
+          <button class="chip" data-style="in stile Studio Ghibli">Ghibli</button>
+          <button class="chip" data-style="in stile pittorico biblico">Biblico</button>
+          <button class="chip" data-style="vintage anni 90, grana leggera">Vintage '90</button>
         </div>
 
         <div class="section-title" style="margin-top: var(--space-5);">
-          <span class="emoji" aria-hidden="true">🎯</span>
+          <span class="emoji">🎯</span>
           <span>Business & Marketing</span>
         </div>
-        <div class="chips" role="group" aria-label="Stili business">
-          <button class="chip business" data-style="logo aziendale minimalista, design pulito, sfondo bianco, tipografia moderna" role="button" aria-pressed="false">Logo Business</button>
-          <button class="chip business" data-style="fotografia commerciale, prodotto su sfondo neutro, illuminazione da studio professionale" role="button" aria-pressed="false">Prodotto</button>
-          <button class="chip business" data-style="design per social media, colori vivaci, layout accattivante, formato quadrato" role="button" aria-pressed="false">Social Post</button>
-          <button class="chip business" data-style="brochure aziendale, layout professionale, colori corporate, tipografia elegante" role="button" aria-pressed="false">Brochure</button>
+        <div class="chips">
+          <button class="chip business" data-style="logo aziendale minimalista, design pulito, sfondo bianco, tipografia moderna">Logo Business</button>
+          <button class="chip business" data-style="fotografia commerciale, prodotto su sfondo neutro, illuminazione da studio professionale">Prodotto</button>
+          <button class="chip business" data-style="design per social media, colori vivaci, layout accattivante, formato quadrato">Social Post</button>
+          <button class="chip business" data-style="brochure aziendale, layout professionale, colori corporate, tipografia elegante">Brochure</button>
         </div>
 
         <div class="section-title" style="margin-top: var(--space-5);">
-          <span class="emoji" aria-hidden="true">🎨</span>
+          <span class="emoji">🎨</span>
           <span>Arte & Creatività</span>
         </div>
-        <div class="chips" role="group" aria-label="Stili creativi">
-          <button class="chip creative" data-style="concept art fantasy, dettagli epici, atmosfera drammatica, colori cinematografici" role="button" aria-pressed="false">Fantasy Art</button>
-          <button class="chip creative" data-style="illustrazione per bambini, stile cartoon dolce, colori pastello, forme arrotondate" role="button" aria-pressed="false">Per Bambini</button>
-          <button class="chip creative" data-style="arte astratta moderna, forme geometriche, gradazioni di colore, composizione dinamica" role="button" aria-pressed="false">Arte Astratta</button>
-          <button class="chip creative" data-style="copertina libro, design editoriale, tipografia accattivante, atmosfera misteriosa" role="button" aria-pressed="false">Copertina Libro</button>
-          <button class="chip creative" data-style="character design anime, stile manga, colori vivaci, dettagli espressivi" role="button" aria-pressed="false">Character Anime</button>
+        <div class="chips">
+          <button class="chip creative" data-style="concept art fantasy, dettagli epici, atmosfera drammatica, colori cinematografici">Fantasy Art</button>
+          <button class="chip creative" data-style="illustrazione per bambini, stile cartoon dolce, colori pastello, forme arrotondate">Per Bambini</button>
+          <button class="chip creative" data-style="arte astratta moderna, forme geometriche, gradazioni di colore, composizione dinamica">Arte Astratta</button>
+          <button class="chip creative" data-style="copertina libro, design editoriale, tipografia accattivante, atmosfera misteriosa">Copertina Libro</button>
+          <button class="chip creative" data-style="character design anime, stile manga, colori vivaci, dettagli espressivi">Character Anime</button>
         </div>
 
         <div class="section-title" style="margin-top: var(--space-5);">
-          <span class="emoji" aria-hidden="true">📸</span>
+          <span class="emoji">📸</span>
           <span>Fotografia</span>
         </div>
-        <div class="chips" role="group" aria-label="Stili fotografici">
-          <button class="chip photo" data-style="ritratto professionale, 85mm, illuminazione soft, bokeh naturale, alta risoluzione" role="button" aria-pressed="false">Ritratto Pro</button>
-          <button class="chip photo" data-style="paesaggio naturale, golden hour, dettagli fotorealistici, colori saturi, composizione panoramica" role="button" aria-pressed="false">Paesaggio</button>
-          <button class="chip photo" data-style="architettura moderna, linee pulite, prospettiva geometrica, illuminazione naturale" role="button" aria-pressed="false">Architettura</button>
-          <button class="chip photo" data-style="food photography, macro dettagli, illuminazione appetitosa, styling professionale" role="button" aria-pressed="false">Food</button>
-          <button class="chip photo" data-style="street photography urbana, momento candido, contrasti drammatici, atmosfera autentica" role="button" aria-pressed="false">Street</button>
+        <div class="chips">
+          <button class="chip photo" data-style="ritratto professionale, 85mm, illuminazione soft, bokeh naturale, alta risoluzione">Ritratto Pro</button>
+          <button class="chip photo" data-style="paesaggio naturale, golden hour, dettagli fotorealistici, colori saturi, composizione panoramica">Paesaggio</button>
+          <button class="chip photo" data-style="architettura moderna, linee pulite, prospettiva geometrica, illuminazione naturale">Architettura</button>
+          <button class="chip photo" data-style="food photography, macro dettagli, illuminazione appetitosa, styling professionale">Food</button>
+          <button class="chip photo" data-style="street photography urbana, momento candido, contrasti drammatici, atmosfera autentica">Street</button>
         </div>
 
         <div class="section-title" style="margin-top: var(--space-5);">
-          <span class="emoji" aria-hidden="true">⚙️</span>
+          <span class="emoji">⚙️</span>
           <span>Parametri Avanzati</span>
         </div>
         <div class="controls">
           <div class="slider">
-            <label for="creativity">Creatività:</label>
-            <input type="range" id="creativity" min="0" max="100" value="70" aria-label="Livello creatività" />
-            <span id="creativityValue" aria-live="polite">70</span>
+            <label>Creatività:</label>
+            <input type="range" id="creativity" min="0" max="100" value="70" />
+            <span id="creativityValue">70</span>
           </div>
           <div class="slider">
-            <label for="quality">Qualità:</label>
-            <input type="range" id="quality" min="1" max="4" value="2" aria-label="Livello qualità" />
-            <span id="qualityValue" aria-live="polite">Standard</span>
+            <label>Qualità:</label>
+            <input type="range" id="quality" min="1" max="4" value="2" />
+            <span id="qualityValue">Standard</span>
           </div>
           <div class="select">
-            <select id="variants" aria-label="Numero varianti">
+            <select id="variants">
               <option value="1">1 Variante</option>
               <option value="2">2 Varianti</option>
               <option value="4">4 Varianti</option>
             </select>
           </div>
           <div class="select">
-            <select id="ratio" aria-label="Formato immagine">
+            <select id="ratio">
               <option value="1-1">1:1 (Quadrato)</option>
               <option value="3-4">3:4 (Ritratto)</option>
               <option value="9-16">9:16 (Verticale)</option>
@@ -864,97 +838,96 @@
         </div>
 
         <div class="textarea">
-          <label for="prompt" class="sr-only">Descrizione immagine da generare</label>
-          <textarea id="prompt" placeholder="Es.: Trasforma in stile cartoon moderno, colori brillanti e contorni morbidi..." aria-describedby="counter"></textarea>
-          <div class="counter" id="counter" aria-live="polite">0/500</div>
+          <textarea id="prompt" placeholder="Es.: Trasforma in stile cartoon moderno, colori brillanti e contorni morbidi..."></textarea>
+          <div class="counter" id="counter">0/500</div>
         </div>
 
         <div class="file-chip" id="fileChip">
-          <span aria-hidden="true">📎</span>
+          <span>📎</span>
           <span id="fileName">Nessun file</span>
-          <button type="button" id="clearFileBtn" aria-label="Rimuovi file caricato">✕</button>
+          <button id="clearFileBtn">✕</button>
         </div>
 
         <div class="batch-controls">
           <span style="font-size: var(--text-sm); font-weight: 600;">Workflow Avanzato:</span>
           <div class="select">
-            <select id="batchSize" aria-label="Dimensione batch">
+            <select id="batchSize">
               <option value="1">Genera 1</option>
               <option value="2">Genera 2</option>
               <option value="4">Genera 4</option>
             </select>
           </div>
-          <button type="button" class="btn outline" id="batchBtn">Batch Generate</button>
-          <button type="button" class="btn outline" id="compareBtn" disabled>Confronta</button>
+          <button class="btn outline" id="batchBtn">Batch Generate</button>
+          <button class="btn outline" id="compareBtn" disabled>Confronta</button>
         </div>
 
         <div class="btns">
-          <button type="button" class="btn primary" id="generateBtn">
-            <span aria-hidden="true">🎨</span>
+          <button class="btn primary" id="generateBtn">
+            <span>🎨</span>
             <span>Genera Immagine</span>
           </button>
-          <button type="button" class="btn outline" id="surpriseBtn">
-            <span aria-hidden="true">🎲</span>
+          <button class="btn outline" id="surpriseBtn">
+            <span>🎲</span>
             <span>Ispirami</span>
           </button>
-          <button type="button" class="btn outline" id="downloadBtn" disabled>
-            <span aria-hidden="true">📥</span>
+          <button class="btn outline" id="downloadBtn" disabled>
+            <span>📥</span>
             <span>Scarica PNG</span>
           </button>
-          <button type="button" class="btn outline" id="exportBtn" disabled>
-            <span aria-hidden="true">📤</span>
+          <button class="btn outline" id="exportBtn" disabled>
+            <span>📤</span>
             <span>Export Multi</span>
           </button>
         </div>
 
         <div class="rating-system" id="ratingSystem" style="display: none;">
           <span>Valuta risultato:</span>
-          <div class="stars" id="starRating" role="group" aria-label="Valutazione da 1 a 5 stelle">
-            <button type="button" class="star" data-rating="1" aria-label="1 stella">⭐</button>
-            <button type="button" class="star" data-rating="2" aria-label="2 stelle">⭐</button>
-            <button type="button" class="star" data-rating="3" aria-label="3 stelle">⭐</button>
-            <button type="button" class="star" data-rating="4" aria-label="4 stelle">⭐</button>
-            <button type="button" class="star" data-rating="5" aria-label="5 stelle">⭐</button>
+          <div class="stars" id="starRating">
+            <button class="star" data-rating="1">⭐</button>
+            <button class="star" data-rating="2">⭐</button>
+            <button class="star" data-rating="3">⭐</button>
+            <button class="star" data-rating="4">⭐</button>
+            <button class="star" data-rating="5">⭐</button>
           </div>
         </div>
 
-        <div id="status" class="status" role="status" aria-live="polite"></div>
+        <div id="status" class="status"></div>
       </section>
 
-      <section class="card" role="region" aria-label="Anteprima e risultati">
+      <section class="card">
         <div class="section-title">
-          <span class="emoji" aria-hidden="true">🖼️</span>
+          <span class="emoji">🖼️</span>
           <span>Anteprima</span>
         </div>
         
-        <div class="frame ratio-1-1" id="frame" role="img" aria-label="Area anteprima immagine">
+        <div class="frame ratio-1-1" id="frame">
           <img id="resultImg" alt="" style="display: none;" />
           <div class="placeholder" id="placeholder">
-            <div class="spinner" id="spinner" style="display: none;" aria-hidden="true"></div>
-            <div class="ph-content" id="phContent">
+            <div class="spinner" id="spinner" style="display: none;"></div>
+            <div id="phContent">
               <div style="font-weight: 700; opacity: 0.9; font-size: var(--text-lg);">Nessuna immagine ancora</div>
               <div class="small">Scrivi un prompt e premi "Genera"</div>
             </div>
           </div>
-          <div class="progress" id="progress" aria-hidden="true"></div>
+          <div class="progress" id="progress"></div>
         </div>
 
         <div class="comparison-mode" id="comparisonMode">
           <div class="section-title">
-            <span class="emoji" aria-hidden="true">⚖️</span>
+            <span class="emoji">⚖️</span>
             <span>Confronto Risultati</span>
           </div>
           <div class="comparison-grid">
             <div class="compare-item">
               <img id="compareImg1" alt="Opzione A" />
               <div class="compare-controls">
-                <button type="button" class="btn outline" id="selectA">Preferisci A</button>
+                <button class="btn outline" id="selectA">Preferisci A</button>
               </div>
             </div>
             <div class="compare-item">
               <img id="compareImg2" alt="Opzione B" />
               <div class="compare-controls">
-                <button type="button" class="btn outline" id="selectB">Preferisci B</button>
+                <button class="btn outline" id="selectB">Preferisci B</button>
               </div>
             </div>
           </div>
@@ -962,10 +935,10 @@
 
         <div class="history">
           <div class="section-title">
-            <span class="emoji" aria-hidden="true">🕘</span>
+            <span class="emoji">🕘</span>
             <span>Cronologia</span>
           </div>
-          <div class="history-grid" id="historyGrid" role="region" aria-label="Cronologia generazioni">
+          <div class="history-grid" id="historyGrid">
             <div class="small" style="grid-column: 1/-1; text-align: center; padding: var(--space-5);">
               Nessuna generazione ancora
             </div>
@@ -985,659 +958,373 @@
       </section>
     </main>
 
-    <input id="fileInput" type="file" accept="image/*" style="display: none;" aria-label="Carica immagine" />
+    <input id="fileInput" type="file" accept="image/*" style="display: none;" />
   </div>
 
   <script>
-    // ===== STATE MANAGEMENT =====
-    class AppState {
-      constructor() {
-        this.currentImage = null;
-        this.uploadedFile = null;
-        this.comparisonImages = [];
-        this.currentRating = 0;
-        this.isGenerating = false;
-        this.history = this.loadHistory();
-        this.imageCache = new Map();
-        this.observers = [];
-      }
+    // ===== GLOBAL STATE (Simple) =====
+    let currentImage = null;
+    let uploadedFile = null;
+    let comparisonImages = [];
+    let currentRating = 0;
+    let isGenerating = false;
+    let history = [];
 
-      loadHistory() {
-        try {
-          const saved = localStorage.getItem('artemisia-history');
-          return saved ? JSON.parse(saved) : [];
-        } catch (error) {
-          console.warn('Error loading history:', error);
-          return [];
-        }
-      }
-
-      saveHistory() {
-        try {
-          localStorage.setItem('artemisia-history', JSON.stringify(this.history));
-        } catch (error) {
-          console.warn('Error saving history:', error);
-        }
-      }
-
-      addToHistory(imageUrl, prompt, rating = 0) {
-        const item = {
-          id: Date.now() + Math.random(),
-          url: imageUrl,
-          prompt,
-          rating,
-          timestamp: new Date().toISOString()
-        };
-        
-        this.history.unshift(item);
-        if (this.history.length > 20) {
-          this.history = this.history.slice(0, 20);
-        }
-        
-        this.saveHistory();
-        this.notifyObservers('historyUpdated');
-      }
-
-      subscribe(callback) {
-        this.observers.push(callback);
-      }
-
-      notifyObservers(event, data) {
-        this.observers.forEach(callback => callback(event, data));
+    // ===== UTILITY FUNCTIONS =====
+    function showStatus(message, type = 'success') {
+      const status = document.getElementById('status');
+      status.style.display = 'flex';
+      status.className = `status ${type}`;
+      status.textContent = message;
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          status.style.display = 'none';
+        }, 3000);
       }
     }
 
-    // ===== API CLIENT WITH RETRY LOGIC =====
-    class APIClient {
-      constructor() {
-        this.baseURL = this.getBaseURL();
-        this.maxRetries = 3;
-        this.timeout = 30000;
-      }
-
-      getBaseURL() {
-        const isLocal = ['localhost', '127.0.0.1'].includes(window.location.hostname) || 
-                       window.location.protocol === 'file:';
-        return isLocal ? 'http://localhost:3000' : '';
-      }
-
-      async makeRequest(endpoint, options = {}, retryCount = 0) {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), this.timeout);
-
-        try {
-          const response = await fetch(`${this.baseURL}${endpoint}`, {
-            ...options,
-            signal: controller.signal,
-            headers: {
-              'Content-Type': 'application/json',
-              ...options.headers
-            }
-          });
-
-          clearTimeout(timeoutId);
-
-          if (!response.ok) {
-            throw new APIError(`HTTP ${response.status}: ${response.statusText}`, response.status);
-          }
-
-          const text = await response.text();
-          try {
-            return JSON.parse(text);
-          } catch {
-            throw new APIError('Invalid JSON response from server');
-          }
-
-        } catch (error) {
-          clearTimeout(timeoutId);
-
-          if (error.name === 'AbortError') {
-            throw new APIError('Request timeout - please try again');
-          }
-
-          if (retryCount < this.maxRetries && this.shouldRetry(error)) {
-            await this.delay(Math.pow(2, retryCount) * 1000);
-            return this.makeRequest(endpoint, options, retryCount + 1);
-          }
-
-          throw error instanceof APIError ? error : new APIError('Network error - check your connection');
-        }
-      }
-
-      shouldRetry(error) {
-        return error instanceof APIError && 
-               (error.status >= 500 || error.status === 429 || !error.status);
-      }
-
-      delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-      }
-
-      async generate(payload) {
-        return this.makeRequest('/api/generate', {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
-      }
+    function updateCounter() {
+      const prompt = document.getElementById('prompt');
+      const counter = document.getElementById('counter');
+      const length = prompt.value.length;
+      counter.textContent = `${length}/500`;
+      counter.style.color = length > 500 ? 'var(--error)' : 'var(--text-subtle)';
     }
 
-    class APIError extends Error {
-      constructor(message, status) {
-        super(message);
-        this.name = 'APIError';
-        this.status = status;
-      }
+    function updateCreativity() {
+      const value = document.getElementById('creativity').value;
+      document.getElementById('creativityValue').textContent = value;
     }
 
-    // ===== IMAGE LAZY LOADING =====
-    class ImageLazyLoader {
-      constructor() {
-        this.imageCache = new Map();
-        this.observer = new IntersectionObserver(
-          this.handleIntersection.bind(this),
-          { rootMargin: '50px' }
-        );
-      }
+    function updateQuality() {
+      const value = document.getElementById('quality').value;
+      const labels = ['Bassa', 'Standard', 'Alta', 'Ultra'];
+      document.getElementById('qualityValue').textContent = labels[value - 1];
+    }
 
-      handleIntersection(entries) {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            this.loadImage(entry.target);
-            this.observer.unobserve(entry.target);
-          }
-        });
-      }
+    function updateRatio() {
+      const ratio = document.getElementById('ratio').value;
+      const frame = document.getElementById('frame');
+      frame.className = `frame ratio-${ratio}`;
+    }
 
-      observe(img) {
-        if (img.dataset.src) {
-          this.observer.observe(img);
-        }
-      }
+    function generateMockImageUrl() {
+      const ratioMap = {
+        '1-1': '512x512',
+        '3-4': '384x512',
+        '9-16': '288x512',
+        '4-3': '512x384',
+        '16-9': '512x288'
+      };
+      const ratio = document.getElementById('ratio').value;
+      const size = ratioMap[ratio] || '512x512';
+      const seed = Math.floor(Math.random() * 10000);
+      return `https://picsum.photos/seed/${seed}/${size}`;
+    }
 
-      async loadImage(img) {
-        const src = img.dataset.src;
-        if (!src) return;
+    function displayImage(imageUrl) {
+      const img = document.getElementById('resultImg');
+      const placeholder = document.getElementById('placeholder');
+      
+      img.src = imageUrl;
+      img.alt = 'Immagine generata da AI';
+      img.style.display = 'block';
+      img.classList.add('show');
+      placeholder.style.display = 'none';
+      
+      currentImage = imageUrl;
+      
+      // Enable buttons
+      document.getElementById('downloadBtn').disabled = false;
+      document.getElementById('exportBtn').disabled = false;
+      
+      // Show rating system
+      document.getElementById('ratingSystem').style.display = 'flex';
+    }
 
-        img.classList.add('loading');
+    async function simulateProgress() {
+      const progressBar = document.getElementById('progress');
+      let width = 0;
 
-        try {
-          if (this.imageCache.has(src)) {
-            img.src = this.imageCache.get(src);
+      return new Promise(resolve => {
+        const interval = setInterval(() => {
+          width += Math.random() * 15 + 5;
+          if (width >= 100) {
+            width = 100;
+            progressBar.style.width = '100%';
+            clearInterval(interval);
+            setTimeout(() => {
+              progressBar.style.width = '0%';
+              resolve();
+            }, 300);
           } else {
-            img.src = src;
-            this.imageCache.set(src, src);
+            progressBar.style.width = width + '%';
           }
+        }, 200);
+      });
+    }
 
-          await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-          });
-
-        } catch (error) {
-          img.alt = 'Errore caricamento immagine';
-          console.warn('Image load failed:', src, error);
-        } finally {
-          img.classList.remove('loading');
-        }
+    function addToHistory(imageUrl, prompt, rating = 0) {
+      const item = {
+        id: Date.now(),
+        url: imageUrl,
+        prompt,
+        rating,
+        timestamp: new Date().toISOString()
+      };
+      
+      history.unshift(item);
+      if (history.length > 20) history.pop();
+      
+      try {
+        localStorage.setItem('artemisia-history', JSON.stringify(history));
+      } catch (e) {
+        console.warn('Could not save to localStorage:', e);
       }
+      
+      renderHistory();
+    }
 
-      preloadImage(src) {
-        if (this.imageCache.has(src)) return Promise.resolve();
-
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => {
-            this.imageCache.set(src, src);
-            resolve();
-          };
-          img.onerror = reject;
-          img.src = src;
-        });
+    function loadHistory() {
+      try {
+        const saved = localStorage.getItem('artemisia-history');
+        return saved ? JSON.parse(saved) : [];
+      } catch (e) {
+        console.warn('Could not load from localStorage:', e);
+        return [];
       }
     }
 
-    // ===== COMPONENT MANAGEMENT =====
-    class ComponentManager {
-      constructor(state, apiClient, imageLoader) {
-        this.state = state;
-        this.api = apiClient;
-        this.imageLoader = imageLoader;
-        this.eventListeners = new Map();
-        this.init();
+    function renderHistory() {
+      const grid = document.getElementById('historyGrid');
+      
+      if (history.length === 0) {
+        grid.innerHTML = `
+          <div class="small" style="grid-column: 1/-1; text-align: center; padding: var(--space-5);">
+            Nessuna generazione ancora
+          </div>
+        `;
+        return;
       }
 
-      init() {
-        this.bindEvents();
-        this.setupDragAndDrop();
-        this.updateUI();
-        this.state.subscribe(this.handleStateChange.bind(this));
+      grid.innerHTML = history.map((item, index) => `
+        <div class="card-thumb" onclick="loadFromHistory(${index})">
+          <img src="${item.url}" alt="Generazione ${index + 1}" />
+          <div class="thumb-actions">
+            <button class="thumb-btn" onclick="event.stopPropagation(); downloadFromUrl('${item.url}')" title="Scarica">📥</button>
+            <button class="thumb-btn" onclick="event.stopPropagation(); reusePrompt(${index})" title="Riusa">♻️</button>
+            <button class="thumb-btn" onclick="event.stopPropagation(); deleteFromHistory(${index})" title="Elimina">🗑️</button>
+          </div>
+          ${item.rating ? `
+            <div style="position: absolute; top: var(--space-1); left: var(--space-1); 
+                 background: rgba(0,0,0,0.8); color: var(--accent); padding: var(--space-1); 
+                 border-radius: var(--space-1); font-size: var(--text-xs);">
+              ${'⭐'.repeat(item.rating)}
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    // ===== EVENT HANDLERS =====
+    async function handleGenerate() {
+      const prompt = document.getElementById('prompt').value.trim();
+      if (!prompt || prompt.length < 3) {
+        showStatus('⚠️ Inserisci un prompt più dettagliato', 'error');
+        return;
       }
 
-      bindEvents() {
-        // Clean up any existing listeners
-        this.cleanup();
-
-        const bindings = [
-          ['#generateBtn', 'click', this.handleGenerate.bind(this)],
-          ['#surpriseBtn', 'click', this.handleSurprise.bind(this)],
-          ['#downloadBtn', 'click', this.handleDownload.bind(this)],
-          ['#exportBtn', 'click', this.handleExportMultiple.bind(this)],
-          ['#batchBtn', 'click', this.handleBatchGenerate.bind(this)],
-          ['#compareBtn', 'click', this.handleToggleComparison.bind(this)],
-          ['#selectA', 'click', () => this.handleSelectWinner(1)],
-          ['#selectB', 'click', () => this.handleSelectWinner(2)],
-          ['#themeBtn', 'click', this.handleToggleTheme.bind(this)],
-          ['#helpBtn', 'click', this.handleShowHelp.bind(this)],
-          ['#clearFileBtn', 'click', this.handleClearFile.bind(this)],
-          ['#fileInput', 'change', this.handleFileInput.bind(this)],
-          ['#prompt', 'input', this.handlePromptInput.bind(this)],
-          ['#creativity', 'input', this.handleCreativityChange.bind(this)],
-          ['#quality', 'input', this.handleQualityChange.bind(this)],
-          ['#ratio', 'change', this.handleRatioChange.bind(this)],
-          ['#frame', 'click', () => document.getElementById('fileInput').click()]
-        ];
-
-        bindings.forEach(([selector, event, handler]) => {
-          const element = document.querySelector(selector);
-          if (element) {
-            element.addEventListener(event, handler);
-            this.eventListeners.set(`${selector}-${event}`, { element, event, handler });
-          }
-        });
-
-        // Chip events
-        document.querySelectorAll('.chip').forEach(chip => {
-          const handler = () => this.handleChipToggle(chip);
-          chip.addEventListener('click', handler);
-          this.eventListeners.set(`chip-${chip.textContent}`, { element: chip, event: 'click', handler });
-        });
-
-        // Star rating events
-        document.querySelectorAll('.star').forEach(star => {
-          const handler = () => this.handleRateImage(parseInt(star.dataset.rating));
-          star.addEventListener('click', handler);
-          this.eventListeners.set(`star-${star.dataset.rating}`, { element: star, event: 'click', handler });
-        });
+      if (prompt.length > 500) {
+        showStatus('⚠️ Il prompt è troppo lungo (max 500 caratteri)', 'error');
+        return;
       }
 
-      cleanup() {
-        this.eventListeners.forEach(({ element, event, handler }) => {
-          element.removeEventListener(event, handler);
-        });
-        this.eventListeners.clear();
-      }
+      if (isGenerating) return;
 
-      setupDragAndDrop() {
-        const frame = document.getElementById('frame');
-        if (!frame) return;
-
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-          frame.addEventListener(eventName, e => {
-            e.preventDefault();
-            e.stopPropagation();
-          });
-        });
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-          frame.addEventListener(eventName, () => {
-            frame.classList.add('drag-over');
-          });
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-          frame.addEventListener(eventName, () => {
-            frame.classList.remove('drag-over');
-          });
-        });
-
-        frame.addEventListener('drop', e => {
-          const files = e.dataTransfer.files;
-          if (files.length > 0) {
-            this.handleFile(files[0]);
-          }
-        });
-      }
-
-      handleStateChange(event, data) {
-        switch (event) {
-          case 'historyUpdated':
-            this.renderHistory();
-            break;
-          case 'imageGenerated':
-            this.updateUIAfterGeneration(data);
-            break;
-        }
-      }
-
-      // Event handlers
-      async handleGenerate() {
-        const prompt = document.getElementById('prompt').value.trim();
-        if (!prompt || prompt.length < 3) {
-          this.showStatus('⚠️ Inserisci un prompt più dettagliato', 'error');
-          return;
-        }
-
-        if (prompt.length > 500) {
-          this.showStatus('⚠️ Il prompt è troppo lungo (max 500 caratteri)', 'error');
-          return;
-        }
-
-        try {
-          this.state.isGenerating = true;
-          this.updateGeneratingState(true);
-          
-          const payload = this.buildGenerationPayload(prompt);
-          
-          // Mock generation for demo
-          if (this.shouldUseMock()) {
-            await this.mockGenerate(payload);
-          } else {
-            const result = await this.api.generate(payload);
-            this.handleGenerationResult(result, payload);
-          }
-
-        } catch (error) {
-          console.error('Generation error:', error);
-          this.showStatus(`❌ ${error.message}`, 'error');
-        } finally {
-          this.state.isGenerating = false;
-          this.updateGeneratingState(false);
-        }
-      }
-
-      shouldUseMock() {
-        return true; // Set to false when real API is available
-      }
-
-      async mockGenerate(payload) {
-        await this.simulateProgress();
-        const mockImageUrl = this.generateMockImageUrl();
-        this.handleGenerationResult({ image_url: mockImageUrl }, payload);
-      }
-
-      generateMockImageUrl() {
-        const ratioMap = {
-          '1-1': '512x512',
-          '3-4': '384x512',
-          '9-16': '288x512',
-          '4-3': '512x384',
-          '16-9': '512x288'
-        };
-        const ratio = document.getElementById('ratio').value;
-        const size = ratioMap[ratio] || '512x512';
-        const seed = Math.floor(Math.random() * 10000);
-        return `https://picsum.photos/seed/${seed}/${size}`;
-      }
-
-      buildGenerationPayload(prompt) {
-        const activeStyles = Array.from(document.querySelectorAll('.chip.active'))
-          .map(chip => chip.dataset.style)
-          .filter(Boolean);
-
-        let finalPrompt = prompt;
-        if (activeStyles.length > 0) {
-          finalPrompt += ', ' + activeStyles.join(', ');
-        }
-
-        return {
-          prompt: finalPrompt,
-          creativity: parseInt(document.getElementById('creativity').value),
-          quality: parseInt(document.getElementById('quality').value),
-          variants: parseInt(document.getElementById('variants').value),
-          ratio: document.getElementById('ratio').value,
-          file: this.state.uploadedFile
-        };
-      }
-
-      handleGenerationResult(result, payload) {
-        if (!result.image_url) {
-          throw new Error('Nessun URL immagine nella risposta');
-        }
-
-        this.state.currentImage = result.image_url;
-        this.displayImage(result.image_url);
-        this.state.addToHistory(result.image_url, payload.prompt);
-        this.showRatingSystem();
-        this.showStatus('✅ Immagine generata con successo!', 'success');
-        this.enableActionButtons();
-      }
-
-      displayImage(imageUrl) {
-        const img = document.getElementById('resultImg');
-        const placeholder = document.getElementById('placeholder');
-        
-        img.src = imageUrl;
-        img.alt = 'Immagine generata da AI';
-        img.style.display = 'block';
-        img.classList.add('show');
-        placeholder.style.display = 'none';
-      }
-
-      async simulateProgress() {
-        const progressBar = document.getElementById('progress');
-        let width = 0;
-
-        return new Promise(resolve => {
-          const interval = setInterval(() => {
-            width += Math.random() * 15 + 5;
-            if (width >= 100) {
-              width = 100;
-              progressBar.style.width = '100%';
-              clearInterval(interval);
-              setTimeout(() => {
-                progressBar.style.width = '0%';
-                resolve();
-              }, 300);
-            } else {
-              progressBar.style.width = width + '%';
-            }
-          }, 200);
-        });
-      }
-
-      updateGeneratingState(isGenerating) {
+      try {
+        isGenerating = true;
         const generateBtn = document.getElementById('generateBtn');
         const spinner = document.getElementById('spinner');
-        const placeholder = document.getElementById('placeholder');
-
-        if (isGenerating) {
-          generateBtn.disabled = true;
-          generateBtn.innerHTML = '<span>⏳</span><span>Generando...</span>';
-          spinner.style.display = 'block';
-          placeholder.style.display = 'flex';
-          this.showStatus('✨ Generazione in corso...', 'loading');
-        } else {
-          generateBtn.disabled = false;
-          generateBtn.innerHTML = '<span aria-hidden="true">🎨</span><span>Genera Immagine</span>';
-          spinner.style.display = 'none';
-        }
-      }
-
-      handleChipToggle(chip) {
-        const isActive = chip.classList.toggle('active');
-        chip.setAttribute('aria-pressed', isActive.toString());
+        const phContent = document.getElementById('phContent');
         
-        const prompt = document.getElementById('prompt');
-        const style = chip.dataset.style;
-        
-        if (isActive && style) {
-          if (prompt.value && !/[,.;:]\s?$/.test(prompt.value)) {
-            prompt.value += ', ';
+        // Update UI to generating state
+        generateBtn.disabled = true;
+        generateBtn.innerHTML = '<span>⏳</span><span>Generando...</span>';
+        spinner.style.display = 'block';
+        phContent.style.display = 'none';
+        document.getElementById('placeholder').style.display = 'flex';
+        showStatus('✨ Generazione in corso...', 'loading');
+
+        // Build prompt with active styles
+        let finalPrompt = prompt;
+        const activeChips = document.querySelectorAll('.chip.active');
+        if (activeChips.length > 0) {
+          const styles = Array.from(activeChips)
+            .map(chip => chip.dataset.style)
+            .filter(Boolean);
+          if (styles.length > 0) {
+            finalPrompt += ', ' + styles.join(', ');
           }
-          prompt.value += style;
-        } else if (style) {
-          prompt.value = prompt.value
-            .replace(style, '')
-            .replace(/\s*,\s*,\s*/g, ', ')
-            .replace(/^,\s*|,\s*$/g, '')
-            .trim();
         }
+
+        // Simulate generation process
+        await simulateProgress();
         
-        this.updateCounter();
-      }
-
-      handlePromptInput() {
-        this.updateCounter();
-      }
-
-      updateCounter() {
-        const prompt = document.getElementById('prompt');
-        const counter = document.getElementById('counter');
-        const length = prompt.value.length;
+        // Generate mock image
+        const imageUrl = generateMockImageUrl();
         
-        counter.textContent = `${length}/500`;
-        counter.style.color = length > 500 ? 'var(--error)' : 'var(--text-subtle)';
-      }
-
-      handleCreativityChange() {
-        const value = document.getElementById('creativity').value;
-        document.getElementById('creativityValue').textContent = value;
-      }
-
-      handleQualityChange() {
-        const value = document.getElementById('quality').value;
-        const labels = ['Bassa', 'Standard', 'Alta', 'Ultra'];
-        document.getElementById('qualityValue').textContent = labels[value - 1];
-      }
-
-      handleRatioChange() {
-        const ratio = document.getElementById('ratio').value;
-        const frame = document.getElementById('frame');
-        frame.className = `frame ratio-${ratio}`;
-      }
-
-      handleSurprise() {
-        const examples = [
-          'Un castello magico su una collina, nuvole colorate al tramonto, in stile acquerello con luce dorata',
-          'Ritratto fotorealistico di una donna, illuminazione cinematografica soft, 85mm, bokeh naturale',
-          'Villaggio fantasy tra le nuvole, cielo stellato, in stile Studio Ghibli con colori pastello',
-          'Logo aziendale minimalista per startup tech, design pulito, sfondo bianco, tipografia moderna',
-          'Character design anime di una guerriera, stile manga, colori vivaci, dettagli espressivi',
-          'Food photography di pasta italiana, macro dettagli, illuminazione appetitosa, styling professionale',
-          'Paesaggio naturale montano, golden hour, dettagli fotorealistici, colori saturi',
-          'Concept art fantasy di una città volante, dettagli epici, atmosfera drammatica',
-          'Copertina libro fantasy, design editoriale, tipografia accattivante, atmosfera misteriosa'
-        ];
-
-        const randomPrompt = examples[Math.floor(Math.random() * examples.length)];
-        document.getElementById('prompt').value = randomPrompt;
-        this.updateCounter();
-
-        // Reset chips
-        document.querySelectorAll('.chip.active').forEach(chip => {
-          chip.classList.remove('active');
-          chip.setAttribute('aria-pressed', 'false');
-        });
-
-        this.showStatus('🎲 Prompt ispirazionale generato!', 'success');
-      }
-
-      handleFileInput(event) {
-        const file = event.target.files[0];
-        if (file) {
-          this.handleFile(file);
-        }
-      }
-
-      handleFile(file) {
-        if (!file.type.startsWith('image/')) {
-          this.showStatus('⚠️ Seleziona solo file immagine', 'error');
-          return;
-        }
-
-        if (file.size > 10 * 1024 * 1024) {
-          this.showStatus('⚠️ File troppo grande (max 10MB)', 'error');
-          return;
-        }
-
-        this.state.uploadedFile = file;
-        document.getElementById('fileName').textContent = file.name;
-        document.getElementById('fileChip').classList.add('show');
-        this.showStatus(`📎 File "${file.name}" caricato`, 'success');
-      }
-
-      handleClearFile() {
-        this.state.uploadedFile = null;
-        document.getElementById('fileInput').value = '';
-        document.getElementById('fileChip').classList.remove('show');
-        this.showStatus('🗑️ File rimosso', 'success');
-      }
-
-      handleRateImage(rating) {
-        this.state.currentRating = rating;
-        this.updateStarDisplay(rating);
+        // Display result
+        displayImage(imageUrl);
+        addToHistory(imageUrl, finalPrompt);
         
-        if (this.state.history.length > 0) {
-          this.state.history[0].rating = rating;
-          this.state.saveHistory();
+        showStatus('✅ Immagine generata con successo!', 'success');
+
+      } catch (error) {
+        console.error('Generation error:', error);
+        showStatus(`❌ ${error.message}`, 'error');
+      } finally {
+        isGenerating = false;
+        const generateBtn = document.getElementById('generateBtn');
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '<span>🎨</span><span>Genera Immagine</span>';
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('phContent').style.display = 'block';
+      }
+    }
+
+    function handleChipToggle(chip) {
+      const isActive = chip.classList.toggle('active');
+      const prompt = document.getElementById('prompt');
+      const style = chip.dataset.style;
+      
+      if (isActive && style) {
+        if (prompt.value && !/[,.;:]\s?$/.test(prompt.value)) {
+          prompt.value += ', ';
         }
-        
-        this.showStatus(`⭐ Valutazione salvata: ${rating}/5`, 'success');
+        prompt.value += style;
+      } else if (style) {
+        prompt.value = prompt.value
+          .replace(style, '')
+          .replace(/\s*,\s*,\s*/g, ', ')
+          .replace(/^,\s*|,\s*$/g, '')
+          .trim();
+      }
+      
+      updateCounter();
+    }
+
+    function handleSurprise() {
+      const examples = [
+        'Un castello magico su una collina, nuvole colorate al tramonto, in stile acquerello con luce dorata',
+        'Ritratto fotorealistico di una donna, illuminazione cinematografica soft, 85mm, bokeh naturale',
+        'Villaggio fantasy tra le nuvole, cielo stellato, in stile Studio Ghibli con colori pastello',
+        'Logo aziendale minimalista per startup tech, design pulito, sfondo bianco, tipografia moderna',
+        'Character design anime di una guerriera, stile manga, colori vivaci, dettagli espressivi',
+        'Food photography di pasta italiana, macro dettagli, illuminazione appetitosa, styling professionale',
+        'Paesaggio naturale montano, golden hour, dettagli fotorealistici, colori saturi',
+        'Concept art fantasy di una città volante, dettagli epici, atmosfera drammatica',
+        'Copertina libro fantasy, design editoriale, tipografia accattivante, atmosfera misteriosa'
+      ];
+
+      const randomPrompt = examples[Math.floor(Math.random() * examples.length)];
+      document.getElementById('prompt').value = randomPrompt;
+      updateCounter();
+
+      // Reset chips
+      document.querySelectorAll('.chip.active').forEach(chip => {
+        chip.classList.remove('active');
+      });
+
+      showStatus('🎲 Prompt ispirazionale generato!', 'success');
+    }
+
+    async function handleBatchGenerate() {
+      const batchSize = parseInt(document.getElementById('batchSize').value);
+      const prompt = document.getElementById('prompt').value.trim();
+
+      if (!prompt || prompt.length < 3) {
+        showStatus('⚠️ Inserisci un prompt per la generazione batch', 'error');
+        return;
       }
 
-      updateStarDisplay(rating) {
-        const stars = document.querySelectorAll('.star');
-        stars.forEach((star, index) => {
-          const isActive = index < rating;
-          star.classList.toggle('active', isActive);
-          star.setAttribute('aria-label', 
-            isActive ? `${index + 1} stelle (selezionato)` : `${index + 1} stelle`
-          );
-        });
-      }
+      try {
+        showStatus(`🔄 Generazione batch di ${batchSize} immagini...`, 'loading');
+        comparisonImages = [];
 
-      handleDownload() {
-        if (!this.state.currentImage) {
-          this.showStatus('⚠️ Nessuna immagine da scaricare', 'error');
-          return;
+        for (let i = 0; i < batchSize; i++) {
+          showStatus(`🔄 Generando immagine ${i + 1}/${batchSize}...`, 'loading');
+          
+          const imageUrl = generateMockImageUrl();
+          comparisonImages.push(imageUrl);
+          addToHistory(imageUrl, prompt);
+
+          if (i === 0) {
+            displayImage(imageUrl);
+          }
+
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
 
-        try {
-          const link = document.createElement('a');
-          link.href = this.state.currentImage;
-          link.download = `artemisia-${Date.now()}.png`;
-          link.click();
-          this.showStatus('📥 Download avviato', 'success');
-        } catch (error) {
-          window.open(this.state.currentImage, '_blank');
-          this.showStatus('🔗 Aperto in nuova scheda', 'success');
-        }
-      }
-
-      handleExportMultiple() {
-        if (this.state.history.length === 0) {
-          this.showStatus('⚠️ Nessuna immagine nella cronologia', 'error');
-          return;
+        if (comparisonImages.length >= 2) {
+          document.getElementById('compareBtn').disabled = false;
         }
 
-        const formats = ['png', 'jpg', 'webp'];
-        this.state.history.slice(0, 5).forEach((item, index) => {
-          formats.forEach(format => {
-            setTimeout(() => {
-              const link = document.createElement('a');
-              link.href = item.url;
-              link.download = `artemisia-${index + 1}.${format}`;
-              link.click();
-            }, index * 200);
-          });
-        });
+        showStatus(`✅ Batch completato: ${batchSize} immagini generate`, 'success');
 
-        this.showStatus('📤 Export multiplo avviato', 'success');
+      } catch (error) {
+        showStatus(`❌ Errore batch: ${error.message}`, 'error');
       }
+    }
 
-      handleToggleTheme() {
-        const root = document.documentElement;
-        const currentTheme = root.getAttribute('data-theme') || 'dark';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        root.setAttribute('data-theme', newTheme);
-        localStorage.setItem('artemisia-theme', newTheme);
-        
-        this.showStatus(`🌗 Tema cambiato a ${newTheme === 'dark' ? 'scuro' : 'chiaro'}`, 'success');
+    function handleToggleComparison() {
+      const comparisonMode = document.getElementById('comparisonMode');
+      const compareBtn = document.getElementById('compareBtn');
+      const isVisible = comparisonMode.style.display !== 'none';
+
+      if (isVisible) {
+        comparisonMode.style.display = 'none';
+        compareBtn.textContent = 'Confronta';
+      } else {
+        if (comparisonImages.length >= 2) {
+          document.getElementById('compareImg1').src = comparisonImages[comparisonImages.length - 2];
+          document.getElementById('compareImg2').src = comparisonImages[comparisonImages.length - 1];
+          comparisonMode.style.display = 'block';
+          compareBtn.textContent = 'Chiudi Confronto';
+        } else {
+          showStatus('❌ Servono almeno 2 immagini per il confronto', 'error');
+        }
       }
+    }
 
-      handleShowHelp() {
-        const helpText = `Artemisia AI - Guida:
+    function handleSelectWinner(choice) {
+      const winnerIndex = choice === 1 ? 
+        comparisonImages.length - 2 : 
+        comparisonImages.length - 1;
+      
+      const winnerUrl = comparisonImages[winnerIndex];
+      displayImage(winnerUrl);
+      
+      showStatus(`🏆 Hai scelto l'immagine ${choice === 1 ? 'A' : 'B'}`, 'success');
+      
+      setTimeout(() => {
+        handleToggleComparison();
+      }, 1500);
+    }
+
+    function handleToggleTheme() {
+      const root = document.documentElement;
+      const currentTheme = root.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      root.setAttribute('data-theme', newTheme);
+      localStorage.setItem('artemisia-theme', newTheme);
+      
+      showStatus(`🌗 Tema cambiato a ${newTheme === 'dark' ? 'scuro' : 'chiaro'}`, 'success');
+    }
+
+    function handleShowHelp() {
+      const helpText = `Artemisia AI - Guida:
 
 • Scrivi un prompt dettagliato per descrivere l'immagine
 • Usa i chip per aggiungere stili predefiniti al prompt
@@ -1652,312 +1339,240 @@ Scorciatoie:
 • Ctrl/Cmd + Enter per generare
 • Trascina file per caricare immagini`;
 
-        alert(helpText);
+      alert(helpText);
+    }
+
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) {
+        showStatus('⚠️ Seleziona solo file immagine', 'error');
+        return;
       }
 
-      async handleBatchGenerate() {
-        const batchSize = parseInt(document.getElementById('batchSize').value);
-        const prompt = document.getElementById('prompt').value.trim();
+      if (file.size > 10 * 1024 * 1024) {
+        showStatus('⚠️ File troppo grande (max 10MB)', 'error');
+        return;
+      }
 
-        if (!prompt || prompt.length < 3) {
-          this.showStatus('⚠️ Inserisci un prompt per la generazione batch', 'error');
-          return;
-        }
+      uploadedFile = file;
+      document.getElementById('fileName').textContent = file.name;
+      document.getElementById('fileChip').classList.add('show');
+      showStatus(`📎 File "${file.name}" caricato`, 'success');
+    }
 
+    function handleClearFile() {
+      uploadedFile = null;
+      document.getElementById('fileInput').value = '';
+      document.getElementById('fileChip').classList.remove('show');
+      showStatus('🗑️ File rimosso', 'success');
+    }
+
+    function handleRateImage(rating) {
+      currentRating = rating;
+      const stars = document.querySelectorAll('.star');
+      stars.forEach((star, index) => {
+        star.classList.toggle('active', index < rating);
+      });
+      
+      if (history.length > 0) {
+        history[0].rating = rating;
         try {
-          this.showStatus(`🔄 Generazione batch di ${batchSize} immagini...`, 'loading');
-          this.state.comparisonImages = [];
-
-          for (let i = 0; i < batchSize; i++) {
-            this.showStatus(`🔄 Generando immagine ${i + 1}/${batchSize}...`, 'loading');
-            
-            const imageUrl = this.generateMockImageUrl();
-            this.state.comparisonImages.push(imageUrl);
-            this.state.addToHistory(imageUrl, prompt);
-
-            if (i === 0) {
-              this.displayImage(imageUrl);
-              this.state.currentImage = imageUrl;
-            }
-
-            await new Promise(resolve => setTimeout(resolve, 1000));
-          }
-
-          if (this.state.comparisonImages.length >= 2) {
-            document.getElementById('compareBtn').disabled = false;
-          }
-
-          this.showStatus(`✅ Batch completato: ${batchSize} immagini generate`, 'success');
-          this.enableActionButtons();
-
-        } catch (error) {
-          this.showStatus(`❌ Errore batch: ${error.message}`, 'error');
+          localStorage.setItem('artemisia-history', JSON.stringify(history));
+        } catch (e) {
+          console.warn('Could not save rating:', e);
         }
+        renderHistory();
+      }
+      
+      showStatus(`⭐ Valutazione salvata: ${rating}/5`, 'success');
+    }
+
+    function handleDownload() {
+      if (!currentImage) {
+        showStatus('⚠️ Nessuna immagine da scaricare', 'error');
+        return;
       }
 
-      handleToggleComparison() {
-        const comparisonMode = document.getElementById('comparisonMode');
-        const compareBtn = document.getElementById('compareBtn');
-        const isVisible = comparisonMode.style.display !== 'none';
+      downloadFromUrl(currentImage);
+    }
 
-        if (isVisible) {
-          comparisonMode.style.display = 'none';
-          compareBtn.textContent = 'Confronta';
-        } else {
-          if (this.state.comparisonImages.length >= 2) {
-            document.getElementById('compareImg1').src = this.state.comparisonImages[this.state.comparisonImages.length - 2];
-            document.getElementById('compareImg2').src = this.state.comparisonImages[this.state.comparisonImages.length - 1];
-            comparisonMode.style.display = 'block';
-            compareBtn.textContent = 'Chiudi Confronto';
-          } else {
-            this.showStatus('❌ Servono almeno 2 immagini per il confronto', 'error');
-          }
-        }
-      }
-
-      handleSelectWinner(choice) {
-        const winnerIndex = choice === 1 ? 
-          this.state.comparisonImages.length - 2 : 
-          this.state.comparisonImages.length - 1;
-        
-        const winnerUrl = this.state.comparisonImages[winnerIndex];
-        
-        this.displayImage(winnerUrl);
-        this.state.currentImage = winnerUrl;
-        
-        this.showStatus(`🏆 Hai scelto l'immagine ${choice === 1 ? 'A' : 'B'}`, 'success');
-        
-        setTimeout(() => {
-          this.handleToggleComparison();
-        }, 1500);
-      }
-
-      showRatingSystem() {
-        document.getElementById('ratingSystem').style.display = 'flex';
-        this.updateStarDisplay(0);
-      }
-
-      enableActionButtons() {
-        document.getElementById('downloadBtn').disabled = false;
-        document.getElementById('exportBtn').disabled = false;
-      }
-
-      showStatus(message, type = 'success') {
-        const status = document.getElementById('status');
-        status.style.display = 'flex';
-        status.className = `status ${type}`;
-        status.textContent = message;
-
-        if (type === 'success') {
-          setTimeout(() => {
-            status.style.display = 'none';
-          }, 3000);
-        }
-      }
-
-      renderHistory() {
-        const grid = document.getElementById('historyGrid');
-        
-        if (this.state.history.length === 0) {
-          grid.innerHTML = `
-            <div class="small" style="grid-column: 1/-1; text-align: center; padding: var(--space-5);">
-              Nessuna generazione ancora
-            </div>
-          `;
-          return;
-        }
-
-        grid.innerHTML = this.state.history.map((item, index) => `
-          <div class="card-thumb" data-index="${index}">
-            <img data-src="${item.url}" alt="Generazione ${index + 1}" class="skeleton" />
-            <div class="thumb-actions">
-              <button class="thumb-btn" data-action="download" data-url="${item.url}" 
-                      title="Scarica" aria-label="Scarica immagine">📥</button>
-              <button class="thumb-btn" data-action="reuse" data-index="${index}" 
-                      title="Riusa prompt" aria-label="Riusa prompt">♻️</button>
-              <button class="thumb-btn" data-action="delete" data-index="${index}" 
-                      title="Elimina" aria-label="Elimina dalla cronologia">🗑️</button>
-            </div>
-            ${item.rating ? `
-              <div class="rating-badge" style="position: absolute; top: var(--space-1); left: var(--space-1); 
-                   background: rgba(0,0,0,0.8); color: var(--accent); padding: var(--space-1); 
-                   border-radius: var(--space-1); font-size: var(--text-xs);">
-                ${'⭐'.repeat(item.rating)}
-              </div>
-            ` : ''}
-          </div>
-        `).join('');
-
-        // Setup lazy loading for new images
-        grid.querySelectorAll('img[data-src]').forEach(img => {
-          this.imageLoader.observe(img);
-        });
-
-        // Bind thumbnail actions
-        grid.addEventListener('click', this.handleHistoryClick.bind(this));
-      }
-
-      handleHistoryClick(event) {
-        const action = event.target.dataset.action;
-        const index = parseInt(event.target.dataset.index);
-        const url = event.target.dataset.url;
-
-        switch (action) {
-          case 'download':
-            this.downloadFromUrl(url);
-            break;
-          case 'reuse':
-            this.reusePrompt(index);
-            break;
-          case 'delete':
-            this.deleteFromHistory(index);
-            break;
-        }
-
-        // Handle thumbnail click to load image
-        if (event.target.closest('.card-thumb') && !action) {
-          const thumbIndex = parseInt(event.target.closest('.card-thumb').dataset.index);
-          this.loadFromHistory(thumbIndex);
-        }
-      }
-
-      downloadFromUrl(url) {
-        try {
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `artemisia-${Date.now()}.png`;
-          link.click();
-          this.showStatus('📥 Download avviato', 'success');
-        } catch (error) {
-          window.open(url, '_blank');
-          this.showStatus('🔗 Aperto in nuova scheda', 'success');
-        }
-      }
-
-      reusePrompt(index) {
-        const item = this.state.history[index];
-        if (item) {
-          document.getElementById('prompt').value = item.prompt;
-          this.updateCounter();
-          
-          // Reset chips
-          document.querySelectorAll('.chip.active').forEach(chip => {
-            chip.classList.remove('active');
-            chip.setAttribute('aria-pressed', 'false');
-          });
-          
-          this.showStatus('📝 Prompt riutilizzato', 'success');
-        }
-      }
-
-      loadFromHistory(index) {
-        const item = this.state.history[index];
-        if (item) {
-          this.displayImage(item.url);
-          this.state.currentImage = item.url;
-          this.updateStarDisplay(item.rating || 0);
-          this.enableActionButtons();
-          this.showStatus('📋 Immagine caricata dalla cronologia', 'success');
-        }
-      }
-
-      deleteFromHistory(index) {
-        if (confirm('Rimuovere questa immagine dalla cronologia?')) {
-          this.state.history.splice(index, 1);
-          this.state.saveHistory();
-          this.renderHistory();
-          this.showStatus('🗑️ Rimosso dalla cronologia', 'success');
-        }
-      }
-
-      updateUI() {
-        this.updateCounter();
-        this.handleCreativityChange();
-        this.handleQualityChange();
-        this.handleRatioChange();
-        this.renderHistory();
-        
-        // Load saved theme
-        const savedTheme = localStorage.getItem('artemisia-theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
+    function downloadFromUrl(url) {
+      try {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `artemisia-${Date.now()}.png`;
+        link.click();
+        showStatus('📥 Download avviato', 'success');
+      } catch (error) {
+        window.open(url, '_blank');
+        showStatus('🔗 Aperto in nuova scheda', 'success');
       }
     }
 
-    // ===== INITIALIZATION =====
-    let app;
-
-    function initializeApp() {
-      try {
-        const state = new AppState();
-        const apiClient = new APIClient();
-        const imageLoader = new ImageLazyLoader();
-        
-        app = new ComponentManager(state, apiClient, imageLoader);
-        
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (event) => {
-          if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
-            event.preventDefault();
-            app.handleGenerate();
-          }
-          
-          if (event.key === 'Escape') {
-            // Close comparison mode if open
-            const comparisonMode = document.getElementById('comparisonMode');
-            if (comparisonMode.style.display !== 'none') {
-              app.handleToggleComparison();
-            }
-          }
-        });
-
-        console.log('🎨 Artemisia Story initialized successfully');
-        
-      } catch (error) {
-        console.error('❌ Failed to initialize app:', error);
-        
-        // Fallback error UI
-        document.body.innerHTML = `
-          <div class="error-boundary">
-            <h2>⚠️ Errore di Inizializzazione</h2>
-            <p>Si è verificato un errore durante il caricamento dell'applicazione.</p>
-            <p>Ricarica la pagina per riprovare.</p>
-            <button onclick="window.location.reload()" class="btn primary" style="margin-top: var(--space-4);">
-              🔄 Ricarica Pagina
-            </button>
-          </div>
-        `;
+    function handleExportMultiple() {
+      if (history.length === 0) {
+        showStatus('⚠️ Nessuna immagine nella cronologia', 'error');
+        return;
       }
+
+      history.slice(0, 5).forEach((item, index) => {
+        setTimeout(() => {
+          downloadFromUrl(item.url);
+        }, index * 200);
+      });
+
+      showStatus('📤 Export multiplo avviato', 'success');
+    }
+
+    // History functions
+    function loadFromHistory(index) {
+      const item = history[index];
+      if (item) {
+        displayImage(item.url);
+        const stars = document.querySelectorAll('.star');
+        stars.forEach((star, i) => {
+          star.classList.toggle('active', i < (item.rating || 0));
+        });
+        showStatus('📋 Immagine caricata dalla cronologia', 'success');
+      }
+    }
+
+    function reusePrompt(index) {
+      const item = history[index];
+      if (item) {
+        document.getElementById('prompt').value = item.prompt;
+        updateCounter();
+        
+        // Reset chips
+        document.querySelectorAll('.chip.active').forEach(chip => {
+          chip.classList.remove('active');
+        });
+        
+        showStatus('📝 Prompt riutilizzato', 'success');
+      }
+    }
+
+    function deleteFromHistory(index) {
+      if (confirm('Rimuovere questa immagine dalla cronologia?')) {
+        history.splice(index, 1);
+        try {
+          localStorage.setItem('artemisia-history', JSON.stringify(history));
+        } catch (e) {
+          console.warn('Could not save history:', e);
+        }
+        renderHistory();
+        showStatus('🗑️ Rimosso dalla cronologia', 'success');
+      }
+    }
+
+    // ===== DRAG & DROP =====
+    function setupDragAndDrop() {
+      const frame = document.getElementById('frame');
+      
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        frame.addEventListener(eventName, e => {
+          e.preventDefault();
+          e.stopPropagation();
+        });
+      });
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        frame.addEventListener(eventName, () => {
+          frame.classList.add('drag-over');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        frame.addEventListener(eventName, () => {
+          frame.classList.remove('drag-over');
+        });
+      });
+
+      frame.addEventListener('drop', e => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleFile(files[0]);
+        }
+      });
+    }
+
+    // ===== INITIALIZATION =====
+    function init() {
+      // Load saved data
+      history = loadHistory();
+      
+      // Load saved theme
+      const savedTheme = localStorage.getItem('artemisia-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      
+      // Update UI
+      updateCounter();
+      updateCreativity();
+      updateQuality();
+      updateRatio();
+      renderHistory();
+      
+      // Setup drag and drop
+      setupDragAndDrop();
+      
+      // Bind events
+      document.getElementById('generateBtn').addEventListener('click', handleGenerate);
+      document.getElementById('surpriseBtn').addEventListener('click', handleSurprise);
+      document.getElementById('downloadBtn').addEventListener('click', handleDownload);
+      document.getElementById('exportBtn').addEventListener('click', handleExportMultiple);
+      document.getElementById('batchBtn').addEventListener('click', handleBatchGenerate);
+      document.getElementById('compareBtn').addEventListener('click', handleToggleComparison);
+      document.getElementById('selectA').addEventListener('click', () => handleSelectWinner(1));
+      document.getElementById('selectB').addEventListener('click', () => handleSelectWinner(2));
+      document.getElementById('themeBtn').addEventListener('click', handleToggleTheme);
+      document.getElementById('helpBtn').addEventListener('click', handleShowHelp);
+      document.getElementById('clearFileBtn').addEventListener('click', handleClearFile);
+      document.getElementById('frame').addEventListener('click', () => document.getElementById('fileInput').click());
+      
+      // Input events
+      document.getElementById('prompt').addEventListener('input', updateCounter);
+      document.getElementById('creativity').addEventListener('input', updateCreativity);
+      document.getElementById('quality').addEventListener('input', updateQuality);
+      document.getElementById('ratio').addEventListener('change', updateRatio);
+      document.getElementById('fileInput').addEventListener('change', (e) => {
+        if (e.target.files[0]) handleFile(e.target.files[0]);
+      });
+      
+      // Chip events
+      document.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => handleChipToggle(chip));
+      });
+      
+      // Star rating events
+      document.querySelectorAll('.star').forEach(star => {
+        star.addEventListener('click', () => {
+          handleRateImage(parseInt(star.dataset.rating));
+        });
+      });
+      
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          handleGenerate();
+        }
+        
+        if (e.key === 'Escape') {
+          const comparisonMode = document.getElementById('comparisonMode');
+          if (comparisonMode.style.display !== 'none') {
+            handleToggleComparison();
+          }
+        }
+      });
+      
+      console.log('🎨 Artemisia Story initialized successfully');
     }
 
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initializeApp);
+      document.addEventListener('DOMContentLoaded', init);
     } else {
-      initializeApp();
+      init();
     }
-
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', () => {
-      if (app) {
-        app.cleanup();
-      }
-    });
-
-    // Global error handler
-    window.addEventListener('error', (event) => {
-      console.error('Global error:', event.error);
-      if (app) {
-        app.showStatus('❌ Si è verificato un errore inaspettato', 'error');
-      }
-    });
-
-    // Unhandled promise rejection handler
-    window.addEventListener('unhandledrejection', (event) => {
-      console.error('Unhandled promise rejection:', event.reason);
-      if (app) {
-        app.showStatus('❌ Errore di connessione - riprova', 'error');
-      }
-    });
 
   </script>
 </body>
