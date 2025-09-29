@@ -4,13 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Artemisia Story · Generatore & Trasformatore di immagini AI</title>
-
-  <!-- Favicon reale -->
   <link rel="icon" type="image/png" href="/logo-artemisia.png" />
-
-  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-
   <style>
     :root{
       --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;
@@ -26,15 +21,19 @@
       --surface:rgba(2,6,23,.04);--surface-h:rgba(2,6,23,.08);--border:rgba(2,6,23,.12);--shadow:0 20px 60px rgba(2,6,23,.15);
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:var(--text-sm);color:var(--text);background:
-      radial-gradient(1000px 600px at -10% -10%, #0ea5e980, transparent 60%),
-      radial-gradient(800px 500px at 110% 10%, #a78bfa66, transparent 60%),
-      linear-gradient(135deg,var(--bg-start),var(--bg-end));-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    html,body{
+      height:100%;margin:0;font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:var(--text-sm);color:var(--text);
+      background:
+        radial-gradient(1000px 600px at -10% -10%, #0ea5e980, transparent 60%),
+        radial-gradient(800px 500px at 110% 10%, #a78bfa66, transparent 60%),
+        linear-gradient(135deg,var(--bg-start),var(--bg-end));
+      -webkit-font-smoothing:antialiased;overflow-x:hidden
+    }
     .container{max-width:1200px;margin:0 auto;padding:var(--space-6)}
     @media(max-width:768px){.container{padding:var(--space-4)}}
     .header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
     .brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .logo{width:44px;height:44px;border-radius:12px;background:var(--surface);display:grid;place-items:center;overflow:hidden}
+    .logo{width:var(--touch);height:var(--touch);display:grid;place-items:center;background:var(--surface);border-radius:12px;box-shadow:var(--shadow);font-size:24px;overflow:hidden}
     .logo img{width:100%;height:100%;object-fit:contain}
     .title{font-size:clamp(var(--text-xl),4vw,var(--text-3xl));font-weight:800;letter-spacing:-.02em;margin:0}
     .subtitle{font-size:12px;color:var(--muted);margin-top:2px}
@@ -44,16 +43,24 @@
     .grid{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}
     @media(max-width:1024px){.grid{grid-template-columns:1fr;gap:24px}}
     .card{background:var(--card);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
-    .section-title{font-weight:700;margin-bottom:10px}
+    .section-title{font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
     .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
     .chip{min-height:var(--touch-sm);padding:8px 12px;border:1px solid var(--border);background:var(--surface);border-radius:999px;font-size:12px;cursor:pointer;transition:.2s}
     .chip:hover{background:var(--surface-h);border-color:var(--brand);transform:translateY(-1px)}
     .chip.active{outline:2px solid var(--ring);border-color:transparent;background:rgba(139,92,246,.2)}
+    .chip.business{border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.1)}
+    .chip.business.active{background:rgba(16,185,129,.2)}
+    .chip.creative{border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.1)}
+    .chip.creative.active{background:rgba(245,158,11,.2)}
+    .chip.photo{border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.1)}
+    .chip.photo.active{background:rgba(59,130,246,.2)}
     .controls{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
     .select,.slider{display:flex;align-items:center;gap:8px;min-height:var(--touch);border:1px solid var(--border);background:var(--surface);padding:0 12px;border-radius:12px}
+    .select:focus-within{border-color:var(--border-f)}
     .select select,.select input{background:transparent;border:none;color:var(--text);font-size:14px}
     .slider input{accent-color:var(--brand);flex:1}
     .slider span{font-size:12px;color:var(--muted);min-width:50px;text-align:right}
+    .select label{font-size:12px;color:var(--muted)}
     .textarea{position:relative;margin:16px 0}
     textarea{width:100%;min-height:140px;resize:vertical;border:2px solid transparent;border-radius:16px;padding:16px;background:var(--surface);color:var(--text)}
     textarea:focus{outline:none;box-shadow:0 0 0 4px var(--ring);border-color:var(--border-f)}
@@ -64,7 +71,14 @@
     .btn:disabled{opacity:.5;cursor:not-allowed}
     .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));border-color:transparent;color:#fff;box-shadow:0 10px 24px rgba(139,92,246,.4)}
     .btn.primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 15px 35px rgba(139,92,246,.5)}
+    .btn.outline:hover:not(:disabled){border-color:var(--accent);background:rgba(139,92,246,.1)}
+    .status{margin-top:12px;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:500;display:none}
+    .status.success{background:rgba(16,185,129,.1);color:var(--ok);border:1px solid rgba(16,185,129,.3)}
+    .status.error{background:rgba(239,68,68,.1);color:var(--err);border:1px solid rgba(239,68,68,.3)}
+    .status.loading{background:rgba(139,92,246,.1);color:var(--brand);border:1px solid rgba(139,92,246,.3)}
     .frame{position:relative;background:linear-gradient(135deg,#0b1020,#1f2937);border:2px solid var(--border);border-radius:18px;display:grid;place-items:center;overflow:hidden;min-height:220px;cursor:pointer}
+    .frame.ratio-1-1{aspect-ratio:1/1}.frame.ratio-3-4{aspect-ratio:3/4}.frame.ratio-4-3{aspect-ratio:4/3}.frame.ratio-16-9{aspect-ratio:16/9}.frame.ratio-9-16{aspect-ratio:9/16}
+    .frame.drag-over{border-color:var(--accent);box-shadow:0 0 0 4px var(--ring)}
     .frame img{max-width:100%;max-height:100%;display:none;border-radius:12px}
     .frame img.show{display:block;animation:fadeIn .35s ease-out}
     @keyframes fadeIn{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
@@ -72,25 +86,36 @@
     .spinner{width:54px;height:54px;border-radius:50%;border:4px solid rgba(255,255,255,.2);border-top-color:var(--brand);animation:spin 1s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .progress{position:absolute;left:0;bottom:0;height:4px;width:0;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .3s ease;border-radius:0 0 16px 16px}
+    .history{margin-top:18px}
     .history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
     .card-thumb{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;cursor:pointer}
     .card-thumb img{width:100%;height:140px;object-fit:cover}
     .thumb-actions{position:absolute;right:8px;bottom:8px;display:flex;gap:6px;opacity:0;transition:opacity .2s}
     .card-thumb:hover .thumb-actions{opacity:1}
+    .thumb-btn{min-width:32px;min-height:32px;background:rgba(0,0,0,.75);color:#fff;border:none;border-radius:8px;cursor:pointer}
+    .comparison-mode{display:none;margin:20px 0}
+    .comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    @media(max-width:768px){.comparison-grid{grid-template-columns:1fr}}
+    .compare-item img{width:100%;border-radius:12px;border:2px solid var(--border)}
+    .rating-system{display:flex;align-items:center;gap:8px;margin:8px 0;font-size:12px}
+    .star{cursor:pointer;font-size:16px;background:none;border:none;color:var(--muted);min-width:24px}
+    .star.active{color:var(--accent)}
+    .file-chip{display:none;align-items:center;gap:8px;padding:8px 12px;margin:10px 0;background:rgba(234,179,8,.1);border:1px solid rgba(234,179,8,.3);border-radius:12px;color:var(--accent);font-size:12px}
+    .file-chip.show{display:flex}
   </style>
 </head>
 <body>
   <div class="container">
     <header class="header">
       <div class="brand">
-        <div class="logo"><img src="/logo-artemisia.png" alt="Artemisia Story" /></div>
+        <div class="logo"><img src="/logo-artemisia.png" alt="Artemisia Story"/></div>
         <div>
           <div class="title">Artemisia Story</div>
           <div class="subtitle">Generatore & Trasformatore di immagini AI</div>
         </div>
       </div>
       <div class="actions">
-        <button class="icon-btn" id="themeBtn" title="Tema">🌗</button>
+        <button class="icon-btn" id="themeBtn" title="Tema chiaro/scuro">🌗</button>
         <button class="icon-btn" id="helpBtn" title="Guida">❔</button>
       </div>
     </header>
@@ -98,110 +123,476 @@
     <main class="grid">
       <!-- Sinistra -->
       <section class="card">
-        <div class="section-title">✨ Scrivi il tuo prompt</div>
-        <div class="chips">
-          <button class="chip" data-style="in stile cartoon moderno">Cartoon</button>
-          <button class="chip" data-style="fotorealistico, illuminazione cinematografica">Fotorealistico</button>
-          <button class="chip" data-style="in stile acquerello morbido">Acquerello</button>
-          <button class="chip" data-style="in stile Studio Ghibli, colori pastello, mano dipinta">Ghibli</button>
+        <div class="section-title"><span class="emoji">✨</span><span>Scrivi il tuo prompt</span></div>
+
+        <div class="chips" id="styleChips">
+          <button class="chip" data-style="in stile cartoon moderno" data-negative="photo, 3D render, stadium, crowd, sports, watermark">Cartoon</button>
+          <button class="chip" data-style="fotorealistico, illuminazione cinematografica" data-negative="cartoon, illustration, drawing, watermark">Fotorealistico</button>
+          <button class="chip" data-style="in stile acquerello morbido" data-negative="high contrast, hyperrealism, text watermark">Acquerello</button>
+          <button class="chip" data-style="in stile Studio Ghibli, colori pastello, mano dipinta" data-negative="photo, hyperrealism, 3D render, harsh contrast, stadium, signage">Ghibli</button>
+          <button class="chip" data-style="in stile pittorico biblico, chiaroscuro, luce dorata" data-negative="modern clothes, sports, stadium, crowd, logos, text watermark">Biblico</button>
+          <button class="chip" data-style="vintage anni 90, grana leggera" data-negative="ultra sharp, digital look">Vintage '90</button>
         </div>
+
+        <div class="section-title"><span class="emoji">🎯</span><span>Business & Marketing</span></div>
+        <div class="chips">
+          <button class="chip business" data-style="logo aziendale minimalista, tipografia moderna, sfondo bianco" data-negative="busy background, clutter, gradient noise">Logo Business</button>
+          <button class="chip business" data-style="prodotto su sfondo neutro, softbox studio, riflessi controllati" data-negative="busy background, watermark">Prodotto</button>
+          <button class="chip business" data-style="grafica social vibrante, alto contrasto, layout accattivante" data-negative="photo watermark, clutter">Social Post</button>
+          <button class="chip business" data-style="brochure aziendale elegante, layout editoriale, colori corporate" data-negative="messy layout, noisy texture">Brochure</button>
+        </div>
+
+        <div class="section-title"><span class="emoji">🎨</span><span>Arte & Creatività</span></div>
+        <div class="chips">
+          <button class="chip creative" data-style="concept art fantasy epico, luce cinematografica, foschia volumetrica" data-negative="sci-fi tech moderno, signage">Fantasy Art</button>
+          <button class="chip creative" data-style="illustrazione per bambini, forme arrotondate, colori pastello" data-negative="harsh contrast, hyperrealism">Per Bambini</button>
+          <button class="chip creative" data-style="arte astratta moderna, forme geometriche, campi di colore" data-negative="figurative realism, text">Arte Astratta</button>
+          <button class="chip creative" data-style="copertina libro, composizione editoriale, tipografia suggestiva" data-negative="watermark, cluttered background">Copertina Libro</button>
+          <button class="chip creative" data-style="character design anime, colori vivaci, lineart pulito" data-negative="photo, hyperrealism">Character Anime</button>
+        </div>
+
+        <div class="section-title"><span class="emoji">📸</span><span>Fotografia</span></div>
+        <div class="chips">
+          <button class="chip photo" data-style="ritratto 85mm, luce soft, bokeh naturale, alta risoluzione" data-negative="overexposed, watermark, harsh shadows">Ritratto Pro</button>
+          <button class="chip photo" data-style="paesaggio golden hour, colori saturi, panoramica" data-negative="haze, washed out">Paesaggio</button>
+          <button class="chip photo" data-style="architettura moderna, linee pulite, prospettiva geometrica" data-negative="distortion, tilted horizon">Architettura</button>
+          <button class="chip photo" data-style="food photography macro appetitosa, styling professionale" data-negative="flat lighting, watermark">Food</button>
+          <button class="chip photo" data-style="street photography autentica, contrasti drammatici" data-negative="blur, watermark">Street</button>
+        </div>
+
+        <div class="section-title"><span class="emoji">⚙️</span><span>Parametri</span></div>
+        <div class="controls">
+          <div class="slider"><label>Creatività:</label><input type="range" id="creativity" min="0" max="100" value="70"/><span id="creativityValue">70</span></div>
+          <div class="slider"><label>Qualità:</label><input type="range" id="quality" min="1" max="4" value="2"/><span id="qualityValue">Standard</span></div>
+          <div class="select"><select id="variants"><option value="1">1 Variante</option><option value="2">2 Varianti</option><option value="4">4 Varianti</option></select></div>
+          <div class="select"><select id="ratio"><option value="1-1">1:1 (Quadrato)</option><option value="3-4">3:4 (Ritratto)</option><option value="9-16">9:16 (Verticale)</option><option value="4-3">4:3 (Orizzontale)</option><option value="16-9">16:9 (Wide)</option></select></div>
+        </div>
+
         <div class="textarea">
           <textarea id="prompt" placeholder="Es.: Un angelo al tramonto su una collina, atmosfera serena."></textarea>
           <div class="counter" id="counter">0/500</div>
         </div>
-        <div class="btns">
-          <button class="btn primary" id="generateBtn">🎨 Genera</button>
+
+        <!-- 🧪 Parametri avanzati -->
+        <div class="section-title" style="margin-top:14px"><span class="emoji">🧪</span><span>Parametri avanzati</span></div>
+        <div class="controls">
+          <div class="select" style="gap:8px">
+            <label for="seed">Seed:</label>
+            <input type="number" id="seed" placeholder="casuale" style="width:120px">
+            <button class="btn outline" id="seedRndBtn" type="button">🎲 Casuale</button>
+            <button class="btn outline" id="seedLockBtn" type="button" aria-pressed="false">🔒 Blocca</button>
+          </div>
+          <div class="slider"><label for="steps">Steps:</label><input type="range" id="steps" min="10" max="60" value="30"><span id="stepsValue">30</span></div>
+          <div class="slider"><label for="cfg">Guida (CFG):</label><input type="range" id="cfg" min="1" max="12" step="0.5" value="7"><span id="cfgValue">7</span></div>
+          <div class="slider"><label for="styleStrength">Forza stile:</label><input type="range" id="styleStrength" min="0" max="1" step="0.05" value="0.6"><span id="styleStrengthValue">0.60</span></div>
+          <div class="slider"><label for="denoise">Denoise:</label><input type="range" id="denoise" min="0" max="1" step="0.05" value="0.5"><span id="denoiseValue">0.50</span></div>
+          <div class="select">
+            <label for="sampler">Sampler:</label>
+            <select id="sampler">
+              <option value="auto" selected>Auto</option>
+              <option value="euler_a">Euler a</option>
+              <option value="dpmpp_2m">DPM++ 2M</option>
+              <option value="dpmpp_sde">DPM++ SDE</option>
+              <option value="ddim">DDIM</option>
+            </select>
+          </div>
         </div>
+
+        <div class="textarea">
+          <textarea id="negative" placeholder="Negative prompt (es.: blur, watermark, extra fingers...)"></textarea>
+          <div class="counter" id="negCounter">0/500</div>
+        </div>
+
+        <div class="file-chip" id="fileChip">
+          <span>📎</span><span id="fileName">Nessun file</span>
+          <button id="clearFileBtn" title="Rimuovi">✕</button>
+        </div>
+
+        <div class="controls" style="padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px">
+          <span style="font-weight:700">Workflow Avanzato:</span>
+          <div class="select"><select id="batchSize"><option value="1">Genera 1</option><option value="2">Genera 2</option><option value="4">Genera 4</option></select></div>
+          <button class="btn outline" id="batchBtn">Batch Generate</button>
+          <button class="btn outline" id="compareBtn" disabled>Confronta A/B</button>
+        </div>
+
+        <div class="btns">
+          <button class="btn primary" id="generateBtn"><span>🎨</span><span>Genera Immagine</span></button>
+          <button class="btn outline" id="surpriseBtn"><span>🎲</span><span>Ispirami</span></button>
+          <button class="btn outline" id="downloadBtn" disabled><span>📥</span><span>Scarica PNG</span></button>
+          <button class="btn outline" id="exportBtn" disabled><span>📤</span><span>Export Multi</span></button>
+        </div>
+
+        <div class="rating-system" id="ratingSystem" style="display:none">
+          <span>Valuta risultato:</span>
+          <div id="starRating">
+            <button class="star" data-rating="1">⭐</button>
+            <button class="star" data-rating="2">⭐</button>
+            <button class="star" data-rating="3">⭐</button>
+            <button class="star" data-rating="4">⭐</button>
+            <button class="star" data-rating="5">⭐</button>
+          </div>
+        </div>
+
         <div id="status" class="status"></div>
       </section>
 
       <!-- Destra -->
       <section class="card">
-        <div class="section-title">🖼️ Anteprima</div>
-        <div class="frame" id="frame">
+        <div class="section-title"><span class="emoji">🖼️</span><span>Anteprima</span></div>
+        <div class="frame ratio-1-1" id="frame" title="Clic o Trascina un'immagine per trasformarla">
           <img id="resultImg" alt="" />
           <div class="placeholder" id="placeholder">
             <div class="spinner" id="spinner" style="display:none"></div>
-            <div id="phContent">Nessuna immagine ancora</div>
+            <div id="phContent">
+              <div style="font-weight:700;opacity:.95;font-size:18px">Nessuna immagine ancora</div>
+              <div class="small">Scrivi un prompt e premi “Genera”</div>
+            </div>
           </div>
           <div class="progress" id="progress"></div>
         </div>
-        <div class="history">
-          <div class="section-title">🕘 Cronologia</div>
-          <div class="history-grid" id="historyGrid">
-            <div style="grid-column:1/-1;text-align:center;padding:20px">Nessuna generazione ancora</div>
+
+        <div class="comparison-mode" id="comparisonMode">
+          <div class="section-title"><span class="emoji">⚖️</span><span>Confronto Risultati</span></div>
+          <div class="comparison-grid">
+            <div class="compare-item"><img id="compareImg1" alt="A"/><div class="btns" style="margin-top:8px"><button class="btn outline" id="selectA">Preferisci A</button></div></div>
+            <div class="compare-item"><img id="compareImg2" alt="B"/><div class="btns" style="margin-top:8px"><button class="btn outline" id="selectB">Preferisci B</button></div></div>
           </div>
+        </div>
+
+        <div class="history">
+          <div class="section-title"><span class="emoji">🕘</span><span>Cronologia</span></div>
+          <div class="history-grid" id="historyGrid">
+            <div class="small" style="grid-column:1/-1;text-align:center;padding:20px">Nessuna generazione ancora</div>
+          </div>
+        </div>
+
+        <div class="tips" style="margin-top:16px;padding:18px;border-left:3px solid var(--brand);background:linear-gradient(0deg,transparent,rgba(139,92,246,.08));border-radius:12px">
+          <strong>💡 Suggerimenti rapidi</strong>
+          <ul style="margin:.5rem 0 0 1.2rem;line-height:1.7;font-size:14px">
+            <li>I preset aggiungono “style” e “negative” per risultati coerenti</li>
+            <li>Batch + Confronto A/B per scegliere il migliore</li>
+            <li>Trascina un’immagine per trasformarla (image-to-image)</li>
+            <li>Per testi renderizzati: usa minuscole e frasi brevi</li>
+          </ul>
         </div>
       </section>
     </main>
+
+    <input id="fileInput" type="file" accept="image/*" style="display:none"/>
   </div>
 
   <script>
-    const BASE = (location.hostname==='localhost'||location.protocol==='file:') ? 'http://localhost:3000' : '';
-    const GEN_URL  = `${BASE}/api/generate`;
-    const EDIT_URL = `${BASE}/api/edit`;
+    // ===================== CONFIG ENDPOINTS =====================
+    const BASE =
+      (location.hostname==='localhost' || location.hostname==='127.0.0.1' || location.protocol==='file:')
+        ? 'http://localhost:3000' : '';
+    const GEN_URL  = `${BASE}/api/generate`; // text -> image
+    const EDIT_URL = `${BASE}/api/edit`;      // image -> image
 
-    let currentImage=null, history=[];
+    // ===================== STATO SEMPLICE ======================
+    let uploadedFile=null, isGenerating=false, history=[], comparisonImages=[], currentImage=null;
+    let lockedSeed = null;
 
+    // ===================== UI HELPERS ==========================
     function showStatus(msg,type='success'){
-      const s=document.getElementById('status');
-      s.style.display='block'; s.textContent=msg;
-      s.className='status '+type;
+      const s=document.getElementById('status'); s.style.display='block'; s.className=`status ${type}`; s.textContent=msg;
+      if(type==='success') setTimeout(()=>s.style.display='none',2500);
     }
-    function updateCounter(){
-      const p=document.getElementById('prompt');
-      const c=document.getElementById('counter');
-      const n=p.value.length;
-      c.textContent=`${n}/500`;
+    function updateCounter(){const p=document.getElementById('prompt'); const c=document.getElementById('counter'); const n=p.value.length; c.textContent=`${n}/500`; c.style.color=n>500?'var(--err)':'var(--subtle)';}
+    function updateCreativity(){document.getElementById('creativityValue').textContent=document.getElementById('creativity').value;}
+    function updateQuality(){const v=+document.getElementById('quality').value;document.getElementById('qualityValue').textContent=['Bassa','Standard','Alta','Ultra'][v-1];}
+    function updateRatio(){const r=document.getElementById('ratio').value;document.getElementById('frame').className=`frame ratio-${r}`;}
+
+    function updateSteps(){ document.getElementById('stepsValue').textContent = document.getElementById('steps').value; }
+    function updateCfg(){ document.getElementById('cfgValue').textContent = document.getElementById('cfg').value; }
+    function updateStyleStrength(){ document.getElementById('styleStrengthValue').textContent = (+document.getElementById('styleStrength').value).toFixed(2); }
+    function updateDenoise(){ document.getElementById('denoiseValue').textContent = (+document.getElementById('denoise').value).toFixed(2); }
+    function updateNegCounter(){
+      const n = document.getElementById('negative').value.length;
+      const el = document.getElementById('negCounter');
+      el.textContent = `${n}/500`;
+      el.style.color = n>500 ? 'var(--err)' : 'var(--subtle)';
     }
-    function handleChipToggle(chip){
-      const promptEl=document.getElementById('prompt');
-      const style=(chip.dataset.style||'').trim();
+
+    // CHIP -> TEXTAREA
+    function handleChipToggle(chip) {
+      const promptEl = document.getElementById('prompt');
+      const style = (chip.dataset.style || '').trim();
       chip.classList.toggle('active');
-      if(chip.classList.contains('active')){
-        promptEl.value += (promptEl.value?', ':'')+style;
-      }else{
-        promptEl.value=promptEl.value.replace(style,'').replace(/\s{2,}/g,' ').trim();
+      if (!style) { updateCounter(); return; }
+      if (chip.classList.contains('active')) {
+        const needsComma = promptEl.value && !/[,.;:]\s?$/.test(promptEl.value);
+        promptEl.value += (needsComma ? ', ' : '') + style;
+      } else {
+        promptEl.value = promptEl.value
+          .replace(style, '')
+          .replace(/\s*,\s*,\s*/g, ', ')
+          .replace(/^,\s*|\s*,\s*$/g, '')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
       }
       updateCounter();
     }
+
+    function buildPromptFromUI(){ return document.getElementById('prompt').value.trim(); }
+    function buildNegativeFromUI(){
+      const NEG_BASE=['low quality','blurry','jpeg artifacts','text watermark','logo','extra fingers','mutated hands','nsfw'];
+      const chipNeg=[...document.querySelectorAll('.chip.active')].map(c=>c.dataset.negative||'').filter(Boolean).join(', ');
+      const userNeg=(document.getElementById('negative').value||'').trim();
+      return [NEG_BASE.join(', '), chipNeg, userNeg].filter(Boolean).join(', ').replace(/\s+,/g,',').replace(/,\s*,/g,', ').trim();
+    }
+
+    // Seed helpers
+    function randomSeed(){ return Math.floor(Math.random()*1_000_000_000); }
+    function applySeedUI(){
+      const input = document.getElementById('seed');
+      input.value = lockedSeed ?? input.value;
+      document.getElementById('seedLockBtn').setAttribute('aria-pressed', lockedSeed!==null ? 'true' : 'false');
+    }
+    function handleSeedRandom(){ if(lockedSeed!==null) return; document.getElementById('seed').value = randomSeed(); }
+    function handleSeedLock(){
+      const btn = document.getElementById('seedLockBtn');
+      const pressed = btn.getAttribute('aria-pressed') === 'true';
+      if(pressed){ lockedSeed=null; btn.setAttribute('aria-pressed','false'); }
+      else{ const val=document.getElementById('seed').value; lockedSeed = val?parseInt(val,10):randomSeed(); btn.setAttribute('aria-pressed','true'); }
+      applySeedUI();
+    }
+
+    // ===================== GENERA ==============================
     async function handleGenerate(){
       const basePrompt=document.getElementById('prompt').value.trim();
-      if(!basePrompt){showStatus('Prompt mancante','error');return;}
-      showStatus('Generazione...','loading');
+      if(!basePrompt || basePrompt.length<3){showStatus('⚠️ Inserisci un prompt più dettagliato','error');return;}
+      if(basePrompt.length>500){showStatus('⚠️ Il prompt è troppo lungo (max 500)','error');return;}
+      if(isGenerating) return;
+
+      const btn=document.getElementById('generateBtn'), spinner=document.getElementById('spinner'), ph=document.getElementById('phContent');
       try{
-        const res=await fetch(GEN_URL,{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({prompt:basePrompt})
-        });
-        const data=await res.json();
-        if(!res.ok) throw new Error(data.error||'Errore');
-        const url=data.image_url;
-        displayImage(url);
-        addToHistory(url,basePrompt);
-        showStatus('✅ Fatto!');
-      }catch(e){showStatus('❌ '+e.message,'error');}
+        isGenerating=true; btn.disabled=true; btn.innerHTML='<span>⏳</span><span>Generando...</span>'; spinner.style.display='block'; ph.style.display='none'; document.getElementById('placeholder').style.display='flex';
+        showStatus('✨ Generazione in corso...','loading');
+        progressAuto();
+
+        const payload={
+          prompt: buildPromptFromUI(),
+          negative_prompt: buildNegativeFromUI(),
+          creativity:+document.getElementById('creativity').value,
+          quality:+document.getElementById('quality').value,
+          variants:+document.getElementById('variants').value,
+          ratio: document.getElementById('ratio').value,
+          steps: +document.getElementById('steps').value,
+          guidance: +document.getElementById('cfg').value,
+          style_strength: +document.getElementById('styleStrength').value,
+          denoise: +document.getElementById('denoise').value,
+          sampler: document.getElementById('sampler').value,
+          seed: (() => {
+            const uiVal = document.getElementById('seed').value;
+            if (lockedSeed !== null) return lockedSeed;
+            return uiVal ? parseInt(uiVal,10) : null;
+          })()
+        };
+
+        let res, data;
+        if(uploadedFile){
+          const fd=new FormData();
+          fd.append('image', uploadedFile);
+          Object.entries(payload).forEach(([k,v])=>{ if(v!==null && v!==undefined) fd.append(k,v); });
+          res = await fetch(EDIT_URL, { method:'POST', body: fd, credentials:'include' });
+        }else{
+          res = await fetch(GEN_URL, {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            credentials:'include',
+            body: JSON.stringify(payload)
+          });
+        }
+
+        const text = await res.text();
+        try{ data = JSON.parse(text); }catch{ throw new Error('Risposta server non valida'); }
+        if(!res.ok) throw new Error(data.error || `Errore ${res.status}`);
+
+        const imageUrl = data.image_url;
+        if(!imageUrl) throw new Error('Nessun URL immagine ricevuto');
+
+        displayImage(imageUrl);
+        addToHistory(imageUrl, payload.prompt);
+        showStatus('✅ Immagine generata con successo!','success');
+
+      }catch(e){
+        console.error(e); showStatus('❌ '+e.message,'error');
+      }finally{
+        isGenerating=false; btn.disabled=false; btn.innerHTML='<span>🎨</span><span>Genera Immagine</span>'; spinner.style.display='none'; ph.style.display='block';
+        stopProgress();
+      }
     }
+
+    // Barra progresso
+    let progTimer=null;
+    function progressAuto(){
+      const bar=document.getElementById('progress'); let w=0; stopProgress();
+      progTimer=setInterval(()=>{w+=Math.random()*14+6; if(w>=98) w=98; bar.style.width=w+'%';},220);
+    }
+    function stopProgress(){const bar=document.getElementById('progress'); if(progTimer){clearInterval(progTimer); progTimer=null;} bar.style.width='0%';}
+
+    // Visualizza immagine
     function displayImage(url){
-      const img=document.getElementById('resultImg');
-      const ph=document.getElementById('placeholder');
-      img.onload=()=>{img.style.display='block'; ph.style.display='none';};
-      img.src=url; currentImage=url;
+      const img=document.getElementById('resultImg'); const ph=document.getElementById('placeholder');
+      img.decoding='async'; img.loading='eager'; img.style.display='none'; ph.style.display='flex';
+      img.onload=()=>{img.style.display='block'; img.classList.add('show'); ph.style.display='none';};
+      img.onerror=()=>showStatus('❌ Impossibile caricare l’immagine','error');
+      img.src=url; img.alt='Immagine generata da AI';
+      currentImage=url;
+      document.getElementById('downloadBtn').disabled=false;
+      document.getElementById('exportBtn').disabled=false;
+      document.getElementById('ratingSystem').style.display='flex';
     }
-    function addToHistory(url,prompt){
-      history.unshift({url,prompt});
+
+    // ===================== BATCH / CONFRONTO ===================
+    async function handleBatch(){
+      const n=parseInt(document.getElementById('batchSize').value,10);
+      const prompt=document.getElementById('prompt').value.trim();
+      if(!prompt || prompt.length<3){showStatus('⚠️ Inserisci un prompt per il batch','error');return;}
+      comparisonImages=[];
+      for(let i=0;i<n;i++){ await handleGenerate(); if(currentImage) comparisonImages.push(currentImage); await new Promise(r=>setTimeout(r,500)); }
+      if(comparisonImages.length>=2) document.getElementById('compareBtn').disabled=false;
+      showStatus(`✅ Batch completato: ${comparisonImages.length} immagini`,'success');
+    }
+    function toggleComparison(){
+      const box=document.getElementById('comparisonMode'); const btn=document.getElementById('compareBtn');
+      const vis=box.style.display!=='none';
+      if(vis){box.style.display='none'; btn.textContent='Confronta A/B';}
+      else{
+        if(comparisonImages.length<2){showStatus('❌ Servono almeno 2 immagini','error');return;}
+        document.getElementById('compareImg1').src=comparisonImages.at(-2);
+        document.getElementById('compareImg2').src=comparisonImages.at(-1);
+        box.style.display='block'; btn.textContent='Chiudi Confronto';
+      }
+    }
+    function selectWinner(which){
+      const url = which===1 ? comparisonImages.at(-2) : comparisonImages.at(-1);
+      displayImage(url); showStatus(`🏆 Hai scelto l'immagine ${which===1?'A':'B'}`,'success');
+      setTimeout(()=>toggleComparison(),1000);
+    }
+
+    // ===================== HISTORY / RATING ====================
+    function addToHistory(url,prompt,rating=0){
+      history.unshift({url,prompt,rating,ts:Date.now()}); if(history.length>20) history.pop();
+      try{localStorage.setItem('artemisia-history',JSON.stringify(history));}catch{}
       renderHistory();
     }
+    function loadHistory(){try{const s=localStorage.getItem('artemisia-history');return s?JSON.parse(s):[];}catch{return[]}}
     function renderHistory(){
       const g=document.getElementById('historyGrid');
-      g.innerHTML=history.map(h=>`<div class="card-thumb"><img src="${h.url}"></div>`).join('');
+      if(history.length===0){g.innerHTML='<div class="small" style="grid-column:1/-1;text-align:center;padding:20px">Nessuna generazione ancora</div>';return;}
+      g.innerHTML = history.map((h,i)=>`
+        <div class="card-thumb" onclick="setMain('${h.url.replace(/'/g,"\\'")}')">
+          <img src="${h.url}" alt="Gen ${i+1}">
+          <div class="thumb-actions">
+            <button class="thumb-btn" onclick="event.stopPropagation(); downloadFromUrl('${h.url.replace(/'/g,"\\'")}')">📥</button>
+            <button class="thumb-btn" onclick="event.stopPropagation(); reusePrompt(${i})">♻️</button>
+            <button class="thumb-btn" onclick="event.stopPropagation(); delHist(${i})">🗑️</button>
+          </div>
+          ${h.rating?`<div style="position:absolute;top:4px;left:4px;background:rgba(0,0,0,.75);padding:2px 4px;border-radius:6px;color:var(--accent);font-size:12px">⭐${h.rating}</div>`:''}
+        </div>`).join('');
     }
-    document.addEventListener('DOMContentLoaded',()=>{
+    function setMain(src){displayImage(src);}
+    function reusePrompt(i){const h=history[i]; if(h){document.getElementById('prompt').value=h.prompt; updateCounter(); document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active')); showStatus('📝 Prompt riutilizzato','success');}}
+    function delHist(i){history.splice(i,1); try{localStorage.setItem('artemisia-history',JSON.stringify(history));}catch{} renderHistory(); showStatus('🗑️ Rimosso dalla cronologia','success');}
+    function rate(r){
+      document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('active',i<r));
+      if(history[0]){history[0].rating=r; try{localStorage.setItem('artemisia-history',JSON.stringify(history));}catch{} renderHistory();}
+      showStatus(`⭐ ${r}/5`,'success');
+    }
+
+    // ===================== FILE / DRAG&DROP ====================
+    function handleFile(file){
+      if(!file.type.startsWith('image/')){showStatus('⚠️ Seleziona un file immagine','error');return;}
+      if(file.size>10*1024*1024){showStatus('⚠️ File troppo grande (max 10MB)','error');return;}
+      uploadedFile=file; document.getElementById('fileName').textContent=file.name; document.getElementById('fileChip').classList.add('show'); showStatus(`📎 File “${file.name}” caricato`,'success');
+    }
+    function clearFile(){uploadedFile=null; document.getElementById('fileInput').value=''; document.getElementById('fileChip').classList.remove('show'); showStatus('🗑️ File rimosso','success');}
+    function setupDnD(){
+      const frame=document.getElementById('frame');
+      ['dragenter','dragover','dragleave','drop'].forEach(ev=>frame.addEventListener(ev,e=>{e.preventDefault();e.stopPropagation();}));
+      ['dragenter','dragover'].forEach(ev=>frame.addEventListener(ev,()=>frame.classList.add('drag-over')));
+      ['dragleave','drop'].forEach(ev=>frame.addEventListener(ev,()=>frame.classList.remove('drag-over')));
+      frame.addEventListener('drop',e=>{const f=e.dataTransfer.files?.[0]; if(f) handleFile(f);});
+      frame.addEventListener('click',()=>document.getElementById('fileInput').click());
+    }
+
+    // ===================== DOWNLOAD / EXPORT ==================
+    function download(){ if(!currentImage){showStatus('⚠️ Nessuna immagine','error');return;} downloadFromUrl(currentImage); }
+    function downloadFromUrl(url){const a=document.createElement('a'); a.href=url; a.download=`artemisia-${Date.now()}.png`; a.click(); showStatus('📥 Download avviato','success');}
+    function exportMulti(){ if(history.length===0){showStatus('⚠️ Nulla da esportare','error');return;} history.slice(0,5).forEach((h,i)=>setTimeout(()=>downloadFromUrl(h.url),i*200)); showStatus('📤 Export multiplo avviato','success'); }
+
+    // ===================== ALTRO ===============================
+    function surprise(){
+      const ex=['Castello magico al tramonto, acquerello morbido','Ritratto fotorealistico, luce cinematografica 85mm','Villaggio tra le nuvole, stile Ghibli, pastello','Logo minimal tech, sfondo bianco','Guerriera anime, colori vivaci','Pasta italiana macro, appetitosa','Paesaggio montano golden hour','Città volante epica, atmosfera drammatica','Copertina libro fantasy misteriosa'];
+      document.getElementById('prompt').value = ex[Math.floor(Math.random()*ex.length)]; updateCounter();
+      document.querySelectorAll('.chip.active').forEach(c=>c.classList.remove('active'));
+      showStatus('🎲 Prompt ispirazionale generato!','success');
+    }
+    function toggleTheme(){
+      const root=document.documentElement; const t=root.getAttribute('data-theme')||'dark'; const n=t==='dark'?'light':'dark';
+      root.setAttribute('data-theme',n); localStorage.setItem('artemisia-theme',n); showStatus(`🌗 Tema ${n==='dark'?'scuro':'chiaro'}`,'success');
+    }
+    function help(){alert(`Artemisia – Guida rapida:
+
+• Scrivi il soggetto, poi attiva i chip: aggiungono stili e negative.
+• Regola Creatività/Qualità, rapporto e Parametri avanzati.
+• Trascina un'immagine nel riquadro per trasformarla (edit).
+• Batch + Confronto A/B per scegliere il migliore.
+• Ctrl/Cmd + Invio: genera.`);}
+
+    // ===================== INIT ================================
+    function init(){
+      history = loadHistory();
+      const savedTheme = localStorage.getItem('artemisia-theme')||'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+
+      updateCounter(); updateCreativity(); updateQuality(); updateRatio();
+      updateSteps(); updateCfg(); updateStyleStrength(); updateDenoise(); updateNegCounter(); applySeedUI();
+      renderHistory(); setupDnD();
+
       document.getElementById('generateBtn').addEventListener('click',handleGenerate);
+      document.getElementById('surpriseBtn').addEventListener('click',surprise);
+      document.getElementById('downloadBtn').addEventListener('click',download);
+      document.getElementById('exportBtn').addEventListener('click',exportMulti);
+      document.getElementById('batchBtn').addEventListener('click',handleBatch);
+      document.getElementById('compareBtn').addEventListener('click',toggleComparison);
+      document.getElementById('selectA').addEventListener('click',()=>selectWinner(1));
+      document.getElementById('selectB').addEventListener('click',()=>selectWinner(2));
+      document.getElementById('themeBtn').addEventListener('click',toggleTheme);
+      document.getElementById('helpBtn').addEventListener('click',help);
+      document.getElementById('fileInput').addEventListener('change',e=>{if(e.target.files[0]) handleFile(e.target.files[0]);});
+      document.getElementById('clearFileBtn').addEventListener('click',clearFile);
+
+      // CHIP binding con inserimento testo nel textarea
       document.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>handleChipToggle(ch)));
+
+      // rating
+      document.querySelectorAll('.star').forEach(st=>st.addEventListener('click',()=>rate(parseInt(st.dataset.rating,10))));
+
+      // slider e campi avanzati
       document.getElementById('prompt').addEventListener('input',updateCounter);
-    });
+      document.getElementById('creativity').addEventListener('input',updateCreativity);
+      document.getElementById('quality').addEventListener('input',updateQuality);
+      document.getElementById('ratio').addEventListener('change',updateRatio);
+
+      document.getElementById('steps').addEventListener('input',updateSteps);
+      document.getElementById('cfg').addEventListener('input',updateCfg);
+      document.getElementById('styleStrength').addEventListener('input',updateStyleStrength);
+      document.getElementById('denoise').addEventListener('input',updateDenoise);
+      document.getElementById('negative').addEventListener('input',updateNegCounter);
+
+      document.getElementById('seedRndBtn').addEventListener('click',handleSeedRandom);
+      document.getElementById('seedLockBtn').addEventListener('click',handleSeedLock);
+
+      // scorciatoie
+      document.addEventListener('keydown',e=>{
+        if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();handleGenerate();}
+        if(e.key==='Escape'){const b=document.getElementById('comparisonMode'); if(b.style.display!=='none') toggleComparison();}
+      });
+    }
+    if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);} else {init();}
   </script>
 </body>
 </html>
