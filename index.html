@@ -4,9 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Artemisia Story · Generatore & Trasformatore di immagini AI</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>" />
+
+  <!-- Favicon reale -->
+  <link rel="icon" type="image/png" href="/logo-artemisia.png" />
+
+  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
   <style>
+    /* ... il tuo CSS esistente ... */
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--surface);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <!-- Logo aggiornato -->
+        <div class="logo">
+          <img src="/logo-artemisia.png" alt="Artemisia Story" />
+        </div>
+        <div>
+          <div class="title">Artemisia Story</div>
+          <div class="subtitle">Generatore & Trasformatore di immagini AI</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="icon-btn" id="themeBtn" title="Tema">🌗</button>
+        <button class="icon-btn" id="helpBtn" title="Guida">❔</button>
+      </div>
+    </header>
+
     :root{
       --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;
       --text-xs:12px;--text-sm:14px;--text-base:16px;--text-lg:18px;--text-xl:20px;--text-2xl:24px;--text-3xl:30px;
